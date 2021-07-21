@@ -1,0 +1,49 @@
+<!DOCTYPE html> {% load static %}
+<html>
+
+<head>
+    <title>
+        Adam Gaffney Blog
+    </title>
+    <link rel="icon" type="image/png" href="{% static 'blog_site/img/Adam Gaffney Logo.jpg' %}">
+    <link rel='stylesheet' type='text/css' href="{% static 'blog_site/css/main.css' %}">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300&display=swap" rel="stylesheet"> {% block head %} {% endblock %}
+</head>
+
+<body>
+    <!-- nav bar -->
+    <nav>
+        <div id="hamburger">
+            <div id="line-group">
+                <div class="line line-1"></div>
+                <div class="line"></div>
+                <div class="line"></div>
+            </div>
+        </div>
+        <ul id="hamburger-nav-list">
+            <div id="list">
+                <a href="{% url 'home' %}">
+                    <li class="nav-item nav-selected">Home</li>
+                </a>
+                <a href="{% url 'gaming' %}">
+                    <li class="nav-item">Gaming</li>
+                </a>
+                <a href="{% url 'essays' %}">
+                    <li class="nav-item">Personal Essays</li>
+                </a>
+                <a href="{% url 'contact' %}">
+                    <li class="nav-item">Contact Me</li>
+                </a>
+            </div>
+        </ul>
+        <div class="nav-logo">
+            <img src="{% static 'blog_site/img/Logo Transparent.png' %}">
+        </div>
+    </nav>
+    <div id="overlay" class="fadeOutOverlay" style="display: none"></div>
+    {% block content %} {% endblock %}
+    <script type="text/javascript" src="{% static 'blog_site/js/main.js' %}"></script>
+</body>
+
+</html>
