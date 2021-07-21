@@ -1,5 +1,5 @@
 django
 gunicorn
 django-heroku
-decouple
+python-decouple
 WhiteNoise
