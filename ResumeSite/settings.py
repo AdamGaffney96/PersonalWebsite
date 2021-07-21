@@ -26,7 +26,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', '7%%t6c(7kq*m%g#mnv(3e_n0&3ud@2j@p8&shb!-w0
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['localhost', '.adamgaffney.co.uk']
+ALLOWED_HOSTS = ['localhost', '.adamgaffney.co.uk', '.adam-gaffney-blog-site.herokuapp.com']
 
 
 # Application definition
