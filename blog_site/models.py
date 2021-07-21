@@ -4,6 +4,6 @@ from django.db import models
 class Gaming(models.Model):
     title = models.CharField(max_length=50, verbose_name='Gaming Article Title', blank=False, null=False)
     desc = models.CharField(max_length=200, verbose_name='Article Description', blank=False, null=False)
-    author = models.CharField(verbose_name='Article Author', blank=False, null=False, default='Anon')
+    author = models.CharField(max_length=60, verbose_name='Article Author', blank=False, null=False, default='Anon')
     post_date = models.DateTimeField(auto_now_add=True)
     last_edited = models.DateTimeField(auto_now=True)
