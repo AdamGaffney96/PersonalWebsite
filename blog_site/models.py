@@ -7,3 +7,5 @@ class Gaming(models.Model):
     author = models.CharField(max_length=60, verbose_name='Article Author', blank=False, null=False, default='Anon')
     post_date = models.DateTimeField(auto_now_add=True)
     last_edited = models.DateTimeField(auto_now=True)
+    def __str__(self):
+        return 'title' + ' - ' + 'author'
