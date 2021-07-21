@@ -1,5 +1,14 @@
 from django.shortcuts import render
-from .models import Greeting
+from .models import Gaming
+from .forms import GamingListForm
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+# Import the logout function from django.contrib.auth below
+from django.contrib.auth import logout
+from django.urls import reverse_lazy
+from django.contrib.auth.forms import UserCreationForm
+from django.views.generic import ListView, DetailView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 # Create your views here.
 
@@ -41,12 +50,3 @@ def essays(request):
 
 def contact(request):
     return render(request, 'blog_site/contact.html')
-
-def db(request):
-    
-    greeting = Greeting()
-    greeting.save()
-
-    greetings = Greeting.objects.all()
-
-    return render(request, 'db.html', {'greetings': greetings})
