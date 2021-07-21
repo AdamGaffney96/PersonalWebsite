@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from .models import Greeting
 
 # Create your views here.
 
@@ -40,3 +41,12 @@ def essays(request):
 
 def contact(request):
     return render(request, 'blog_site/contact.html')
+
+def db(request):
+    
+    greeting = Greeting()
+    greeting.save()
+
+    greetings = Greeting.objects.all()
+
+    return render(request, 'db.html', {'greetings': greetings})
