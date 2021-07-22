@@ -24,16 +24,16 @@
         <ul id="hamburger-nav-list">
             <div id="list">
                 <a href="{% url 'home' %}">
-                    <li class="nav-item nav-selected">Home</li>
+                    <li class="nav-item {% if request.path == '/' %}nav-selected{% endif %}">Home</li>
                 </a>
                 <a href="{% url 'gaming' %}">
-                    <li class="nav-item">Gaming</li>
+                    <li class="nav-item {% if 'gaming' in request.path %}nav-selected{% endif %}">Gaming</li>
                 </a>
                 <a href="{% url 'essays' %}">
-                    <li class="nav-item">Personal Essays</li>
+                    <li class="nav-item {% if 'essays' in request.path %}nav-selected{% endif %}">Personal Essays</li>
                 </a>
                 <a href="{% url 'contact' %}">
-                    <li class="nav-item">Contact Me</li>
+                    <li class="nav-item {% if 'contact' in request.path %}nav-selected{% endif %}">Contact Me</li>
                 </a>
             </div>
         </ul>

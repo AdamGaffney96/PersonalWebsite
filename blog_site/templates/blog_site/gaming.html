@@ -7,42 +7,23 @@
     <div class="title-desc first-paragraph">
         <p>A collection of gaming content, be it reviews, analysis or critical discussion.</p>
     </div>
+    {% for item in gaming %}
     <div class="page-line-break"></div>
     <div class="article-box">
-        <a href="" class="article-link">
+        <a href="{% url 'single_review' item.slug %}" class="article-link">
             <div class="article-preview-contents">
                 <div class="article-img-wrapper">
-                    <img src="./static/img/Caves and Cliffs.jpg" class="article-img-preview" />
+                    <img src="{% static item.thumb %}" class="article-img-preview" />
                 </div>
                 <div class="article-text-wrapper">
                     <div class="article-header-wrapper">
-                        <h3 class="article-title">Minecraft 1.17 Update Review</h3>
+                        <h3 class="article-title">{{item.title}}</h3>
                     </div>
                     <div class="article-desc-wrapper">
-                        <p class="article-desc">Caving has never been so exciting</p>
+                        <p class="article-desc">{{item.desc}}</p>
                     </div>
                 </div>
             </div>
         </a>
     </div>
-    <div class="page-line-break"></div>
-    <div class="article-box">
-        <a href="./reviews/test_review.html" class="article-link">
-            <div class="article-preview-contents">
-                <div class="article-img-wrapper">
-                    <img src="./static/img/Logo.png" class="article-img-preview" />
-                </div>
-                <div class="article-text-wrapper">
-                    <div class="article-header-wrapper">
-                        <h3 class="article-title">Test</h3>
-                    </div>
-                    <div class="article-desc-wrapper">
-                        <p class="article-desc">Test</p>
-                    </div>
-                </div>
-            </div>
-        </a>
-    </div>
-    <div class="page-line-break"></div>
-</main>
-{% endblock %}
+    {% endfor %} {% endblock %}

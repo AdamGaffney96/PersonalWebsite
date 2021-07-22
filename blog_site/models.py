@@ -26,7 +26,8 @@ def post_save_receiver(sender, instance, *args, **kwargs):
 
 class Essay(models.Model):
     title = models.CharField(max_length=50, verbose_name='Essay Article Title')
-    slug = models.CharField(max_length=100, verbose_name='Slug Title')
+    thumb = models.CharField(max_length=100, verbose_name='Thumbnail Image')
+    slug = models.SlugField(max_length=100, verbose_name='Slug Title', null=True, blank=True)
     desc = models.CharField(max_length=200, verbose_name='Article Description')
     content = models.TextField(verbose_name='Article Content', default = "Placeholder")
     keywords = models.CharField(max_length=100, verbose_name='Article Keywords', default = "Placeholder")

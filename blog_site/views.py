@@ -23,27 +23,21 @@ def home(request):
     
     gaming = Gaming.objects.all()
 
-    essays = [
-        {"title": "Minecraft 1.17 Update Review",
-        "image": 'blog_site/img/Caves and Cliffs.jpg',
-        "publish_date": "2021-06-20"},
-        {"title": "An Introduction to Inverse Semigroups",
-        "image": 'blog_site/img/MM401 Project.png',
-        "publish_date": "2019-06-26"},
-            {"title": "An Introduction to Inverse Semigroups",
-        "image": 'blog_site/img/MM401 Project.png',
-        "publish_date": "2019-06-27"}
-    ]
+    essays = Essay.objects.all()
 
     context = {"gaming": gaming,
     "essays": essays}
     return render(request, 'blog_site/home.html', context)
 
 def gaming(request):
-    return render(request, 'blog_site/gaming.html')
+    gaming = Gaming.objects.all()
+    context = {'gaming': gaming}
+    return render(request, 'blog_site/gaming.html', context)
 
 def essays(request):
-    return render(request, 'blog_site/essays.html')
+    essays = Essay.objects.all()
+    context = {'essays': essays}
+    return render(request, 'blog_site/essays.html', context)
 
 def contactsubmit(request):
     if request.method == "POST":
@@ -71,6 +65,24 @@ def contactfailure(request):
 
 def singlereview(request, slug):
     q = Gaming.objects.filter(slug__iexact = slug)
+    print(q)
+    if q.exists(): 
+        q = q.first()
+    else:
+        return HttpResponse('<h1>Post Not Found</h1>')
+    context = {
+        "pk": q.pk,
+        "title": q.title,
+        "slug": q.slug,
+        "desc": q.desc,
+        "author": q.author,
+        "content": q.content,
+        "post_date": q.post_date,
+    }
+    return render(request, 'blog_site/base_review.html', context)
+    
+def singleessay(request, slug):
+    q = Essay.objects.filter(slug__iexact = slug)
     print(q)
     if q.exists(): 
         q = q.first()

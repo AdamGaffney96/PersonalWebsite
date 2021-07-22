@@ -1,94 +1,29 @@
-<!DOCTYPE html>
-
-<html>
-
-<head>
-    <title>
-        Adam Gaffney Blog
-    </title>
-    <link rel="icon" type="image/png" href="./static/img/Logo.png">
-    <link rel="stylesheet" href="./static/css/main.css" type="text/css">
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300&display=swap" rel="stylesheet">
-</head>
-
-<body>
-    <nav>
-        <div id="hamburger">
-            <div id="line-group">
-                <div class="line line-1"></div>
-                <div class="line"></div>
-                <div class="line"></div>
-            </div>
-        </div>
-        <ul id="hamburger-nav-list">
-            <div id="list">
-                <a href="./">
-                    <li class="nav-item">Home</li>
-                </a>
-                <a href="./gaming.html">
-                    <li class="nav-item">Gaming</li>
-                </a>
-                <a href="./essays.html">
-                    <li class="nav-item nav-selected">Personal Essays</li>
-                </a>
-                <a href="./contactme.html">
-                    <li class="nav-item">Contact Me</li>
-                </a>
-            </div>
-        </ul>
-        <div class="nav-logo">
-            <img src="./static/img/Logo Transparent.png" />
-        </div>
-    </nav>
-    <div id="overlay" class="fadeOutOverlay" style="display: none"></div>
-    <main>
-        <div class="page-title">
-            <h1>Adam's Essays</h1>
-            <div class="title-border"></div>
-        </div>
-        <div class="title-desc first-paragraph">
-            <p>A place for me to publish opinion pieces, mathematical papers and anything else I feel like writing.</p>
-        </div>
-        <div class="page-line-break"></div>
-        <div class="article-box">
-            <a href="./reviews/test_review.html" class="article-link">
-                <div class="article-preview-contents">
-                    <div class="article-img-wrapper">
-                        <img src="./static/img/MM401 Project.png" class="article-img-preview" />
+{% extends 'blog_site/base.html' %} {% load static %} {% block content %}
+<main>
+    <div class="page-title">
+        <h1>Adam's Essays</h1>
+        <div class="title-border"></div>
+    </div>
+    <div class="title-desc first-paragraph">
+        <p>A place for me to publish opinion pieces, mathematical papers and anything else I feel like writing.</p>
+    </div>
+    {% for item in essays %}
+    <div class="page-line-break"></div>
+    <div class="article-box">
+        <a href="{% url 'single_essay' item.slug %}" class="article-link">
+            <div class="article-preview-contents">
+                <div class="article-img-wrapper">
+                    <img src="{% static item.thumb %}" class="article-img-preview" />
+                </div>
+                <div class="essay-text-wrapper">
+                    <div class="article-header-wrapper">
+                        <h3 class="article-title">{{item.title}}</h3>
                     </div>
-                    <div class="essay-text-wrapper">
-                        <div class="article-header-wrapper">
-                            <h3 class="article-title">An Introduction to Inverse Semigroups</h3>
-                        </div>
-                        <div class="article-desc-wrapper">
-                            <p class="article-desc">A basic introduction to abstract algebra and inverse semigroups</p>
-                        </div>
+                    <div class="article-desc-wrapper">
+                        <p class="article-desc">{{item.desc}}</p>
                     </div>
                 </div>
-            </a>
-        </div>
-        <div class="page-line-break"></div>
-        <div class="article-box">
-            <a href="./reviews/test_review.html" class="article-link">
-                <div class="article-preview-contents">
-                    <div class="article-img-wrapper">
-                        <img src="./static/img/Logo.png" class="article-img-preview" />
-                    </div>
-                    <div class="article-text-wrapper">
-                        <div class="article-header-wrapper">
-                            <h3 class="article-title">Test</h3>
-                        </div>
-                        <div class="article-desc-wrapper">
-                            <p class="article-desc">Test</p>
-                        </div>
-                    </div>
-                </div>
-            </a>
-        </div>
-        <div class="page-line-break"></div>
-    </main>
-    <script type="text/javascript" src="static/js/main.js"></script>
-</body>
-
-</html>
+            </div>
+        </a>
+    </div>
+    {% endfor %} {% endblock %}
