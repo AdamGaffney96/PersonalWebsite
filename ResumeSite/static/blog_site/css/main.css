@@ -422,6 +422,11 @@ img {
     border-bottom-right-radius: 10px;
 }
 
+#pdf-link {
+    color: #579fd9e3;
+    text-align: center;
+}
+
 
 /* contact form */
 
