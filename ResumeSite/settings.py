@@ -48,7 +48,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'blog_site',
+    'django_summernote',
 ]
+
+MEDIA_URL = '/blog_site/img/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'blog_site/img/')
+
+X_FRAME_OPTIONS = 'SAMEORIGIN'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

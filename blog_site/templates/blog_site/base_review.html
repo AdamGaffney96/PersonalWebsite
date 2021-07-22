@@ -1,0 +1,15 @@
+{% extends 'blog_site/base.html' %} {% load static %} {% block content %}
+<main>
+    <div class="page-title">
+        <h1>{{ title }}</h1>
+        <div class="title-border"></div>
+    </div>
+    <div class="title-desc subtitle">
+        <p>{{ desc }}</p>
+    </div>
+    <div class="page-line-break"></div>
+    <div class="article-text">
+        {{content |safe}}
+    </div>
+</main>
+{% endblock %}

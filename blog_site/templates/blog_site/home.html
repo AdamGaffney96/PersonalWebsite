@@ -23,10 +23,10 @@
     <div class="sidescrolling-box article-list-box">
         {% for item in gaming %}
         <div class="article-box-thumbnail">
-            <a href="./reviews/test_review.html" class="article-link">
+            <a href="{% url 'single_review' item.slug %}" class="article-link">
                 <div class="article-preview-contents">
                     <div class="article-img-wrapper-thumbnail">
-                        <img src="{% static item.image %}" class="article-img-preview" />
+                        <img src="{% static item.thumb %}" class="article-img-preview" />
                     </div>
                     <div class="article-text-wrapper-thumbnail">
                         <div class="article-header-wrapper">
@@ -46,10 +46,10 @@
     <div class="sidescrolling-box article-list-box">
         {% for item in gaming %}
         <div class="article-box-thumbnail">
-            <a href="./reviews/test_review.html" class="article-link">
+            <a href="{% url 'single_review' item.slug %}" class="article-link">
                 <div class="article-preview-contents">
                     <div class="article-img-wrapper-thumbnail">
-                        <img src="{% static item.image %}" class="article-img-preview" />
+                        <img src="{% static item.thumb %}" class="article-img-preview" />
                     </div>
                     <div class="article-text-wrapper-thumbnail">
                         <div class="article-header-wrapper">
