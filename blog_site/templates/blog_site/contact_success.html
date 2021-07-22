@@ -1,0 +1,15 @@
+{% extends 'blog_site/base.html' %} {% load static %} {% block content %}
+
+<input>
+<div id='contact-form-success'>
+    <div id='img-container'>
+        <img src="{% static 'blog_site/img/email_sent.gif' %}" />
+    </div>
+    <h5>Email submitted!</h5>
+    <h6>Thank you for getting in contact. If I respond I try to do it within 48 hours, if not assume I will not respond.</h6>
+</div>
+<div id='contact-submit'>
+    <a href="{% url 'home' %}"><input type="submit" value='Return Home' /></a>
+</div>
+</main>
+{% endblock %}

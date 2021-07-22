@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from .models import Gaming
-from .forms import GamingListForm
+from .models import Gaming, Contact
+from .forms import ContactForm, GamingListForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 # Import the logout function from django.contrib.auth below
@@ -48,5 +48,10 @@ def gaming(request):
 def essays(request):
     return render(request, 'blog_site/essays.html')
 
-def contact(request):
-    return render(request, 'blog_site/contact.html')
+class ContactSubmit(CreateView):
+    model = Contact
+    template_name = 'blog_site/contact_form.html'
+    form_class = ContactForm
+
+def contact_success(request):
+    return render(request, 'blog_site/contact_success.html')

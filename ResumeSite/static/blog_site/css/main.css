@@ -156,7 +156,7 @@ main {
     min-height: 90vh;
     height: 90vh;
     padding-left: 10px;
-    padding-top: 14%;
+    padding-top: 150px;
 }
 
 .page-title {
@@ -415,4 +415,93 @@ img {
     padding: 10px 0;
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
+}
+
+
+/* contact form */
+
+
+/* #contact-form-div {
+    background-color: white;
+    border-radius: 10px;
+    border: 0.5px solid rgb(131, 131, 131);
+} */
+
+#contact-title h5 {
+    font-size: 70px;
+    text-align: center;
+    margin: 0;
+}
+
+#contact-subtitle {
+    padding: 0 40px;
+}
+
+#contact-form-div p {
+    font-family: 'Merriweather', serif;
+    padding: 0 40px;
+    margin: 5px 0;
+}
+
+input[type=text],
+input[type=email] {
+    margin: 20px 0;
+    width: 100%;
+    height: 50px;
+    border-radius: 20px;
+}
+
+#contact-submit {
+    padding: 0 40px;
+}
+
+input[type=submit] {
+    font-size: 50px;
+    margin: 20px 0;
+    padding: 20px 0;
+    width: 100%;
+    border-radius: 20px;
+    background-color: #579ED9;
+    color: white;
+}
+
+#contact-form tr {
+    height: 150px;
+}
+
+#contact-form th {
+    text-align: end;
+}
+
+#contact-form th label {
+    font-size: 50px;
+}
+
+#contact-form textarea {
+    resize: none;
+    margin: 20px 0;
+    width: 100%;
+    height: 300px;
+    border-radius: 20px;
+}
+
+#contact-form-success {
+    margin: 0 20px;
+}
+
+#contact-form-success #img-container {
+    text-align: center;
+    margin-top: 30px;
+}
+
+#contact-form-success h5 {
+    font-size: 70px;
+    text-align: center;
+    margin: 0;
+    margin-top: 30px;
+}
+
+#contact-form-success h6 {
+    margin: 20px 0;
+    padding: 0 40px;
 }
