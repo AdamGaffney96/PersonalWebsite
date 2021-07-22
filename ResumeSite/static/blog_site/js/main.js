@@ -7,13 +7,13 @@ if (screen.width <= 1024) {
         // console.log(content.style.width)
         if (content.style.maxHeight) {
             content.style.maxHeight = null;
-            setTimeout(function() { document.getElementById("overlay").className = "fadeOutOverlay" }, 1)
+            // setTimeout(function() { document.getElementById("overlay").className = "fadeOutOverlay" }, 1)
             setTimeout(function() { document.getElementById("overlay").style.display = "none" }, 301)
         } else {
             document.getElementById("overlay").style.display = null
             content.style.maxHeight = content.scrollHeight + "px";
-            document.getElementById("overlay").classList.remove("fadeOutOverlay")
-            setTimeout(function() { document.getElementById("overlay").className = "fadeInOverlay" }, 1)
+            // document.getElementById("overlay").classList.remove("fadeOutOverlay")
+            // setTimeout(function() { document.getElementById("overlay").className = "fadeInOverlay" }, 1)
         }
     })
 } else {
@@ -23,13 +23,13 @@ if (screen.width <= 1024) {
         // console.log(content.style.width)
         if (content.style.maxHeight) {
             content.style.maxHeight = null;
-            setTimeout(function() { document.getElementById("overlay").className = "fadeOutOverlay" }, 1)
+            // setTimeout(function() { document.getElementById("overlay").className = "fadeOutOverlay" }, 1)
             setTimeout(function() { document.getElementById("overlay").style.display = "none" }, 301)
         } else {
             document.getElementById("overlay").style.display = null
             content.style.maxHeight = content.scrollHeight + "px";
-            document.getElementById("overlay").classList.remove("fadeOutOverlay")
-            setTimeout(function() { document.getElementById("overlay").className = "fadeInOverlay" }, 1)
+            // document.getElementById("overlay").classList.remove("fadeOutOverlay")
+            // setTimeout(function() { document.getElementById("overlay").className = "fadeInOverlay" }, 1)
         }
     })
 }
@@ -41,8 +41,8 @@ function getWidth() {
 window.addEventListener('resize', (e) => {
     ham_nav.style.maxHeight = null;
     document.getElementById("overlay").style.display = null
-    document.getElementById("overlay").classList.remove("fadeInOverlay")
-    document.getElementById("overlay").classList.add("fadeOutOverlay")
+        // document.getElementById("overlay").classList.remove("fadeInOverlay")
+        // document.getElementById("overlay").classList.add("fadeOutOverlay")
 })
 
 // max-device-width for mobile: 1024
