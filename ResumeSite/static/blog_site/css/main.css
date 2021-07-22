@@ -456,6 +456,8 @@ input[type=email] {
     height: 50px;
     border-radius: 20px;
     font-size: 50px;
+    color: transparent;
+    text-shadow: 0 0 0 black;
 }
 
 #contact-submit {
@@ -498,6 +500,7 @@ textarea:focus {
     box-shadow: 0 0 0 2pt grey;
     outline: none;
     transition: .1s;
+    padding: 0 20px;
 }
 
 #contact-form-success {
