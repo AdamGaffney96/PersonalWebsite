@@ -11,7 +11,18 @@
                 <h6>Please fill out the form below for any business inquiries or feedback. I will not respond to all emails so please don't be offended if I don't get back to you.</h6>
             </div>
             <div id='contact-form'>
-                {{ form.as_p }}
+                <p>
+                    <label for='email'>User Email</label>
+                    <input type=email required id='email' maxlength='254' name='email' />
+                </p>
+                <p>
+                    <label for='subject'>Subject Line</label>
+                    <input type=text required id='subject' name='subject' maxlength="255" />
+                </p>
+                <p>
+                    <label for='message'>Message</label>
+                    <textarea required id='message' cols="40" rows="10" maxlength="10000" name="message"></textarea>
+                </p>
                 <div id='contact-submit'>
                     <input type="submit" />
                 </div>

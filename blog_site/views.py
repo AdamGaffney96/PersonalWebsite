@@ -1,6 +1,9 @@
 from django.shortcuts import render
 from .models import Gaming, Contact
 from .forms import ContactForm, GamingListForm
+from django.conf import settings
+from django.core.mail import send_mail
+from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 # Import the logout function from django.contrib.auth below
@@ -9,6 +12,8 @@ from django.urls import reverse_lazy
 from django.contrib.auth.forms import UserCreationForm
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
+import smtplib
+import requests
 
 # Create your views here.
 
@@ -48,10 +53,26 @@ def gaming(request):
 def essays(request):
     return render(request, 'blog_site/essays.html')
 
-class ContactSubmit(CreateView):
-    model = Contact
-    template_name = 'blog_site/contact_form.html'
-    form_class = ContactForm
+def contactsubmit(request):
+    if request.method == "POST":
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            newContact = Contact()
+            newContact.email = request.POST['email']
+            newContact.subject = request.POST['subject']
+            newContact.message = request.POST['message']
+            newContact.save()
+            email_subject = f'Email from {form.cleaned_data["email"]} - {form.cleaned_data["subject"]}'
+            email_message = form.cleaned_data['message']
+            try:
+                send_mail(email_subject, email_message, settings.CONTACT_EMAIL, settings.ADMIN_EMAILS)
+            except smtplib.SMTPException:
+                return redirect('contact_failure')
+            return redirect('contact_success')
+    return render(request, 'blog_site/contact_form.html')
 
-def contact_success(request):
+def contactsuccess(request):
     return render(request, 'blog_site/contact_success.html')
+
+def contactfailure(request):
+    return render(request, 'blog_site/contact_failure.html')

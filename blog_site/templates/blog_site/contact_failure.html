@@ -1,0 +1,12 @@
+{% extends 'blog_site/base.html' %} {% load static %} {% block content %}
+
+<input>
+<div id='contact-form-failure'>
+    <h5>Email not sent</h5>
+    <h6>Something appears to have gone wrong. Please return to the contact form to try again.</h6>
+</div>
+<div id='contact-submit'>
+    <a href="{% url 'contact' %}"><input type="submit" value='Return Home' /></a>
+</div>
+</main>
+{% endblock %}
