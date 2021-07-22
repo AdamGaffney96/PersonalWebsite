@@ -485,6 +485,7 @@ input[type=submit] {
 }
 
 #contact-form textarea {
+    font-family: Arial, Helvetica, sans-serif;
     font-size: 30px;
     resize: none;
     margin: 20px 0;
