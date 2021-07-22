@@ -61,7 +61,7 @@ def contactsubmit(request):
             newContact.email = request.POST['email']
             newContact.subject = request.POST['subject']
             newContact.message = request.POST['message']
-            newContact.save()
+            # newContact.save()
             email_subject = f'Email from {form.cleaned_data["email"]} - {form.cleaned_data["subject"]}'
             email_message = form.cleaned_data['message']
             try:
