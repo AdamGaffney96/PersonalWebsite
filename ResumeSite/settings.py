@@ -33,8 +33,8 @@ if os.path.isfile(dotenv_file):
 SECRET_KEY = os.getenv('SECRET_KEY', '7%%t6c(7kq*m%g#mnv(3e_n0&3ud@2j@p8&shb!-w0#f9u!1c7')
 
 # UNCOMMENT BEFORE PUSHING TO DEPLOYMENT
-# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-# SECURE_SSL_REDIRECT = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_SSL_REDIRECT = True
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
@@ -56,11 +56,11 @@ INSTALLED_APPS = [
 ]
 
 # REMOVE BEFORE PUSHING TO DEPLOYMENT
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
-    }
-}
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+#     }
+# }
 
 MEDIA_URL = '/blog_site/img/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'blog_site/img/')
