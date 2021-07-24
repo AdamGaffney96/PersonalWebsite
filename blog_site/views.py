@@ -16,6 +16,7 @@ import smtplib
 from django.utils.text import slugify
 import requests
 from django.http import HttpResponse
+from django.core.paginator import Paginator
 
 # Create your views here.
 
@@ -30,7 +31,56 @@ def home(request):
     return render(request, 'blog_site/home.html', context)
 
 def gaming(request):
-    gaming = Gaming.objects.all()
+    # gaming = Gaming.objects.all()
+    gaming = [
+        {"title": 'Test Title 1',
+        "slug": 'test-title-1',
+        "thumb": 'blog_site/img/Caves and Cliffs.jpg',
+        },
+        {"title": 'Test Title 2',
+        "slug": 'test-title-2',
+        "thumb": 'blog_site/img/Caves and Cliffs.jpg',
+        },
+        {"title": 'Test Title 3',
+        "slug": 'test-title-3',
+        "thumb": 'blog_site/img/Caves and Cliffs.jpg',
+        },
+        {"title": 'Test Title 4',
+        "slug": 'test-title-4',
+        "thumb": 'blog_site/img/Caves and Cliffs.jpg',
+        },
+        {"title": 'Test Title 5',
+        "slug": 'test-title-5',
+        "thumb": 'blog_site/img/Caves and Cliffs.jpg',
+        },
+        {"title": 'Test Title 6',
+        "slug": 'test-title-6',
+        "thumb": 'blog_site/img/Caves and Cliffs.jpg',
+        },
+        {"title": 'Test Title 7',
+        "slug": 'test-title-7',
+        "thumb": 'blog_site/img/Caves and Cliffs.jpg',
+        },
+        {"title": 'Test Title 8',
+        "slug": 'test-title-8',
+        "thumb": 'blog_site/img/Caves and Cliffs.jpg',
+        },
+        {"title": 'Test Title 9',
+        "slug": 'test-title-9',
+        "thumb": 'blog_site/img/Caves and Cliffs.jpg',
+        },
+        {"title": 'Test Title 10',
+        "slug": 'test-title-10',
+        "thumb": 'blog_site/img/Caves and Cliffs.jpg',
+        },
+        {"title": 'Test Title 11',
+        "slug": 'test-title-11',
+        "thumb": 'blog_site/img/Caves and Cliffs.jpg',
+        },
+    ]
+    paginator = Paginator(gaming, 6)
+    page = request.GET.get('page')
+    gaming = paginator.get_page(page)
     context = {'gaming': gaming}
     return render(request, 'blog_site/gaming.html', context)
 

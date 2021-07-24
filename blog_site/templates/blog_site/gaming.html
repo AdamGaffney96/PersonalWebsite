@@ -7,23 +7,26 @@
     <div class="title-desc first-paragraph">
         <p>A collection of gaming content, be it reviews, analysis or critical discussion.</p>
     </div>
-    {% for item in gaming %}
     <div class="page-line-break"></div>
-    <div class="article-box">
-        <a href="{% url 'single_review' item.slug %}" class="article-link">
-            <div class="article-preview-contents">
-                <div class="article-img-wrapper">
-                    <img src="{% static item.thumb %}" class="article-img-preview" />
-                </div>
-                <div class="article-text-wrapper">
-                    <div class="article-header-wrapper">
-                        <h3 class="article-title">{{item.title}}</h3>
+    <div class="article-box-container">
+        {% for item in gaming %}
+        <div class="article-box">
+            <a href="{% url 'single_review' item.slug %}" class="article-link">
+                <div class="article-preview-contents">
+                    <div class="article-img-wrapper">
+                        <img src="{% static item.thumb %}" class="article-img-preview" />
                     </div>
-                    <div class="article-desc-wrapper">
-                        <p class="article-desc">{{item.desc}}</p>
+                    <div class="article-text-wrapper">
+                        <div class="article-header-wrapper">
+                            <h3 class="article-title">{{item.title}}</h3>
+                        </div>
+                        <div class="article-desc-wrapper">
+                            <p class="article-desc">{{item.desc}}</p>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </a>
+            </a>
+        </div>
+        {% endfor %}
     </div>
-    {% endfor %} {% endblock %}
+    {% endblock %}
