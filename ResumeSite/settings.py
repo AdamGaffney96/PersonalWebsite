@@ -162,11 +162,8 @@ STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CONTACT_EMAIL = 'admin@adamgaffney.co.uk'
-ADMIN_EMAILS = ['adamgaffney96@gmail.com',]
+CONTACT_EMAIL = 'newsletter@adamgaffney.co.uk'
+ADMIN_EMAILS = 'adamgaffney96@gmail.com'
 
-EMAIL_HOST = 'smtp.sendgrid.net'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'apikey'
-EMAIL_HOST_PASSWORD = os.environ.get('SENDGRID_API_KEY')
+TEMPLATE_ID_CONTACT = 'd-85c329ea3430413486b94a9e87dc6c86'
+TEMPLATE_ID_NEWSLETTER = 'd-f1f33b873b904423952de2ab36849cff'

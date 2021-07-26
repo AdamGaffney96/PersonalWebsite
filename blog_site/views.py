@@ -17,6 +17,10 @@ from django.utils.text import slugify
 import requests
 from django.http import HttpResponse
 from django.core.paginator import Paginator
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
+import os
+import json
 
 # Create your views here.
 
@@ -94,15 +98,25 @@ def contactsubmit(request):
         form = ContactForm(request.POST)
         if form.is_valid():
             newContact = Contact()
-            newContact.email = request.POST['email']
-            newContact.subject = request.POST['subject']
-            newContact.message = request.POST['message']
-            # newContact.save()
-            email_subject = f'Email from {form.cleaned_data["email"]} - {form.cleaned_data["subject"]}'
-            email_message = form.cleaned_data['message']
+            message = Mail(
+            from_email=settings.CONTACT_EMAIL,
+            to_emails=settings.ADMIN_EMAILS,
+            subject=request.POST['subject'],
+            html_content=request.POST['message'])
+            message.dynamic_template_data = {
+            'email': request.POST['email'],
+            'subject': request.POST['subject'],
+            'message': request.POST['message']
+            }
+            message.template_id = settings.TEMPLATE_ID
             try:
-                send_mail(email_subject, email_message, settings.CONTACT_EMAIL, settings.ADMIN_EMAILS)
-            except smtplib.SMTPException:
+                sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
+                response = sg.send(message)
+                print(response.status_code)
+                print(response.body)
+                print(response.headers)
+            except Exception as e:
+                print(e.message)
                 return redirect('contact_failure')
             return redirect('contact_success')
     return render(request, 'blog_site/contact_form.html')
@@ -135,6 +149,7 @@ def singlereview(request, slug):
     return render(request, 'blog_site/base_review.html', context)
     
 def singleessay(request, slug):
+
     q = Essay.objects.filter(slug__iexact = slug)
     print(q)
     if q.exists(): 
@@ -151,3 +166,6 @@ def singleessay(request, slug):
         "post_date": q.post_date,
     }
     return render(request, 'blog_site/base_review.html', context)
+
+def newsletter(request):
+    return render(request, 'blog_site/newsletter.html')

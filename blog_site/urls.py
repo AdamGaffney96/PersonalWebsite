@@ -11,4 +11,5 @@ urlpatterns = [
     path('contact/success', views.contactsuccess, name = "contact_success"),
     path('contact/failure', views.contactfailure, name = "contact_failure"),
     path('eia/home', views.eiahome, name = "eiahome"),
+    path('newsletter', views.newsletter, name = "newsletter"),
 ]

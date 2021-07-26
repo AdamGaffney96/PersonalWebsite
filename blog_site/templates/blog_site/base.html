@@ -35,6 +35,9 @@
                 <a href="{% url 'contact' %}">
                     <li class="nav-item {% if 'contact' in request.path %}nav-selected{% endif %}">Contact Me</li>
                 </a>
+                <a href="{% url 'newsletter' %}">
+                    <li class="nav-item {% if 'newsletter' in request.path %}nav-selected{% endif %}">Newsletter</li>
+                </a>
             </div>
         </ul>
         <div class="nav-logo">
