@@ -33,8 +33,8 @@ if os.path.isfile(dotenv_file):
 SECRET_KEY = os.getenv('SECRET_KEY', '7%%t6c(7kq*m%g#mnv(3e_n0&3ud@2j@p8&shb!-w0#f9u!1c7')
 
 # UNCOMMENT BEFORE PUSHING TO DEPLOYMENT
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-SECURE_SSL_REDIRECT = True
+# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+# SECURE_SSL_REDIRECT = True
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
@@ -68,7 +68,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'blog_site/img/')
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
+    # 'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -162,7 +162,7 @@ STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CONTACT_EMAIL = 'adamgaffney96@gmail.com'
+CONTACT_EMAIL = 'admin@adamgaffney.co.uk'
 ADMIN_EMAILS = ['adamgaffney96@gmail.com',]
 
 EMAIL_HOST = 'smtp.sendgrid.net'

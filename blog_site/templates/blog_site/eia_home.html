@@ -1,0 +1,59 @@
+<!DOCTYPE html> {% load static %}
+
+<html>
+
+<head>
+    <title>Emily Is Away Fangame</title>
+    <link rel="stylesheet" href="{% static 'blog_site/css/eia_style.css' %}" type="text/css">
+    <script src="{% static 'blog_site/js/jquery-3.6.0.min.js' %}"></script>
+</head>
+
+<body>
+    <nav>
+        <div id="logo-container">
+            <p id="logo">facebook</p>
+        </div>
+        <ul>
+            <li>Home</li>
+            <li>Profile</li>
+            <li>Friends</li>
+            <li>Inbox</li>
+        </ul>
+    </nav>
+    <main>
+        <div id="left-sidebar">
+            <p id="welcome-message">Welcome to Facebook.</p>
+            <div id="base-buttons">
+                <p id="news-feed-button" class="sidebar-button">News Feed</p>
+                <p id="city-button" class="sidebar-button">City</p>
+                <p id="public-profiles-button" class="sidebar-button">Public Profiles</p>
+            </div>
+        </div>
+        <article id="centre-article">
+            <p id="test2">Test</p>
+        </article>
+        <div id="right-sidebar">
+            <p id="test3">Test</p>
+            <button id='test-button'>Add Message</button>
+        </div>
+    </main>
+    <footer id="footer">
+        <div id="chat-boxes">
+            <div id="clear"></div>
+        </div>
+        <div id="bottom-bar">
+            <div id="notification-icon">
+                <img src="{% static 'blog_site/img/Notification icon.png' %}">
+            </div>
+            <div id="online-friends">
+                <img id="online-friends-image" src="static/img/Notification icon.png"> Online Friends (0)
+            </div>
+        </div>
+    </footer>
+    <script src="{% static 'blog_site/js/characters.js' %}"></script>
+    <script src="{% static 'blog_site/js/typing.js' %}"></script>
+    <script src="{% static 'blog_site/js/addMessage.js' %}"></script>
+    <script src="{% static 'blog_site/js/collapseOnResize.js' %}"></script>
+</body>
+
+</html>

@@ -54,3 +54,7 @@ class Contact(models.Model):
 
     def get_absolute_url(self):
         return 'contact_success'
+
+class EIAChars(models.Model):
+    name = models.CharField(verbose_name='Character Name', max_length=120, primary_key=True)
+    age = models.IntegerField()

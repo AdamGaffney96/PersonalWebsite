@@ -113,6 +113,9 @@ def contactsuccess(request):
 def contactfailure(request):
     return render(request, 'blog_site/contact_failure.html')
 
+def eiahome(request):
+    return render(request, 'blog_site/eia_home.html')
+
 def singlereview(request, slug):
     q = Gaming.objects.filter(slug__iexact = slug)
     print(q)
