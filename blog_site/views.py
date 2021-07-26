@@ -108,7 +108,7 @@ def contactsubmit(request):
             'subject': request.POST['subject'],
             'message': request.POST['message']
             }
-            message.template_id = settings.TEMPLATE_ID
+            message.template_id = settings.TEMPLATE_ID_CONTACT
             try:
                 sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
                 response = sg.send(message)
