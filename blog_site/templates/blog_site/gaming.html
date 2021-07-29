@@ -8,6 +8,25 @@
         <p>A collection of gaming content, be it reviews, analysis or critical discussion.</p>
     </div>
     <div class="page-line-break"></div>
+    {% if users.has_other_pages %}
+    <table class="pagination">
+        <tr>
+            {% if users.has_previous %}
+            <td class='left-page'><a href="?page={{ users.previous_page_number }}">&laquo;</a></td>
+            {% else %}
+            <td class="disabled left-page"><span>&laquo;</span></td>
+            {% endif %} {% for i in users.paginator.page_range %} {% if users.number == i %}
+            <td class="active">{{ i }}</td>
+            {% else %}
+            <td><a href="?page={{ i }}">{{ i }}</a></td>
+            {% endif %} {% endfor %} {% if users.has_next %}
+            <td class='right-page'><a href="?page={{ users.next_page_number }}">&raquo;</a></td>
+            {% else %}
+            <td class="disabled right-page"><span>&raquo;</span></td>
+            {% endif %}
+        </tr>
+    </table>
+    {% endif %}
     <div class="article-box-container">
         {% for item in gaming %}
         <div class="article-box">
