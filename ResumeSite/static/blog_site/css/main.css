@@ -21,6 +21,21 @@
         padding-left: 0;
         z-index: 999;
     }
+    .sublist {
+        list-style: none;
+        margin: 0;
+        padding-left: 70px;
+        border-bottom-left-radius: 4px;
+        border-bottom-right-radius: 4px;
+        transition: max-height 0.2s ease-out;
+        z-index: 10;
+    }
+    .sublist li {
+        padding: 10px 20px;
+    }
+    .sublist a {
+        color: white !important;
+    }
     #hamburger {
         display: block;
         width: 150px;
@@ -78,13 +93,13 @@
     .nav-item {
         font-size: 60px;
         color: white;
-        padding: 5px;
+        padding: 10px;
     }
     a {
         text-decoration: none;
         width: 50%;
     }
-    .nav-selected {
+    .nav-selected>a {
         text-decoration: underline !important;
     }
     a,
@@ -241,6 +256,10 @@
         padding-left: 20px;
         margin: 0;
     }
+    .edited {
+        color: rgb(65, 65, 65);
+        font-size: 80%;
+    }
     /* reviews page stuff */
     .article-box {
         display: block;
@@ -272,6 +291,10 @@
     .article-img-wrapper img {
         width: 100%;
         height: 100%;
+        min-height: 600px;
+        object-fit: cover;
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
     }
     .article-text-wrapper {
         background-color: #579fd9e3;
@@ -311,6 +334,16 @@
         font-weight: bold;
         margin-left: 180px;
         margin-right: 65px;
+    }
+    .date-stamp {
+        font-size: 20px !important;
+        padding-left: 60px;
+        color: rgba(20, 87, 196, 0.5);
+    }
+    .edit-stamp {
+        font-size: 20px !important;
+        padding-left: 60px;
+        color: rgba(20, 87, 196, 0.5);
     }
     .rest-of-article {
         margin: 20px 60px;
@@ -441,6 +474,22 @@
         height: 600px;
         border: 0;
         transform: scale(1.3);
+    }
+    /* error stylings */
+    .error-title h5 {
+        color: rgba(20, 87, 196);
+        font-size: 90px;
+        text-align: center;
+        margin: 0;
+        margin-top: 10%;
+    }
+    .error-subtitle {
+        text-align: center;
+    }
+    .error-subtitle h6 {
+        color: rgba(20, 87, 196);
+        font-size: 30px;
+        margin: 20px;
     }
 }
 
@@ -873,7 +922,6 @@
         font-size: 30px;
         margin: 10px 0 20px 0;
         padding: 20px 0;
-        padding-left: 10px;
         width: 20%;
         border-radius: 20px;
         background-color: #579ED9;
@@ -971,5 +1019,21 @@
         border: 1px solid rgba(20, 87, 196);
         background-color: #579ED9;
         box-shadow: 0 0 5px rgb(87, 87, 87);
+    }
+    /* error stylings */
+    .error-title h5 {
+        color: rgba(20, 87, 196);
+        font-size: 70px;
+        text-align: center;
+        margin: 0;
+        margin-top: 10%;
+    }
+    .error-subtitle {
+        text-align: center;
+    }
+    .error-subtitle h6 {
+        color: rgba(20, 87, 196);
+        font-size: 30px;
+        margin: 20px;
     }
 }
