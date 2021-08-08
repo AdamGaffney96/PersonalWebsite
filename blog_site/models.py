@@ -71,6 +71,27 @@ class Contact(models.Model):
     def get_absolute_url(self):
         return 'contact_success'
 
+class Project(models.Model):
+    title = models.CharField(max_length=50, verbose_name='Project Title')
+    thumb = models.CharField(max_length=100, verbose_name='Thumbnail Image')
+    slug = models.SlugField(max_length=100, verbose_name='Slug Title', null=True, blank=True)
+    desc = models.CharField(max_length=200, verbose_name='Project Description')
+    html = models.CharField(max_length=300, verbose_name='HTML to load')
+    keywords = models.ManyToManyField('Keyword')
+    type = models.ManyToManyField('Type')
+    post_date = models.DateTimeField(auto_now_add=True)
+    last_edited = models.DateTimeField(auto_now=True)
+    article_type = models.CharField(max_length=50, verbose_name='Grouping Type', default='project')
+
+    def __str__(self):
+        return self.title
+
+@receiver(post_save, sender=Project)
+def pre_save_receiver(sender, instance, *args, **kwargs):
+   if not instance.slug:
+       instance.slug = slugify(instance.title)
+       instance.save()
+
 # class EIAChars(models.Model):
 #     name = models.CharField(verbose_name='Character Name', max_length=120, primary_key=True)
 #     age = models.IntegerField()

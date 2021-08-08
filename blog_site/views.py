@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 # Import the logout function from django.contrib.auth below
 from django.contrib.auth import logout
+from django.http import Http404
 from django.urls import reverse_lazy
 from django.contrib.auth.forms import UserCreationForm
 from django.views.generic import ListView, DetailView
@@ -26,10 +27,10 @@ import json
 
 def home(request):
     # Uncomment these for production and comment out the others. Reason being order by doesn't work correctly on SQLite but is fine on Postgres
-    gaming = Gaming.objects.all().order_by('-post_date')
-    essays = Essay.objects.all().order_by('-post_date')
-    # gaming = Gaming.objects.all()
-    # essays = Essay.objects.all()
+    # gaming = Gaming.objects.all().order_by('-post_date')
+    # essays = Essay.objects.all().order_by('-post_date')
+    gaming = Gaming.objects.all()
+    essays = Essay.objects.all()
     combined = gaming.union(essays).order_by('-post_date')
     context = {"gaming": gaming,
     "essays": essays, "combined": combined}
@@ -45,7 +46,7 @@ def gaming(request):
 
 def gaming_review(request):
     gaming = Gaming.objects.filter(type__type='Review').order_by('-post_date')
-    paginator = Paginator(gaming, 9)
+    paginator = Paginator(gaming, 6)
     page = request.GET.get('page')
     gaming = paginator.get_page(page)
     try:
@@ -59,7 +60,7 @@ def gaming_review(request):
 
 def gaming_opinion(request):
     gaming = Gaming.objects.filter(type__type='Opinion').order_by('-post_date')
-    paginator = Paginator(gaming, 9)
+    paginator = Paginator(gaming, 6)
     page = request.GET.get('page')
     gaming = paginator.get_page(page)
     try:
@@ -73,7 +74,7 @@ def gaming_opinion(request):
 
 def gaming_discussion(request):
     gaming = Gaming.objects.filter(type__type='Discussion').order_by('-post_date')
-    paginator = Paginator(gaming, 9)
+    paginator = Paginator(gaming, 6)
     page = request.GET.get('page')
     gaming = paginator.get_page(page)
     try:
@@ -95,7 +96,7 @@ def essays(request):
 
 def essay_educational(request):
     essay = Essay.objects.filter(type__type='Educational').order_by('-post_date')
-    paginator = Paginator(essay, 9)
+    paginator = Paginator(essay, 6)
     page = request.GET.get('page')
     essay = paginator.get_page(page)
     try:
@@ -109,7 +110,7 @@ def essay_educational(request):
 
 def essay_discussions(request):
     essay = Essay.objects.filter(type__type='Discussion').order_by('-post_date')
-    paginator = Paginator(essay, 9)
+    paginator = Paginator(essay, 6)
     page = request.GET.get('page')
     essay = paginator.get_page(page)
     try:
@@ -123,7 +124,7 @@ def essay_discussions(request):
 
 def essay_opinions(request):
     essay = Essay.objects.filter(type__type='Opinions').order_by('-post_date')
-    paginator = Paginator(essay, 9)
+    paginator = Paginator(essay, 6)
     page = request.GET.get('page')
     essay = paginator.get_page(page)
     try:
@@ -177,7 +178,7 @@ def singlereview(request, slug):
     if q.exists(): 
         q = q.first()
     else:
-        return HttpResponse('<h1>Post Not Found</h1>')
+        raise Http404('Gaming article does not exist')
     context = {
         "pk": q.pk,
         "title": q.title,
@@ -197,7 +198,7 @@ def singleessay(request, slug):
     if q.exists(): 
         q = q.first()
     else:
-        return HttpResponse('<h1>Post Not Found</h1>')
+        raise Http404('Essay does not exist')
     context = {
         "pk": q.pk,
         "title": q.title,
@@ -212,6 +213,40 @@ def singleessay(request, slug):
 
 def newsletter(request):
     return render(request, 'blog_site/newsletter.html')
+
+def projects(request):
+    # Uncomment below for deployment
+    # projects = Project.objects.all().order_by('-post_date')
+    projects = Project.objects.all()
+    paginator = Paginator(projects, 6)
+    page = request.GET.get('page')
+    projects = paginator.get_page(page)
+    try:
+        users = paginator.page(page)
+    except PageNotAnInteger:
+        users = paginator.page(1)
+    except EmptyPage:
+        users = paginator.page(paginator.num_pages)
+    context = {'projects': projects, 'users': users}
+    return render(request, 'blog_site/projects.html', context)
+
+def singleproject(request, slug):
+    q = Project.objects.filter(slug__iexact = slug)
+    print(q)
+    if q.exists(): 
+        q = q.first()
+    else:
+        raise Http404('Project does not exist')
+    context = {
+        "pk": q.pk,
+        "title": q.title,
+        "slug": q.slug,
+        "desc": q.desc,
+        "html": q.html,
+        "post_date": q.post_date,
+        "last_edited": q.last_edited,
+    }
+    return render(request, 'blog_site/'+q.html, context)
 
 def movingdot(request):
     return render(request, 'blog_site/move_dot_project.html')

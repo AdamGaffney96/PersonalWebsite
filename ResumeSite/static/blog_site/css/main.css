@@ -559,7 +559,7 @@
         font-size: 20px;
         color: white;
         height: 55px;
-        margin: 5px 3%;
+        margin: 5px 1%;
         align-items: flex-start;
         cursor: pointer;
         flex-wrap: wrap;
@@ -1035,5 +1035,26 @@
         color: rgba(20, 87, 196);
         font-size: 30px;
         margin: 20px;
+    }
+    /* project stuff */
+    .project-head {
+        display: inline;
+    }
+    .return-home-button {
+        cursor: pointer;
+        display: inline;
+        font-size: 20px;
+        background-color: #579ED9;
+        border-radius: 4px;
+    }
+    .return-home-button a {
+        color: white;
+        padding: 5px 10px;
+        border: 1px solid black;
+        border-radius: 4px;
+        transition: color 0.3s;
+    }
+    .return-home-button a:hover {
+        color: rgba(20, 87, 196);
     }
 }
