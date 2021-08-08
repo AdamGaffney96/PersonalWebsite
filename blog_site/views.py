@@ -217,7 +217,7 @@ def newsletter(request):
 def projects(request):
     # Uncomment below for deployment
     projects = Project.objects.all().order_by('-post_date')
-    projects = Project.objects.all()
+    # projects = Project.objects.all()
     paginator = Paginator(projects, 6)
     page = request.GET.get('page')
     projects = paginator.get_page(page)
