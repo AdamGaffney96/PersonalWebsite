@@ -10,10 +10,12 @@ class Gaming(models.Model):
     slug = models.SlugField(max_length=100, verbose_name='Slug Title', null=True, blank=True)
     desc = models.CharField(max_length=200, verbose_name='Article Description')
     content = models.TextField(verbose_name='Article Content', default = "Placeholder")
-    keywords = models.CharField(max_length=100, verbose_name='Article Keywords', default = "Placeholder")
+    keywords = models.ManyToManyField('Keyword')
     author = models.CharField(max_length=60, verbose_name='Article Author', default='Anon')
+    type = models.ManyToManyField('Type')
     post_date = models.DateTimeField(auto_now_add=True)
     last_edited = models.DateTimeField(auto_now=True)
+    article_type = models.CharField(max_length=50, verbose_name='Grouping Type', default='gaming')
 
     def __str__(self):
         return self.title + ' - ' + self.author
@@ -30,10 +32,12 @@ class Essay(models.Model):
     slug = models.SlugField(max_length=100, verbose_name='Slug Title', null=True, blank=True)
     desc = models.CharField(max_length=200, verbose_name='Article Description')
     content = models.TextField(verbose_name='Article Content', default = "Placeholder")
-    keywords = models.CharField(max_length=100, verbose_name='Article Keywords', default = "Placeholder")
+    keywords = models.ManyToManyField('Keyword')
     author = models.CharField(max_length=60, verbose_name='Article Author', default='Anon')
+    type = models.ManyToManyField('Type')
     post_date = models.DateTimeField(auto_now_add=True)
     last_edited = models.DateTimeField(auto_now=True)
+    article_type = models.CharField(max_length=50, verbose_name='Grouping Type', default='essay')
 
     def __str__(self):
         return self.title + ' - ' + self.author
@@ -43,6 +47,18 @@ def pre_save_receiver(sender, instance, *args, **kwargs):
    if not instance.slug:
        instance.slug = slugify(instance.title)
        instance.save()
+
+class Keyword(models.Model):
+    keyword = models.CharField(max_length=50, verbose_name='Keyword')
+
+    def __str__(self):
+        return self.keyword
+
+class Type(models.Model):
+    type = models.CharField(max_length=60, verbose_name='Article Type')
+
+    def __str__(self):
+        return self.type
 
 class Contact(models.Model):
     email = models.EmailField(verbose_name='User Email', blank=False, null=False)
@@ -55,6 +71,6 @@ class Contact(models.Model):
     def get_absolute_url(self):
         return 'contact_success'
 
-class EIAChars(models.Model):
-    name = models.CharField(verbose_name='Character Name', max_length=120, primary_key=True)
-    age = models.IntegerField()
+# class EIAChars(models.Model):
+#     name = models.CharField(verbose_name='Character Name', max_length=120, primary_key=True)
+#     age = models.IntegerField()

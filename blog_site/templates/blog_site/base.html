@@ -2,9 +2,6 @@
 <html>
 
 <head>
-    <title>
-        Adam Gaffney Blog
-    </title>
     <link rel="icon" type="image/png" href="{% static 'blog_site/img/Logo.png' %}">
     <link rel='stylesheet' type='text/css' href="{% static 'blog_site/css/main.css' %}">
     <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -23,25 +20,28 @@
         </div>
         <ul id="hamburger-nav-list">
             <div id="list">
-                <a href="{% url 'home' %}">
-                    <li class="nav-item {% if request.path == '/' %}nav-selected{% endif %}">Home</li>
-                </a>
-                <a href="{% url 'gaming' %}">
-                    <li class="nav-item {% if 'gaming' in request.path %}nav-selected{% endif %}">Gaming</li>
-                </a>
-                <a href="{% url 'essays' %}">
-                    <li class="nav-item {% if 'essays' in request.path %}nav-selected{% endif %}">Personal Essays</li>
-                </a>
-                <a href="{% url 'contact' %}">
-                    <li class="nav-item {% if 'contact' in request.path %}nav-selected{% endif %}">Contact Me</li>
-                </a>
-                <a href="{% url 'newsletter' %}">
-                    <li class="nav-item {% if 'newsletter' in request.path %}nav-selected{% endif %}">Newsletter</li>
-                </a>
+                <li class="nav-item {% if request.path == '/' %}nav-selected{% endif %}"><a href="{% url 'home' %}">Home</a></li>
+                <li class="nav-item {% if 'gaming' in request.path %}nav-selected{% endif %}"><a href="{% url 'gaming' %}">Gaming</a>
+                    <ul class='sublist'>
+                        <li><a href='{% url "gaming_review" %}'>Reviews</a></li>
+                        <li><a href='{% url "gaming_opinions" %}'>Opinions</a></li>
+                        <li><a href='{% url "gaming_discussions" %}'>Discussions</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item {% if 'essays' in request.path %}nav-selected{% endif %}">
+                    <a href="{% url 'essays' %}">Personal Essays</a>
+                    <ul class='sublist'>
+                        <li><a href='{% url "essay_educational" %}'>Educational</a></li>
+                        <li><a href='{% url "essay_opinions" %}'>Opinions</a></li>
+                        <li><a href='{% url "essay_discussions" %}'>Discussions</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item {% if 'contact' in request.path %}nav-selected{% endif %}"><a href="{% url 'contact' %}">Contact Me</a></li>
+                <li class="nav-item {% if 'newsletter' in request.path %}nav-selected{% endif %}"><a href="{% url 'newsletter' %}">Newsletter</a></li>
             </div>
         </ul>
         <div class="nav-logo">
-            <img src="{% static 'blog_site/img/Logo Transparent.png' %}">
+            <a href="{% url 'home' %}"><img src="{% static 'blog_site/img/Logo Transparent.png' %}"></a>
         </div>
     </nav>
     {% block content %} {% endblock %}

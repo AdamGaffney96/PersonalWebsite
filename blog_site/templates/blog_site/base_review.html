@@ -1,4 +1,6 @@
-{% extends 'blog_site/base.html' %} {% load static %} {% block content %}
+{% extends 'blog_site/base.html' %} {% load static %} {% block head %}
+<title>{{title}} | Adam Gaffney</title>
+{% endblock %} {% block content %}
 <main>
     <div class="page-title">
         <h1>{{ title }}</h1>
@@ -6,6 +8,10 @@
     </div>
     <div class="title-desc subtitle">
         <p>{{ desc }}</p>
+        <p class='date-stamp'>Posted on {{ post_date|date:'dS F Y, h:i A' }}</p>
+        {% if post_date|date:'Y-m-d H:i' != last_edited|date:'Y-m-d H:i' %}
+        <p class='edit-stamp'>Last edited on {{ last_edited|date:'dS F Y, h:i A' }}</p>
+        {% endif %}
     </div>
     <div class="page-line-break"></div>
     <div class="article-text">

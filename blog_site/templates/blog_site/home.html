@@ -1,4 +1,6 @@
-{% extends 'blog_site/base.html' %} {% load static %} {% block content %}
+{% extends 'blog_site/base.html' %} {% load static %} {% block head %}
+<title>About Me | Adam Gaffney</title>
+{% endblock %} {% block content %}
 <!-- main -->
 <main>
     <!-- About Me -->
@@ -17,20 +19,28 @@
     <div class="page-line-break"></div>
     <!-- Most recent review -->
     <div class="page-title">
-        <h2>Most Recent Reviews</h2>
+        <h2>Most Recent Articles</h2>
         <div class="title-border"></div>
     </div>
     <div class="sidescrolling-box article-list-box">
-        {% for item in gaming %}
+        {% for item in combined|slice:"0:3" %}
         <div class="article-box-thumbnail">
+            {% if item.article_type == 'gaming' %}
             <a href="{% url 'single_review' item.slug %}" class="article-link">
+            {% else %}
+            <a href="{% url 'single_essay' item.slug %}" class="article-link">
+            {% endif %}
                 <div class="article-preview-contents">
                     <div class="article-img-wrapper-thumbnail">
                         <img src="{% static item.thumb %}" class="article-img-preview" />
                     </div>
                     <div class="article-text-wrapper-thumbnail">
                         <div class="article-header-wrapper">
+                            {% if item.post_date|date:'Y-m-d H:i' != item.last_edited|date:'Y-m-d H:i' %}
+                            <h3 class="article-title-review-thumbnail">{{item.title}} <span class='edited'>(edited)</span></h3>
+                            {% else %}
                             <h3 class="article-title-review-thumbnail">{{item.title}}</h3>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -40,11 +50,11 @@
     </div>
     <!-- Most recent gaming discussions -->
     <div class="page-title">
-        <h2>Most Recent Gaming Articles</h2>
+        <h2>Most Recent in Gaming</h2>
         <div class="title-border"></div>
     </div>
     <div class="sidescrolling-box article-list-box">
-        {% for item in gaming %}
+        {% for item in gaming|slice:"0:3" %}
         <div class="article-box-thumbnail">
             <a href="{% url 'single_review' item.slug %}" class="article-link">
                 <div class="article-preview-contents">
@@ -53,7 +63,11 @@
                     </div>
                     <div class="article-text-wrapper-thumbnail">
                         <div class="article-header-wrapper">
+                            {% if item.post_date|date:'Y-m-d H:i' != item.last_edited|date:'Y-m-d H:i' %}
+                            <h3 class="article-title-review-thumbnail">{{item.title}} <span class='edited'>(edited)</span></h3>
+                            {% else %}
                             <h3 class="article-title-review-thumbnail">{{item.title}}</h3>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -63,11 +77,11 @@
     </div>
     <!-- Most recent opinion pieces -->
     <div class="page-title">
-        <h2>Most Recent Essays</h2>
+        <h2>Most Recent in Essays</h2>
         <div class="title-border"></div>
     </div>
     <div class="sidescrolling-box article-list-box">
-        {% for item in essays %}
+        {% for item in essays|slice:"0:3" %}
         <div class="article-box-thumbnail">
             <a href="{% url 'single_essay' item.slug %}" class="article-link">
                 <div class="article-preview-contents">
@@ -76,7 +90,11 @@
                     </div>
                     <div class="article-text-wrapper-thumbnail">
                         <div class="article-header-wrapper">
+                            {% if item.post_date|date:'Y-m-d H:i' != item.last_edited|date:'Y-m-d H:i' %}
+                            <h3 class="article-title-review-thumbnail">{{item.title}} <span class='edited'>(edited)</span></h3>
+                            {% else %}
                             <h3 class="article-title-review-thumbnail">{{item.title}}</h3>
+                            {% endif %}
                         </div>
                     </div>
                 </div>

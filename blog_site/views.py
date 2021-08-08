@@ -25,17 +25,26 @@ import json
 # Create your views here.
 
 def home(request):
-    
-    gaming = Gaming.objects.all()
-
-    essays = Essay.objects.all()
-
+    # Uncomment these for production and comment out the others. Reason being order by doesn't work correctly on SQLite but is fine on Postgres
+    gaming = Gaming.objects.all().order_by('-post_date')
+    essays = Essay.objects.all().order_by('-post_date')
+    # gaming = Gaming.objects.all()
+    # essays = Essay.objects.all()
+    combined = gaming.union(essays).order_by('-post_date')
     context = {"gaming": gaming,
-    "essays": essays}
+    "essays": essays, "combined": combined}
     return render(request, 'blog_site/home.html', context)
 
 def gaming(request):
     gaming = Gaming.objects.all()
+    reviews = Gaming.objects.filter(type__type = 'Review').order_by('-post_date')
+    opinion = Gaming.objects.filter(type__type = 'Opinion').order_by('-post_date')
+    discussion = Gaming.objects.filter(type__type = 'Discussion').order_by('-post_date')
+    context = {'reviews': reviews, 'opinion': opinion, 'discussion': discussion}
+    return render(request, 'blog_site/gaming.html', context)
+
+def gaming_review(request):
+    gaming = Gaming.objects.filter(type__type='Review').order_by('-post_date')
     paginator = Paginator(gaming, 9)
     page = request.GET.get('page')
     gaming = paginator.get_page(page)
@@ -46,21 +55,85 @@ def gaming(request):
     except EmptyPage:
         users = paginator.page(paginator.num_pages)
     context = {'gaming': gaming, 'users': users}
-    return render(request, 'blog_site/gaming.html', context)
+    return render(request, 'blog_site/gaming_reviews.html', context)
 
-def essays(request):
-    essays = Essay.objects.all()
-    paginator = Paginator(essays, 9)
+def gaming_opinion(request):
+    gaming = Gaming.objects.filter(type__type='Opinion').order_by('-post_date')
+    paginator = Paginator(gaming, 9)
     page = request.GET.get('page')
-    essays = paginator.get_page(page)
+    gaming = paginator.get_page(page)
     try:
         users = paginator.page(page)
     except PageNotAnInteger:
         users = paginator.page(1)
     except EmptyPage:
         users = paginator.page(paginator.num_pages)
-    context = {'essays': essays, 'users': users}
+    context = {'gaming': gaming, 'users': users}
+    return render(request, 'blog_site/gaming_opinions.html', context)
+
+def gaming_discussion(request):
+    gaming = Gaming.objects.filter(type__type='Discussion').order_by('-post_date')
+    paginator = Paginator(gaming, 9)
+    page = request.GET.get('page')
+    gaming = paginator.get_page(page)
+    try:
+        users = paginator.page(page)
+    except PageNotAnInteger:
+        users = paginator.page(1)
+    except EmptyPage:
+        users = paginator.page(paginator.num_pages)
+    context = {'gaming': gaming, 'users': users}
+    return render(request, 'blog_site/gaming_discussions.html', context)
+
+def essays(request):
+    essays = Essay.objects.all()
+    educational = Essay.objects.filter(type__type = 'Educational').order_by('-post_date')
+    discussion = Essay.objects.filter(type__type = 'Discussion').order_by('-post_date')
+    opinion = Essay.objects.filter(type__type = 'Opinion').order_by('-post_date')
+    context = {'essays': essays, 'educational': educational, 'discussion': discussion, 'opinion': opinion}
     return render(request, 'blog_site/essays.html', context)
+
+def essay_educational(request):
+    essay = Essay.objects.filter(type__type='Educational').order_by('-post_date')
+    paginator = Paginator(essay, 9)
+    page = request.GET.get('page')
+    essay = paginator.get_page(page)
+    try:
+        users = paginator.page(page)
+    except PageNotAnInteger:
+        users = paginator.page(1)
+    except EmptyPage:
+        users = paginator.page(paginator.num_pages)
+    context = {'essay': essay, 'users': users}
+    return render(request, 'blog_site/essay_educational.html', context)
+
+def essay_discussions(request):
+    essay = Essay.objects.filter(type__type='Discussion').order_by('-post_date')
+    paginator = Paginator(essay, 9)
+    page = request.GET.get('page')
+    essay = paginator.get_page(page)
+    try:
+        users = paginator.page(page)
+    except PageNotAnInteger:
+        users = paginator.page(1)
+    except EmptyPage:
+        users = paginator.page(paginator.num_pages)
+    context = {'essay': essay, 'users': users}
+    return render(request, 'blog_site/essay_discussions.html', context)
+
+def essay_opinions(request):
+    essay = Essay.objects.filter(type__type='Opinions').order_by('-post_date')
+    paginator = Paginator(essay, 9)
+    page = request.GET.get('page')
+    essay = paginator.get_page(page)
+    try:
+        users = paginator.page(page)
+    except PageNotAnInteger:
+        users = paginator.page(1)
+    except EmptyPage:
+        users = paginator.page(paginator.num_pages)
+    context = {'essay': essay, 'users': users}
+    return render(request, 'blog_site/essay_opinions.html', context)
 
 def contactsubmit(request):
     if request.method == "POST":
@@ -101,7 +174,6 @@ def eiahome(request):
 
 def singlereview(request, slug):
     q = Gaming.objects.filter(slug__iexact = slug)
-    print(q)
     if q.exists(): 
         q = q.first()
     else:
@@ -114,9 +186,10 @@ def singlereview(request, slug):
         "author": q.author,
         "content": q.content,
         "post_date": q.post_date,
+        "last_edited": q.last_edited,
     }
     return render(request, 'blog_site/base_review.html', context)
-    
+
 def singleessay(request, slug):
 
     q = Essay.objects.filter(slug__iexact = slug)
@@ -133,8 +206,12 @@ def singleessay(request, slug):
         "author": q.author,
         "content": q.content,
         "post_date": q.post_date,
+        "last_edited": q.last_edited,
     }
     return render(request, 'blog_site/base_review.html', context)
 
 def newsletter(request):
     return render(request, 'blog_site/newsletter.html')
+
+def movingdot(request):
+    return render(request, 'blog_site/move_dot_project.html')

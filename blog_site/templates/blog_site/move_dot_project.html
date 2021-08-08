@@ -1,0 +1,11 @@
+{% extends 'blog_site/base.html' %} {% load static %} {% block head %}
+<title>Moving Dot Project | Adam Gaffney</title>
+{% endblock %} {% block content %}
+<main>
+    <h2 class='first-paragraph'>Slow and steady wins the race...</h2>
+    <div id='moving-dot-container'>
+        <div id='moving-dot-body'></div>
+    </div>
+</main>
+<script src='{% static "blog_site/js/movingDot.js" %}'></script>
+{% endblock %}

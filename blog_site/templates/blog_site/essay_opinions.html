@@ -1,0 +1,57 @@
+{% extends 'blog_site/base.html' %} {% load static %} {% block head %}
+<title>Opinions | Adam Gaffney</title>
+{% endblock %} {% block content %}
+<main>
+    <div class="page-title">
+        <h1>Opinions</h1>
+        <div class="title-border"></div>
+    </div>
+    <div class="title-desc first-paragraph">
+        <p>A collection of all my opinion pieces.</p>
+    </div>
+    <div class="page-line-break"></div>
+    {% if users.has_other_pages %}
+    <table class="pagination">
+        <tr>
+            {% if users.has_previous %}
+            <td class='left-page'><a href="?page={{ users.previous_page_number }}">&laquo;</a></td>
+            {% else %}
+            <td class="disabled left-page"><span>&laquo;</span></td>
+            {% endif %} {% for i in users.paginator.page_range %} {% if users.number == i %}
+            <td class="active">{{ i }}</td>
+            {% else %}
+            <td><a href="?page={{ i }}">{{ i }}</a></td>
+            {% endif %} {% endfor %} {% if users.has_next %}
+            <td class='right-page'><a href="?page={{ users.next_page_number }}">&raquo;</a></td>
+            {% else %}
+            <td class="disabled right-page"><span>&raquo;</span></td>
+            {% endif %}
+        </tr>
+    </table>
+    {% endif %}
+    <div class="article-box-container">
+        {% for item in essay %}
+        <div class="article-box">
+            <a href="{% url 'single_essay' item.slug %}" class="article-link">
+                <div class="article-preview-contents">
+                    <div class="article-img-wrapper">
+                        <img src="{% static item.thumb %}" class="article-img-preview" />
+                    </div>
+                    <div class="article-text-wrapper">
+                        <div class="article-header-wrapper">
+                            {% if item.post_date|date:'Y-m-d H:i' != item.last_edited|date:'Y-m-d H:i' %}
+                            <h3 class="article-title">{{item.title}} <span class='edited'>(edited)</span></h3>
+                            {% else %}
+                            <h3 class="article-title">{{item.title}}</h3>
+                            {% endif %}
+                        </div>
+                        <div class="article-desc-wrapper">
+                            <p class="article-desc">{{item.desc}}</p>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+    {% endblock %}

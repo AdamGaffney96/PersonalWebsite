@@ -12,3 +12,5 @@ class EssayAdmin(SummernoteModelAdmin):
 admin.site.register(Gaming, GamingAdmin)
 admin.site.register(Contact)
 admin.site.register(Essay, EssayAdmin)
+admin.site.register(Keyword)
+admin.site.register(Type)

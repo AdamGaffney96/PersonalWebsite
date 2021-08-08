@@ -1,4 +1,5 @@
 let hamburger = document.getElementById('hamburger')
+let nav_item = document.querySelectorAll('.nav-item')
 let ham_nav = document.getElementById('hamburger-nav-list')
 if (screen.width <= 1024) {
     hamburger.addEventListener('touchend', (e) => {
@@ -10,23 +11,21 @@ if (screen.width <= 1024) {
         }
     })
 } else {
-    hamburger.addEventListener('click', (e) => {
-        let content = document.getElementById('hamburger-nav-list');
-        if (content.style.maxHeight) {
-            content.style.maxHeight = null;
-        } else {
+    nav_item.forEach(item => {
+        item.addEventListener('mouseover', (e) => {
+            let content = item.querySelector('.sublist');
             content.style.maxHeight = content.scrollHeight + "px";
-        }
+        })
+        item.addEventListener('mouseleave', (e) => {
+            let content = item.querySelector('.sublist');
+            content.style.maxHeight = null;
+        })
     })
 }
 
 function getWidth() {
     return document.documentElement.clientWidth
 }
-
-window.addEventListener('resize', (e) => {
-    ham_nav.style.maxHeight = null;
-})
 
 // max-device-width for mobile: 1024
 // max-device-height for mobile: 1440
