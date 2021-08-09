@@ -924,6 +924,7 @@
         padding: 20px 0;
         width: 20%;
         border-radius: 20px;
+        cursor: pointer;
         background-color: #579ED9;
         color: white;
     }
