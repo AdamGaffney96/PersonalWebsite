@@ -1,0 +1,14 @@
+{% extends 'blog_site/base.html' %} {% load static %}
+<title>Email Sent Too Quickly | Adam Gaffney</title>
+{% block content %}
+
+<input>
+<div id='contact-form-failure'>
+    <h5>Email not sent</h5>
+    <h6>Our records indicate you have already sent an email very recently. Please wait {{timediff_h}} hours and {{timediff_m}} minutes before sending another.</h6>
+</div>
+<div id='contact-submit'>
+    <a href="{% url 'contact' %}"><input type="submit" value='Return Home' /></a>
+</div>
+</main>
+{% endblock %}

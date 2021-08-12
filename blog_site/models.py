@@ -20,6 +20,9 @@ class Gaming(models.Model):
     def __str__(self):
         return self.title + ' - ' + self.author
 
+    class Meta:
+        verbose_name_plural = 'Gaming Articles'
+
 @receiver(post_save, sender=Gaming)
 def post_save_receiver(sender, instance, *args, **kwargs):
    if not instance.slug:
@@ -42,6 +45,9 @@ class Essay(models.Model):
     def __str__(self):
         return self.title + ' - ' + self.author
 
+    class Meta:
+        verbose_name_plural = 'Essays'
+
 @receiver(post_save, sender=Essay)
 def pre_save_receiver(sender, instance, *args, **kwargs):
    if not instance.slug:
@@ -53,23 +59,33 @@ class Keyword(models.Model):
 
     def __str__(self):
         return self.keyword
+    
+    class Meta:
+        verbose_name_plural = 'Article Keywords'
 
 class Type(models.Model):
     type = models.CharField(max_length=60, verbose_name='Article Type')
 
     def __str__(self):
         return self.type
+    
+    class Meta:
+        verbose_name_plural = 'Article Types'
 
 class Contact(models.Model):
     email = models.EmailField(verbose_name='User Email', blank=False, null=False)
     subject = models.CharField(max_length=255, verbose_name='Subject Line')
     message = models.TextField(max_length=10000)
+    last_contact = models.DateTimeField(auto_now=True)
 
     def __str__(self) -> str:
         return self.email
 
     def get_absolute_url(self):
         return 'contact_success'
+
+    class Meta:
+        verbose_name_plural = 'Contacts'
 
 class Project(models.Model):
     title = models.CharField(max_length=50, verbose_name='Project Title')
@@ -85,6 +101,9 @@ class Project(models.Model):
 
     def __str__(self):
         return self.title
+
+    class Meta:
+        verbose_name_plural = 'Projects'
 
 @receiver(post_save, sender=Project)
 def pre_save_receiver(sender, instance, *args, **kwargs):

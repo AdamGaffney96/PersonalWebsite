@@ -15,22 +15,25 @@ from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 import smtplib
 from django.utils.text import slugify
+from datetime import datetime, timezone
+import pytz
 import requests
 from django.http import HttpResponse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 import os
+import math
 import json
 
 # Create your views here.
 
 def home(request):
     # Uncomment these for production and comment out the others. Reason being order by doesn't work correctly on SQLite but is fine on Postgres
-    gaming = Gaming.objects.all().order_by('-post_date')
-    essays = Essay.objects.all().order_by('-post_date')
-    # gaming = Gaming.objects.all()
-    # essays = Essay.objects.all()
+    # gaming = Gaming.objects.all().order_by('-post_date')
+    # essays = Essay.objects.all().order_by('-post_date')
+    gaming = Gaming.objects.all()
+    essays = Essay.objects.all()
     combined = gaming.union(essays).order_by('-post_date')
     context = {"gaming": gaming,
     "essays": essays, "combined": combined}
@@ -139,8 +142,23 @@ def essay_opinions(request):
 def contactsubmit(request):
     if request.method == "POST":
         form = ContactForm(request.POST)
+        current_contact = Contact.objects.filter(email = request.POST['email']).first()
+        if not current_contact:
+            current_contact = Contact(email = request.POST['email'], subject=request.POST['subject'], message=request.POST['message'])
+        else:
+            current_contact.subject = request.POST['subject']
+            current_contact.message = request.POST['message']
+            if (datetime.now(timezone.utc) - current_contact.last_contact).seconds/3600 < 12:
+                timediff = 12 - (datetime.now(timezone.utc) - current_contact.last_contact).seconds/3600
+                timediff_h = math.floor(timediff)
+                timediff_m = int((timediff - math.floor(timediff)) * 60)
+                context = {
+                    'email': request.POST['email'], 
+                    'timediff_h': timediff_h,
+                    'timediff_m': timediff_m,
+                    }
+                return render(request, 'blog_site/contact_failure_quick.html', context)
         if form.is_valid():
-            newContact = Contact()
             message = Mail(
             from_email=settings.CONTACT_EMAIL,
             to_emails=settings.ADMIN_EMAILS,
@@ -158,6 +176,7 @@ def contactsubmit(request):
                 print(response.status_code)
                 print(response.body)
                 print(response.headers)
+                current_contact.save()
             except Exception as e:
                 print(e.message)
                 return redirect('contact_failure')
@@ -216,8 +235,8 @@ def newsletter(request):
 
 def projects(request):
     # Uncomment below for deployment
-    projects = Project.objects.all().order_by('-post_date')
-    # projects = Project.objects.all()
+    # projects = Project.objects.all().order_by('-post_date')
+    projects = Project.objects.all()
     paginator = Paginator(projects, 6)
     page = request.GET.get('page')
     projects = paginator.get_page(page)

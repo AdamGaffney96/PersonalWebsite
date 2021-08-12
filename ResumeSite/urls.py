@@ -19,10 +19,14 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path('adamgaffney96-local-admin-login-page', admin.site.urls),
+    path('adamgaffney96-local-admin-login-page/', admin.site.urls),
     path("", include('blog_site.urls')),
     path('summernote', include('django_summernote.urls')),
 ]
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+admin.site.site_header = "Adam Gaffney Behind the Scenes"
+admin.site.site_title = "Admin Page | Adam Gaffney"
+admin.site.index_title = "Adam Gaffney Site Management"

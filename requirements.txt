@@ -11,3 +11,4 @@ requests==2.25.1
 whitenoise==5.3.0
 django-summernote==0.8.11.6
 sendgrid==6.7.1
+pytz==2021.1
