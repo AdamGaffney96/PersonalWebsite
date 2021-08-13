@@ -8,10 +8,10 @@
 <meta property='article:author' content='{{author}}'>
 <meta property='article:published_time' content='{{post_date}}'>
 <meta property='article:modified_time' content='{{last_edited}}'>
-<meta property='twitter:title' content='{{title}}'>
-<meta property='twitter:url' content='{{request.get_full_path}}'>
-<meta property='twitter:description' content='{{desc}}'>
-<meta property='twitter:image' content='{% static thumb %}'> {% endblock %} {% block content %}
+<meta name='twitter:title' content='{{title}}'>
+<meta name='twitter:url' content='{{request.get_full_path}}'>
+<meta name='twitter:description' content='{{desc}}'>
+<meta name='twitter:image' content='{% static thumb %}'> {% endblock %} {% block content %}
 <main>
     <div class="page-title ">
         <h1>{{ title }}</h1>
