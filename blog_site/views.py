@@ -201,6 +201,7 @@ def singlereview(request, slug):
     context = {
         "pk": q.pk,
         "title": q.title,
+        "thumb": q.thumb,
         "slug": q.slug,
         "desc": q.desc,
         "author": q.author,

@@ -1,20 +1,23 @@
 {% extends 'blog_site/base.html' %} {% load static %} {% block head %}
 <title>{{title}} | Adam Gaffney</title>
-{% endblock %} {% block content %}
+<meta property='og:title' content="{{title}}">
+<meta property='og:image' content="{% static thumb %}">
+<meta property='og:description' content="{{desc}}">
+<meta property='og:url' content='{{request.get_full_path}}'> {% endblock %} {% block content %}
 <main>
-    <div class="page-title">
+    <div class="page-title ">
         <h1>{{ title }}</h1>
-        <div class="title-border"></div>
+        <div class="title-border "></div>
     </div>
-    <div class="title-desc subtitle">
+    <div class="title-desc subtitle ">
         <p>{{ desc }}</p>
         <p class='date-stamp'>Posted on {{ post_date|date:'jS F Y, h:i A' }}</p>
         {% if post_date|date:'Y-m-d H:i' != last_edited|date:'Y-m-d H:i' %}
         <p class='edit-stamp'>Last edited on {{ last_edited|date:'jS F Y, h:i A' }}</p>
         {% endif %}
     </div>
-    <div class="page-line-break"></div>
-    <div class="article-text">
+    <div class="page-line-break "></div>
+    <div class="article-text ">
         {{content |safe}}
     </div>
 </main>
