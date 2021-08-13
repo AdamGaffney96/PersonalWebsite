@@ -21,7 +21,7 @@ class Gaming(models.Model):
         return self.title + ' - ' + self.author
 
     def save(self, *args, **kwargs):
-        if self.slug == '':
+        if self.slug is None:
             self.slug = slugify(self.title)
             super(Gaming, self).save(*args, **kwargs)
 
