@@ -20,14 +20,13 @@ class Gaming(models.Model):
     def __str__(self):
         return self.title + ' - ' + self.author
 
+    def save(self, *args, **kwargs):
+        if self.slug == '':
+            self.slug = slugify(self.title)
+            super(Gaming, self).save(*args, **kwargs)
+
     class Meta:
         verbose_name_plural = 'Gaming Articles'
-
-@receiver(post_save, sender=Gaming)
-def post_save_receiver(sender, instance, *args, **kwargs):
-   if not instance.slug:
-       instance.slug = slugify(instance.title)
-       instance.save()
 
 class Essay(models.Model):
     title = models.CharField(max_length=50, verbose_name='Essay Article Title')
@@ -45,14 +44,13 @@ class Essay(models.Model):
     def __str__(self):
         return self.title + ' - ' + self.author
 
+    def save(self, *args, **kwargs):
+        if self.slug == '':
+            self.slug = slugify(self.title)
+            super(Essay, self).save(*args, **kwargs)
+
     class Meta:
         verbose_name_plural = 'Essays'
-
-@receiver(post_save, sender=Essay)
-def pre_save_receiver(sender, instance, *args, **kwargs):
-   if not instance.slug:
-       instance.slug = slugify(instance.title)
-       instance.save()
 
 class Keyword(models.Model):
     keyword = models.CharField(max_length=50, verbose_name='Keyword')

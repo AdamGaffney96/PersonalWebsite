@@ -1,7 +1,7 @@
 {% extends 'blog_site/base.html' %} {% load static %} {% block head %}
 <title>{{title}} | Adam Gaffney</title>
 <meta property='og:title' content="{{title}}">
-<meta property='og:image' content="{% static thumb %}">
+<meta property='og:image' content='{{request.scheme}}://{{request.get_host}}{% static thumb %}'>
 <meta property='og:description' content="{{desc}}">
 <meta property='og:url' content='{{request.get_full_path}}'>
 <meta property='og:type' content='article'>
