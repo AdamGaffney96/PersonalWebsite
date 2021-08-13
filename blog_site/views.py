@@ -30,10 +30,10 @@ import json
 
 def home(request):
     # Uncomment these for production and comment out the others. Reason being order by doesn't work correctly on SQLite but is fine on Postgres
-    # gaming = Gaming.objects.all().order_by('-post_date')
-    # essays = Essay.objects.all().order_by('-post_date')
-    gaming = Gaming.objects.all()
-    essays = Essay.objects.all()
+    gaming = Gaming.objects.all().order_by('-post_date')
+    essays = Essay.objects.all().order_by('-post_date')
+    # gaming = Gaming.objects.all()
+    # essays = Essay.objects.all()
     combined = gaming.union(essays).order_by('-post_date')
     context = {"gaming": gaming,
     "essays": essays, "combined": combined}
@@ -222,6 +222,7 @@ def singleessay(request, slug):
     context = {
         "pk": q.pk,
         "title": q.title,
+        "thumb": q.thumb,
         "slug": q.slug,
         "desc": q.desc,
         "author": q.author,
@@ -236,8 +237,8 @@ def newsletter(request):
 
 def projects(request):
     # Uncomment below for deployment
-    # projects = Project.objects.all().order_by('-post_date')
-    projects = Project.objects.all()
+    projects = Project.objects.all().order_by('-post_date')
+    # projects = Project.objects.all()
     paginator = Paginator(projects, 6)
     page = request.GET.get('page')
     projects = paginator.get_page(page)

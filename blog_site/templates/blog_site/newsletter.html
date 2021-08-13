@@ -1,6 +1,13 @@
 {% extends 'blog_site/base.html' %} {% load static %} {% block head %}
 <title>Newsletter Signup | Adam Gaffney</title>
-{% endblock %} {% block content %}
+<meta property='og:title' content="Adam Gaffney's Newsletter">
+<meta property='og:image' content="{% static 'blog_site/img/Adam Gaffney Logo.jpg' %}">
+<meta property='og:description' content="Sign up for my newsletter to be the first to hear about my new projects!">
+<meta property='og:url' content='{{request.get_full_path}}'>
+<meta property='twitter:title' content="Adam Gaffney's Newsletter">
+<meta property='twitter:url' content='{{request.get_full_path}}'>
+<meta property='twitter:description' content='Sign up for my newsletter to be the first to hear about my new projects!'>
+<meta property='twitter:image' content='{% static "blog_site/img/Adam Gaffney Logo.jpg" %}'> {% endblock %} {% block content %}
 <main>
     <div id='contact-title'>
         <h5>Newsletter</h5>

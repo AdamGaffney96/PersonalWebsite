@@ -1,6 +1,13 @@
 {% extends 'blog_site/base.html' %} {% load static %} {% block head %}
 <title>Discussions | Adam Gaffney</title>
-{% endblock %} {% block content %}
+<meta property='og:title' content="Discussions">
+<meta property='og:image' content="{% static 'blog_site/img/Adam Gaffney Logo.jpg' %}">
+<meta property='og:description' content="A collection of all my discussion pieces.">
+<meta property='og:url' content='{{request.get_full_path}}'>
+<meta property='twitter:title' content='Discussions'>
+<meta property='twitter:url' content='{{request.get_full_path}}'>
+<meta property='twitter:description' content='A collection of all my discussion pieces.'>
+<meta property='twitter:image' content='{% static "blog_site/img/Adam Gaffney Logo.jpg" %}'> {% endblock %} {% block content %}
 <main>
     <div class="page-title">
         <h1>Discussions</h1>

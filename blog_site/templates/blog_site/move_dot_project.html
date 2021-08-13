@@ -1,6 +1,13 @@
 {% extends 'blog_site/base.html' %} {% load static %} {% block head %}
 <title>Moving Dot Project | Adam Gaffney</title>
-{% endblock %} {% block content %}
+<meta property='og:title' content="Moving Dot Project">
+<meta property='og:image' content="{% static 'blog_site/img/Adam Gaffney Logo.jpg' %}">
+<meta property='og:description' content="Just a dot that moves...probably.">
+<meta property='og:url' content='{{request.get_full_path}}'>
+<meta property='twitter:title' content='Moving Dot Project'>
+<meta property='twitter:url' content='{{request.get_full_path}}'>
+<meta property='twitter:description' content='Just a dot that moves...probably.'>
+<meta property='twitter:image' content='{% static "blog_site/img/Adam Gaffney Logo.jpg" %}'> {% endblock %} {% block content %}
 <main>
     <h2 class='first-paragraph project-head'>Slow and steady wins the race...</h2>
     <div class='return-home-button'>

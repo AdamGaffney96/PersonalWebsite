@@ -1,6 +1,13 @@
 {% extends 'blog_site/base.html' %} {% load static %} {% block head %}
 <title>Essays | Adam Gaffney</title>
-{% endblock %} {% block content %}
+<meta property='og:title' content="All Essays">
+<meta property='og:image' content="{% static 'blog_site/img/Adam Gaffney Logo.jpg' %}">
+<meta property='og:description' content="A collection of all my completed essays.">
+<meta property='og:url' content='{{request.get_full_path}}'>
+<meta property='twitter:title' content='All Essays'>
+<meta property='twitter:url' content='{{request.get_full_path}}'>
+<meta property='twitter:description' content='A collection of all my completed essays.'>
+<meta property='twitter:image' content='{% static "blog_site/img/Adam Gaffney Logo.jpg" %}'> {% endblock %} {% block content %}
 <main>
     <div class="page-title">
         <h1>General Essays</h1>
@@ -17,7 +24,7 @@
     <div class="sidescrolling-box article-list-box">
         {% for item in educational|slice:"0:3" %}
         <div class="article-box-thumbnail">
-            <a href="{% url 'single_review' item.slug %}" class="article-link">
+            <a href="{% url 'single_essay' item.slug %}" class="article-link">
                 <div class="article-preview-contents">
                     <div class="article-img-wrapper-thumbnail">
                         <img src="{% static item.thumb %}" class="article-img-preview" />
