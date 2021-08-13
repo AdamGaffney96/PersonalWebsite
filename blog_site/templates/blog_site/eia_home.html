@@ -7,13 +7,13 @@
     <link rel="stylesheet" href="{% static 'blog_site/css/eia_style.css' %}" type="text/css">
     <script src="{% static 'blog_site/js/jquery-3.6.0.min.js' %}"></script>
     <meta property='og:title' content="Emily is Away Fangame">
-    <meta property='og:image' content="{% static 'blog_site/img/Emily Is Away Fangame.PNG' %}">
+    <meta property='og:image' content="{{request.scheme}}://{{request.get_host}}{% static 'blog_site/img/Emily Is Away Fangame.PNG' %}">
     <meta property='og:description' content="A prototype of my web-based Emily Is Away Fangame.">
     <meta property='og:url' content='{{request.get_full_path}}'>
     <meta property='twitter:title' content='Emily is Away Fangame'>
     <meta property='twitter:url' content='{{request.get_full_path}}'>
     <meta property='twitter:description' content='A prototype of my web-based Emily Is Away Fangame.'>
-    <meta property='twitter:image' content='{% static "blog_site/img/Emily Is Away Fangame.PNG" %}'>
+    <meta property='twitter:image' content='{{request.scheme}}://{{request.get_host}}{% static "blog_site/img/Emily Is Away Fangame.PNG" %}'>
 </head>
 
 <body>

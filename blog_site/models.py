@@ -100,6 +100,11 @@ class Project(models.Model):
     def __str__(self):
         return self.title
 
+    def save(self, *args, **kwargs):
+        if self.slug is None:
+            self.slug = slugify(self.title)
+            super(Project, self).save(*args, **kwargs)
+
     class Meta:
         verbose_name_plural = 'Projects'
 
