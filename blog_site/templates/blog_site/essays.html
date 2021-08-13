@@ -1,13 +1,13 @@
 {% extends 'blog_site/base.html' %} {% load static %} {% block head %}
 <title>Essays | Adam Gaffney</title>
 <meta property='og:title' content="All Essays">
-<meta property='og:image' content="{{request.scheme}}://{{request.get_host}}{% static 'blog_site/img/Adam Gaffney Logo.jpg' %}">
+<meta property='og:image' content="{{request.scheme}}://{{request.get_host}}{% static 'blog_site/img/Logo.png' %}">
 <meta property='og:description' content="A collection of all my completed essays.">
 <meta property='og:url' content='{{request.get_full_path}}'>
 <meta property='twitter:title' content='All Essays'>
 <meta property='twitter:url' content='{{request.get_full_path}}'>
 <meta property='twitter:description' content='A collection of all my completed essays.'>
-<meta property='twitter:image' content='{{request.scheme}}://{{request.get_host}}{% static "blog_site/img/Adam Gaffney Logo.jpg" %}'> {% endblock %} {% block content %}
+<meta property='twitter:image' content='{{request.scheme}}://{{request.get_host}}{% static "blog_site/img/Logo.png" %}'> {% endblock %} {% block content %}
 <main>
     <div class="page-title">
         <h1>General Essays</h1>
