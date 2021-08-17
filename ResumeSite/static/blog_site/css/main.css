@@ -1,5 +1,6 @@
 :root {
     --clr-light: #579ED9;
+    --clr-light-trans: #579fd9cb;
     --clr-dark: rgba(20, 87, 196);
     --clr-dark-trans: rgba(20, 87, 196, 0.5);
     --clr-bg: #f1efef;
@@ -699,6 +700,7 @@
         justify-content: center;
         border-radius: 10px;
         max-height: 300px;
+        opacity: 1;
     }
     .article-img-wrapper-thumbnail img {
         width: 100%;
@@ -709,14 +711,22 @@
         object-fit: cover;
     }
     .article-text-wrapper-thumbnail {
-        background-color: #579fd9e3;
+        background-color: var(--clr-light-trans);
         position: absolute;
-        bottom: 0;
+        inset: 0;
         width: 100%;
-        padding: 10px 0;
-        border-bottom-left-radius: 10px;
-        border-bottom-right-radius: 10px;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        border-radius: 10px;
         white-space: normal;
+        opacity: 0;
+        transition: opacity 0.2s ease-in;
+    }
+    .article-text-wrapper-thumbnail:hover {
+        opacity: 1;
     }
     .essay-text-wrapper-thumbnail {
         background-color: #274ae7d8;
@@ -785,11 +795,21 @@
     .article-text-wrapper {
         background-color: #579fd9e3;
         position: absolute;
-        bottom: 0;
+        inset: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        flex-direction: column;
+        gap: 10px;
         width: 100%;
-        padding: 10px 0;
         border-bottom-left-radius: 10px;
         border-bottom-right-radius: 10px;
+        opacity: 0;
+        transition: opacity 0.2s ease-out;
+    }
+    .article-text-wrapper:hover {
+        opacity: 1;
     }
     .article-text {
         margin: 0 30% 0 10%;
@@ -802,18 +822,17 @@
         padding: 0 40px !important;
     }
     .article-title {
-        font-size: 20px;
+        font-size: 30px;
         color: #0000d1;
-        padding-left: 10px;
         margin: 0;
     }
     .article-desc-wrapper {
         overflow: hidden;
+        padding: 0 5px;
     }
     .article-desc {
         font-size: 15px;
         color: rgba(34, 34, 34, 0.966);
-        padding-left: 50px;
         margin: 0;
     }
     img {
