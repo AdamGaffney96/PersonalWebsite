@@ -1,3 +1,11 @@
+:root {
+    --clr-light: #579ED9;
+    --clr-dark: rgba(20, 87, 196);
+    --clr-dark-trans: rgba(20, 87, 196, 0.5);
+    --clr-bg: #f1efef;
+    --clr-faded: rgb(66, 66, 66);
+}
+
 @media(max-width:1023px) {
     html,
     body {
@@ -5,7 +13,7 @@
         margin: 0;
         font-family: 'Merriweather', serif;
         font-size: 2em;
-        background-color: #f1efef;
+        background-color: var(--clr-bg);
     }
     p {
         font-family: Arial, Helvetica, sans-serif;
@@ -13,7 +21,7 @@
     /* All nav bar CSS */
     nav {
         position: fixed;
-        background-color: #579ED9;
+        background-color: var(--clr-light);
         width: 100%;
         height: 123px;
         margin: 0;
@@ -81,7 +89,7 @@
         overflow: hidden;
         position: fixed;
         width: 99.5%;
-        background-color: #579ED9;
+        background-color: var(--clr-light);
         border-bottom-left-radius: 20px;
         border-bottom-right-radius: 20px;
         transition: max-height 0.3s ease-out;
@@ -150,15 +158,15 @@
         margin: 0;
         padding-bottom: 20px;
         padding-left: 50px;
-        color: rgb(66, 66, 66);
+        color: var(--clr-faded);
     }
     .title-border {
         grid-column-start: 2;
         grid-column-end: 4;
         grid-row-start: 2;
         grid-row-end: 3;
-        border-bottom: 10px solid #579ED9;
-        border-right: 10px solid #579ED9;
+        border-bottom: 10px solid var(--clr-light);
+        border-right: 10px solid var(--clr-light);
         z-index: 10;
     }
     .title-desc p {
@@ -170,7 +178,7 @@
     .page-line-break {
         width: 92%;
         height: 10px;
-        background-color: #579ED9;
+        background-color: var(--clr-light);
         border-radius: 30px;
         margin: 0 auto;
         margin-bottom: 40px;
@@ -178,7 +186,7 @@
     /* home page stuff */
     .first-paragraph {
         font-size: 35px;
-        color: rgba(20, 87, 196);
+        color: var(--clr-dark);
         font-weight: bold;
         margin-left: 90px;
         margin-right: 90px;
@@ -190,7 +198,7 @@
     .bold-indent {
         font-size: 50px !important;
         font-weight: bolder;
-        border-left: 10px solid rgba(20, 87, 196);
+        border-left: 10px solid var(--clr-dark);
         padding-left: 40px;
         margin-left: 50px;
     }
@@ -330,7 +338,7 @@
     /* review page */
     .subtitle {
         font-size: 50px;
-        color: rgba(20, 87, 196);
+        color: var(--clr-dark);
         font-weight: bold;
         margin-left: 180px;
         margin-right: 65px;
@@ -338,12 +346,12 @@
     .date-stamp {
         font-size: 20px !important;
         padding-left: 60px;
-        color: rgba(20, 87, 196, 0.5);
+        color: var(--clr-dark-trans);
     }
     .edit-stamp {
         font-size: 20px !important;
         padding-left: 60px;
-        color: rgba(20, 87, 196, 0.5);
+        color: var(--clr-dark-trans);
     }
     .rest-of-article {
         margin: 20px 60px;
@@ -409,7 +417,7 @@
         padding: 20px 0;
         width: 100%;
         border-radius: 20px;
-        background-color: #579ED9;
+        background-color: var(--clr-light);
         color: white;
     }
     #contact-form tr {
@@ -477,7 +485,7 @@
     }
     /* error stylings */
     .error-title h5 {
-        color: rgba(20, 87, 196);
+        color: var(--clr-dark);
         font-size: 90px;
         text-align: center;
         margin: 0;
@@ -487,7 +495,7 @@
         text-align: center;
     }
     .error-subtitle h6 {
-        color: rgba(20, 87, 196);
+        color: var(--clr-dark);
         font-size: 30px;
         margin: 20px;
     }
@@ -501,7 +509,7 @@
         margin: 0;
         font-family: 'Merriweather', serif;
         font-size: 2em;
-        background-color: #f1efef;
+        background-color: var(--clr-bg);
     }
     p {
         font-family: Arial, Helvetica, sans-serif;
@@ -509,7 +517,7 @@
     /* All nav bar CSS */
     nav {
         position: fixed;
-        background-color: #579ED9;
+        background-color: var(--clr-light);
         width: 100%;
         height: 60px;
         margin: 0;
@@ -525,7 +533,7 @@
         max-height: 0;
         overflow: hidden;
         position: absolute;
-        background-color: rgba(20, 87, 196);
+        background-color: var(--clr-dark);
         border-bottom-left-radius: 4px;
         border-bottom-right-radius: 4px;
         transition: max-height 0.2s ease-out;
@@ -628,15 +636,15 @@
         margin-left: 70px;
         padding-bottom: 10px;
         padding-left: 50px;
-        color: rgb(66, 66, 66);
+        color: var(--clr-faded);
     }
     .title-border {
         grid-column-start: 2;
         grid-column-end: 5;
         grid-row-start: 2;
         grid-row-end: 3;
-        border-bottom: 5px solid #579ED9;
-        border-right: 5px solid #579ED9;
+        border-bottom: 5px solid var(--clr-light);
+        border-right: 5px solid var(--clr-light);
         z-index: 10;
     }
     .title-desc p {
@@ -647,7 +655,7 @@
     .page-line-break {
         width: 92%;
         height: 10px;
-        background-color: #579ED9;
+        background-color: var(--clr-light);
         border-radius: 30px;
         margin: 0 auto;
         margin-bottom: 5px;
@@ -655,7 +663,7 @@
     /* home page stuff */
     .first-paragraph {
         font-size: 25px;
-        color: rgba(20, 87, 196);
+        color: var(--clr-dark);
         font-weight: bold;
         margin-left: 120px;
         margin-right: 90px;
@@ -667,7 +675,7 @@
     .bold-indent {
         font-size: 50px !important;
         font-weight: bolder;
-        border-left: 10px solid rgba(20, 87, 196);
+        border-left: 10px solid var(--clr-dark);
         padding-left: 40px;
         margin-left: 50px;
     }
@@ -737,6 +745,11 @@
         font-size: 80%;
     }
     /* reviews page stuff */
+    #scroll-bar-tracker {
+        height: 5px;
+        background-color: #0000d1;
+        min-width: 0;
+    }
     .article-box-container {
         margin: 0 auto;
         display: grid;
@@ -809,7 +822,7 @@
     /* review page */
     .subtitle {
         font-size: 30px;
-        color: rgba(20, 87, 196);
+        color: var(--clr-dark);
         font-weight: bold;
         margin-left: 180px;
         margin-right: 65px;
@@ -817,12 +830,12 @@
     .date-stamp {
         font-size: 20px !important;
         padding-left: 60px;
-        color: rgba(20, 87, 196, 0.5);
+        color: var(--clr-dark-trans);
     }
     .edit-stamp {
         font-size: 20px !important;
         padding-left: 60px;
-        color: rgba(20, 87, 196, 0.5);
+        color: var(--clr-dark-trans);
     }
     .rest-of-article {
         margin: 20px 60px;
@@ -857,14 +870,14 @@
         display: inline-block;
         font-size: 20px;
         width: 14px;
-        color: rgba(20, 87, 196);
+        color: var(--clr-dark);
         border: 1px solid rgb(165, 165, 165);
         border-right: none;
         padding: 5px 10px;
         text-align: center;
     }
     .active {
-        background-color: #579ED9;
+        background-color: var(--clr-light);
         color: white !important;
     }
     .disabled {
@@ -925,7 +938,7 @@
         width: 20%;
         border-radius: 20px;
         cursor: pointer;
-        background-color: #579ED9;
+        background-color: var(--clr-light);
         color: white;
     }
     #contact-form tr {
@@ -1017,13 +1030,13 @@
         width: 20px;
         height: 20px;
         border-radius: 50%;
-        border: 1px solid rgba(20, 87, 196);
-        background-color: #579ED9;
+        border: 1px solid var(--clr-dark);
+        background-color: var(--clr-light);
         box-shadow: 0 0 5px rgb(87, 87, 87);
     }
     /* error stylings */
     .error-title h5 {
-        color: rgba(20, 87, 196);
+        color: var(--clr-dark);
         font-size: 70px;
         text-align: center;
         margin: 0;
@@ -1033,7 +1046,7 @@
         text-align: center;
     }
     .error-subtitle h6 {
-        color: rgba(20, 87, 196);
+        color: var(--clr-dark);
         font-size: 30px;
         margin: 20px;
     }
@@ -1045,7 +1058,7 @@
         cursor: pointer;
         display: inline;
         font-size: 20px;
-        background-color: #579ED9;
+        background-color: var(--clr-light);
         border-radius: 4px;
     }
     .return-home-button a {
@@ -1056,6 +1069,6 @@
         transition: color 0.3s;
     }
     .return-home-button a:hover {
-        color: rgba(20, 87, 196);
+        color: var(--clr-dark);
     }
 }

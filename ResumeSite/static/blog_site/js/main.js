@@ -27,6 +27,14 @@ function getWidth() {
     return document.documentElement.clientWidth
 }
 
-// max-device-width for mobile: 1024
-// max-device-height for mobile: 1440
-// anything higher is desktop site
+function scrollTracker(e) {
+    let scrollTop = window.scrollY
+    let scrollPercent = (window.innerHeight + scrollTop) / document.body.offsetHeight
+    console.log(scrollPercent)
+    document.getElementById('scroll-bar-tracker').style.width = scrollPercent * 100
+}
+
+window.addEventListener('scroll', scrollTracker)
+    // max-device-width for mobile: 1024
+    // max-device-height for mobile: 1440
+    // anything higher is desktop site

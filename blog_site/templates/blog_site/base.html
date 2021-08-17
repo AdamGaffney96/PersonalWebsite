@@ -1,5 +1,5 @@
 <!DOCTYPE html> {% load static %}
-<html>
+<html lang='en'>
 
 <head>
     <link rel="icon" type="image/png" href="{% static 'blog_site/img/Logo.png' %}">
@@ -10,7 +10,9 @@
     <meta property='og:locale' content='en_GB'>
     <meta name='twitter:card' content='summary'>
     <meta name='twitter:site' content='@AdamGaffney96'>
-    <meta name='twitter:creator' content='@AdamGaffney96'> {% block head %} {% endblock %} </head>
+    <meta name='twitter:creator' content='@AdamGaffney96'>
+    <script src='{% static "blog_site/js/jquery-3.6.0.min.js" %}'></script>
+    {% block head %} {% endblock %} </head>
 
 <body>
     <!-- nav bar -->
@@ -45,7 +47,7 @@
             </div>
         </ul>
         <div class="nav-logo">
-            <a href="{% url 'home' %}"><img src="{% static 'blog_site/img/Logo Transparent.png' %}"></a>
+            <a href="{% url 'home' %}"><img src="{% static 'blog_site/img/Logo Transparent.png' %}" alt='Logo icon which links to the home page.'></a>
         </div>
     </nav>
     {% block content %} {% endblock %}

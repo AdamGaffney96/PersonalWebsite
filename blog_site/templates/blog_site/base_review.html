@@ -12,7 +12,8 @@
 <meta name='twitter:url' content='{{request.get_full_path}}'>
 <meta name='twitter:description' content='{{desc}}'>
 <meta name='twitter:image' content='{{request.scheme}}://{{request.get_host}}{% static thumb %}'> {% endblock %} {% block content %}
-<main>
+<main style='padding-left: 0;'>
+    <!-- <div id='scroll-bar-tracker'></div> -->
     <div class="page-title ">
         <h1>{{ title }}</h1>
         <div class="title-border "></div>
