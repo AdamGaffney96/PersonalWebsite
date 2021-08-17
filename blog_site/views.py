@@ -189,9 +189,6 @@ def contactsuccess(request):
 def contactfailure(request):
     return render(request, 'blog_site/contact_failure.html')
 
-def eiahome(request):
-    return render(request, 'blog_site/eia_home.html')
-
 def singlereview(request, slug):
     q = Gaming.objects.filter(slug__iexact = slug)
     if q.exists(): 
@@ -267,7 +264,5 @@ def singleproject(request, slug):
         "post_date": q.post_date,
         "last_edited": q.last_edited,
     }
+    print('blog_site/'+q.html)
     return render(request, 'blog_site/'+q.html, context)
-
-def movingdot(request):
-    return render(request, 'blog_site/move_dot_project.html')
