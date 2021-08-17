@@ -725,8 +725,11 @@
         opacity: 0;
         transition: opacity 0.2s ease-in;
     }
-    .article-text-wrapper-thumbnail:hover {
+    .article-box-thumbnail:hover .article-text-wrapper-thumbnail {
         opacity: 1;
+    }
+    .article-box-thumbnail:hover .article-img-wrapper-thumbnail {
+        opacity: 0.7;
     }
     .essay-text-wrapper-thumbnail {
         background-color: #274ae7d8;
@@ -791,6 +794,8 @@
         width: 100%;
         height: 100%;
         object-fit: cover;
+        opacity: 1;
+        transition: opacity 0.2s ease-out;
     }
     .article-text-wrapper {
         background-color: #579fd9e3;
@@ -808,8 +813,11 @@
         opacity: 0;
         transition: opacity 0.2s ease-out;
     }
-    .article-text-wrapper:hover {
+    .article-box:hover .article-text-wrapper {
         opacity: 1;
+    }
+    .article-box:hover .article-img-wrapper {
+        opacity: 0.7;
     }
     .article-text {
         margin: 0 30% 0 10%;
