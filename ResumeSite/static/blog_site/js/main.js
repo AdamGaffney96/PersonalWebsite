@@ -20,6 +20,14 @@ if (screen.width <= 1024) {
             let content = item.querySelector('.sublist');
             content.style.maxHeight = null;
         })
+        item.addEventListener('focus', (e) => {
+            let content = item.querySelector('.sublist');
+            content.style.maxHeight = content.scrollHeight + "px";
+        })
+        item.addEventListener('focusout', (e) => {
+            let content = item.querySelector('.sublist');
+            content.style.maxHeight = null;
+        })
     })
 }
 
