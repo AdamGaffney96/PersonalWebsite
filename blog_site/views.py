@@ -195,8 +195,10 @@ def singlereview(request, slug):
         q = q.first()
     else:
         raise Http404('Gaming article does not exist')
+    keywords = q.keywords.objects.values_list('keyword', flat=True)
     context = {
         "q": q,
+        "keywords": keywords,
     }
     return render(request, 'blog_site/base_review.html', context)
 
