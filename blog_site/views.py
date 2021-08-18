@@ -195,7 +195,11 @@ def singlereview(request, slug):
         q = q.first()
     else:
         raise Http404('Gaming article does not exist')
-    keywords = q.keywords.objects.values_list('keyword', flat=True)
+    keywords = ''
+    for keyword in q.keywords.all():
+        keywords += keyword + ", "
+    keywords = keywords[:-2]
+    print(keywords)
     context = {
         "q": q,
         "keywords": keywords,
