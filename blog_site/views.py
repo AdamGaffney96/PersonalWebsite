@@ -197,9 +197,8 @@ def singlereview(request, slug):
         raise Http404('Gaming article does not exist')
     keywords = ''
     for keyword in q.keywords.all():
-        keywords += keyword + ", "
+        keywords += keyword.keyword + ", "
     keywords = keywords[:-2]
-    print(keywords)
     context = {
         "q": q,
         "keywords": keywords,
@@ -214,8 +213,13 @@ def singleessay(request, slug):
         q = q.first()
     else:
         raise Http404('Essay does not exist')
+    keywords = ''
+    for keyword in q.keywords.all():
+        keywords += keyword.keyword + ", "
+    keywords = keywords[:-2]
     context = {
         "q": q,
+        "keywords": keywords,
     }
     return render(request, 'blog_site/base_review.html', context)
 
