@@ -196,15 +196,7 @@ def singlereview(request, slug):
     else:
         raise Http404('Gaming article does not exist')
     context = {
-        "pk": q.pk,
-        "title": q.title,
-        "thumb": q.thumb,
-        "slug": q.slug,
-        "desc": q.desc,
-        "author": q.author,
-        "content": q.content,
-        "post_date": q.post_date,
-        "last_edited": q.last_edited,
+        "q": q,
     }
     return render(request, 'blog_site/base_review.html', context)
 
@@ -217,15 +209,7 @@ def singleessay(request, slug):
     else:
         raise Http404('Essay does not exist')
     context = {
-        "pk": q.pk,
-        "title": q.title,
-        "thumb": q.thumb,
-        "slug": q.slug,
-        "desc": q.desc,
-        "author": q.author,
-        "content": q.content,
-        "post_date": q.post_date,
-        "last_edited": q.last_edited,
+        "q": q,
     }
     return render(request, 'blog_site/base_review.html', context)
 
@@ -256,13 +240,7 @@ def singleproject(request, slug):
     else:
         raise Http404('Project does not exist')
     context = {
-        "pk": q.pk,
-        "title": q.title,
-        "slug": q.slug,
-        "desc": q.desc,
-        "html": q.html,
-        "post_date": q.post_date,
-        "last_edited": q.last_edited,
+        "q": q,
     }
     print('blog_site/'+q.html)
     return render(request, 'blog_site/'+q.html, context)
