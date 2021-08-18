@@ -20,14 +20,6 @@ if (screen.width <= 1024) {
             let content = item.querySelector('.sublist');
             content.style.maxHeight = null;
         })
-        item.addEventListener('focus', (e) => {
-            let content = item.querySelector('.sublist');
-            content.style.maxHeight = content.scrollHeight + "px";
-        })
-        item.addEventListener('focusout', (e) => {
-            let content = item.querySelector('.sublist');
-            content.style.maxHeight = null;
-        })
     })
 }
 
@@ -35,12 +27,12 @@ function getWidth() {
     return document.documentElement.clientWidth
 }
 
-function scrollTracker(e) {
-    let scrollTop = window.scrollY
-    let scrollPercent = (window.innerHeight + scrollTop) / document.body.offsetHeight
-    console.log(scrollPercent)
-    document.getElementById('scroll-bar-tracker').style.width = scrollPercent * 100
-}
+// function scrollTracker(e) {
+//     let scrollTop = window.scrollY
+//     let scrollPercent = (window.innerHeight + scrollTop) / document.body.offsetHeight
+//     console.log(scrollPercent)
+//     document.getElementById('scroll-bar-tracker').style.width = scrollPercent * 100
+// }
 
 window.addEventListener('scroll', scrollTracker)
     // max-device-width for mobile: 1024
