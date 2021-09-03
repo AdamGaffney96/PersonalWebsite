@@ -65,7 +65,11 @@ INSTALLED_APPS = [
 MEDIA_URL = '/blog_site/img/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'blog_site/img/')
 
-X_FRAME_OPTIONS = 'SAMEORIGIN'
+X_FRAME_OPTIONS = 'DENY'
+
+CSRF_COOKIE_SECURE = True
+
+SESSION_COOKIE_SECURE = True
 
 MIDDLEWARE = [
     # 'django.middleware.security.SecurityMiddleware',
