@@ -1,49 +1,8 @@
 :root {
-    --clr-light: #579ED9;
-    --clr-light-trans: #579fd9cb;
-    --clr-dark: rgba(20, 87, 196);
-    --clr-dark-trans: rgba(20, 87, 196, 0.5);
-    --clr-bg: #f1efef;
-    --clr-faded: rgb(66, 66, 66);
+    --clr-dark-bg: hsl(0, 0%, 0%);
 }
 
-#hamburger {
-    display: block;
-    width: 150px;
-    height: 120px;
-    border-radius: 10px;
-    cursor: pointer;
-    margin-bottom: 12px;
-    margin-left: 10px;
-    margin-right: 0;
-}
-
-#hamburger:hover {
-    background: rgba(20, 87, 196, 0.705);
-    transition-duration: 300ms;
-}
-
-#line-group {
-    margin: 0 auto;
-    padding-top: 20%;
-}
-
-.line {
-    background-color: white;
-    height: 6px;
-    width: 90px;
-    border-radius: 4px;
-    margin: 0 auto;
-    margin-top: 20px;
-    z-index: 9999;
-}
-
-.line-1 {
-    background-color: white;
-    height: 6px;
-    width: 90px;
-    border-radius: 4px;
-    margin: 0 auto;
-    margin-top: 0px;
-    z-index: 9999;
+body {
+    background: var(--clr-dark-bg);
+    margin: 0;
 }

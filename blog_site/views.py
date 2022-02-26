@@ -37,7 +37,7 @@ def home(request):
     combined = gaming.union(essays).order_by('-post_date')
     context = {"gaming": gaming,
     "essays": essays, "combined": combined}
-    return render(request, 'blog_site/base.html', context)
+    return render(request, 'blog_site/coming_soon.html', context)
 
 def gaming(request):
     gaming = Gaming.objects.all()
