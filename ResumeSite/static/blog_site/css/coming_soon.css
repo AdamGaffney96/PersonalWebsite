@@ -24,7 +24,6 @@ body {
     border: .5rem solid;
     border-radius: 1.5rem;
     padding: 1rem 1rem;
-    width: 70%;
     text-align: center;
     text-shadow: 0 0 7px var(--clr-neon-fore), 0 0 17px var(--clr-neon-fore), 0 0 30px var(--clr-neon-fore), 0 0 55px var(--clr-neon-fore), 0 0 78px var(--clr-neon-fore);
     box-shadow: 0 0 7px var(--clr-neon-fore), 0 0 14px var(--clr-neon-fore), 0 0 21px var(--clr-neon-fore), 0 0 28px var(--clr-neon-fore), 0 0 35px var(--clr-neon-fore), inset 0 0 7px var(--clr-neon-fore), inset 0 0 14px var(--clr-neon-fore), inset 0 0 21px var(--clr-neon-fore);
