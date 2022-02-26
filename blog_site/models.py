@@ -108,6 +108,28 @@ class Project(models.Model):
     class Meta:
         verbose_name_plural = 'Projects'
 
+class Sudoku(models.Model):
+    title = models.CharField(max_length=50, verbose_name='Sudoku Title')
+    slug = models.SlugField(max_length=100, verbose_name='Slug Title', null=True, blank=True)
+    ruleset = models.CharField(max_length=500, verbose_name='Sudoku Ruleset')
+    board = models.CharField(max_length=200, verbose_name='Sudoku Board')
+    html = models.CharField(max_length=300, verbose_name='HTML to load')
+    keywords = models.ManyToManyField('Keyword')
+    type = models.ManyToManyField('Type')
+    post_date = models.DateTimeField(auto_now_add=True)
+    last_edited = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.title
+
+    def save(self, *args, **kwargs):
+        if self.slug is None:
+            self.slug = slugify(self.title)
+            super(Sudoku, self).save(*args, **kwargs)
+
+    class Meta:
+        verbose_name_plural = 'Sudoku Puzzles'
+
 @receiver(post_save, sender=Project)
 def pre_save_receiver(sender, instance, *args, **kwargs):
    if not instance.slug:

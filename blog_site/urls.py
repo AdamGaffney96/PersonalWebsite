@@ -19,4 +19,7 @@ urlpatterns = [
     path('contact/success', views.contactsuccess, name = "contact_success"),
     path('contact/failure', views.contactfailure, name = "contact_failure"),
     path('newsletter', views.newsletter, name = "newsletter"),
+    path('sudoku', views.singlesudoku, name = "sudoku"),
+    path('sudoku/<slug>', views.singlesudoku, name = "single_sudoku"),
+    path('sudoku/new', views.newsudoku, name = "new_sudoku"),
 ]

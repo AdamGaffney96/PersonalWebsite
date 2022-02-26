@@ -30,10 +30,10 @@ import json
 
 def home(request):
     # Uncomment these for production and comment out the others. Reason being order by doesn't work correctly on SQLite but is fine on Postgres
-    gaming = Gaming.objects.all().order_by('-post_date')
-    essays = Essay.objects.all().order_by('-post_date')
-    # gaming = Gaming.objects.all()
-    # essays = Essay.objects.all()
+    # gaming = Gaming.objects.all().order_by('-post_date')
+    # essays = Essay.objects.all().order_by('-post_date')
+    gaming = Gaming.objects.all()
+    essays = Essay.objects.all()
     combined = gaming.union(essays).order_by('-post_date')
     context = {"gaming": gaming,
     "essays": essays, "combined": combined}
@@ -228,8 +228,8 @@ def newsletter(request):
 
 def projects(request):
     # Uncomment below for deployment
-    projects = Project.objects.all().order_by('-post_date')
-    # projects = Project.objects.all()
+    # projects = Project.objects.all().order_by('-post_date')
+    projects = Project.objects.all()
     paginator = Paginator(projects, 6)
     page = request.GET.get('page')
     projects = paginator.get_page(page)
@@ -254,3 +254,36 @@ def singleproject(request, slug):
     }
     print('blog_site/'+q.html)
     return render(request, 'blog_site/'+q.html, context)
+
+def sudoku(request):
+    # Uncomment below for deployment
+    # projects = Project.objects.all().order_by('-post_date')
+    projects = Sudoku.objects.all()
+    paginator = Paginator(projects, 6)
+    page = request.GET.get('page')
+    projects = paginator.get_page(page)
+    try:
+        users = paginator.page(page)
+    except PageNotAnInteger:
+        users = paginator.page(1)
+    except EmptyPage:
+        users = paginator.page(paginator.num_pages)
+    context = {'projects': projects, 'users': users}
+    return render(request, 'blog_site/projects.html', context)
+
+def singlesudoku(request, slug):
+    print('test')
+    q = Sudoku.objects.filter(slug__iexact = slug)
+    print(q)
+    if q.exists(): 
+        q = q.first()
+    else:
+        raise Http404('Sudoku does not exist')
+    context = {
+        "q": q,
+    }
+    print('blog_site/'+q.html)
+    return render(request, 'blog_site/base_sudoku.html', context)
+
+def newsudoku(request):
+    pass

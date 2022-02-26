@@ -1,0 +1,142 @@
+{% extends 'blog_site/base.html' %} {% load static %} {% block head %}
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <link rel="stylesheet" href="./static/css/style.css">
+    <script type="text/javascript">
+        sudoku = {
+            {}
+        }
+    </script>
+</head>
+
+<body>
+    <header>
+        <h1>Sudoku</h1>
+        <script src="sudoku.js" type="text/javascript"></script>
+    </header>
+    <main>
+
+        <div class="sudoku-grid">
+            <div class="row">
+                <div class="cell" row="1" col="1" box="1"></div>
+                <div class="cell" row="1" col="2" box="1"></div>
+                <div class="cell" row="1" col="3" box="1"></div>
+                <div class="cell" row="1" col="4" box="2"></div>
+                <div class="cell" row="1" col="5" box="2"></div>
+                <div class="cell" row="1" col="6" box="2"></div>
+                <div class="cell" row="1" col="7" box="3"></div>
+                <div class="cell" row="1" col="8" box="3"></div>
+                <div class="cell" row="1" col="9" box="3"></div>
+            </div>
+            <div class="row">
+                <div class="cell" row="2" col="1" box="1"></div>
+                <div class="cell" row="2" col="2" box="1"></div>
+                <div class="cell" row="2" col="3" box="1"></div>
+                <div class="cell" row="2" col="4" box="2"></div>
+                <div class="cell" row="2" col="5" box="2"></div>
+                <div class="cell" row="2" col="6" box="2"></div>
+                <div class="cell" row="2" col="7" box="3"></div>
+                <div class="cell" row="2" col="8" box="3"></div>
+                <div class="cell" row="2" col="9" box="3"></div>
+            </div>
+            <div class="row">
+                <div class="cell" row="3" col="1" box="1"></div>
+                <div class="cell" row="3" col="2" box="1"></div>
+                <div class="cell" row="3" col="3" box="1"></div>
+                <div class="cell" row="3" col="4" box="2"></div>
+                <div class="cell" row="3" col="5" box="2"></div>
+                <div class="cell" row="3" col="6" box="2"></div>
+                <div class="cell" row="3" col="7" box="3"></div>
+                <div class="cell" row="3" col="8" box="3"></div>
+                <div class="cell" row="3" col="9" box="3"></div>
+            </div>
+            <div class="row">
+                <div class="cell" row="4" col="1" box="4"></div>
+                <div class="cell" row="4" col="2" box="4"></div>
+                <div class="cell" row="4" col="3" box="4"></div>
+                <div class="cell" row="4" col="4" box="5"></div>
+                <div class="cell" row="4" col="5" box="5"></div>
+                <div class="cell" row="4" col="6" box="5"></div>
+                <div class="cell" row="4" col="7" box="6"></div>
+                <div class="cell" row="4" col="8" box="6"></div>
+                <div class="cell" row="4" col="9" box="6"></div>
+            </div>
+            <div class="row">
+                <div class="cell" row="5" col="1" box="4"></div>
+                <div class="cell" row="5" col="2" box="4"></div>
+                <div class="cell" row="5" col="3" box="4"></div>
+                <div class="cell" row="5" col="4" box="5"></div>
+                <div class="cell" row="5" col="5" box="5"></div>
+                <div class="cell" row="5" col="6" box="5"></div>
+                <div class="cell" row="5" col="7" box="6"></div>
+                <div class="cell" row="5" col="8" box="6"></div>
+                <div class="cell" row="5" col="9" box="6"></div>
+            </div>
+            <div class="row">
+                <div class="cell" row="6" col="1" box="4"></div>
+                <div class="cell" row="6" col="2" box="4"></div>
+                <div class="cell" row="6" col="3" box="4"></div>
+                <div class="cell" row="6" col="4" box="5"></div>
+                <div class="cell" row="6" col="5" box="5"></div>
+                <div class="cell" row="6" col="6" box="5"></div>
+                <div class="cell" row="6" col="7" box="6"></div>
+                <div class="cell" row="6" col="8" box="6"></div>
+                <div class="cell" row="6" col="9" box="6"></div>
+            </div>
+            <div class="row">
+                <div class="cell" row="7" col="1" box="7"></div>
+                <div class="cell" row="7" col="2" box="7"></div>
+                <div class="cell" row="7" col="3" box="7"></div>
+                <div class="cell" row="7" col="4" box="8"></div>
+                <div class="cell" row="7" col="5" box="8"></div>
+                <div class="cell" row="7" col="6" box="8"></div>
+                <div class="cell" row="7" col="7" box="9"></div>
+                <div class="cell" row="7" col="8" box="9"></div>
+                <div class="cell" row="7" col="9" box="9"></div>
+            </div>
+            <div class="row">
+                <div class="cell" row="8" col="1" box="7"></div>
+                <div class="cell" row="8" col="2" box="7"></div>
+                <div class="cell" row="8" col="3" box="7"></div>
+                <div class="cell" row="8" col="4" box="8"></div>
+                <div class="cell" row="8" col="5" box="8"></div>
+                <div class="cell" row="8" col="6" box="8"></div>
+                <div class="cell" row="8" col="7" box="9"></div>
+                <div class="cell" row="8" col="8" box="9"></div>
+                <div class="cell" row="8" col="9" box="9"></div>
+            </div>
+            <div class="row">
+                <div class="cell" row="9" col="1" box="7"></div>
+                <div class="cell" row="9" col="2" box="7"></div>
+                <div class="cell" row="9" col="3" box="7"></div>
+                <div class="cell" row="9" col="4" box="8"></div>
+                <div class="cell" row="9" col="5" box="8"></div>
+                <div class="cell" row="9" col="6" box="8"></div>
+                <div class="cell" row="9" col="7" box="9"></div>
+                <div class="cell" row="9" col="8" box="9"></div>
+                <div class="cell" row="9" col="9" box="9"></div>
+            </div>
+        </div>
+        <div class="controls">
+            <div class="numpad">
+                <div class="digit num-1">1</div>
+                <div class="digit num-2">2</div>
+                <div class="digit num-3">3</div>
+                <div class="digit num-4">4</div>
+                <div class="digit num-5">5</div>
+                <div class="digit num-6">6</div>
+                <div class="digit num-7">7</div>
+                <div class="digit num-8">8</div>
+                <div class="digit num-9">9</div>
+            </div>
+            <button class="check-solution" onclick="solutionPopup()">Check Solution</button>
+        </div>
+    </main>
+    <script src="./static/js/sudoku.js"></script>
+    <script src="./static/js/check.js"></script>
+</body>
+
+</html>
