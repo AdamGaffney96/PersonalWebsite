@@ -15,41 +15,6 @@
     {% block head %} {% endblock %} </head>
 
 <body>
-    <!-- nav bar -->
-    <nav>
-        <div id="hamburger">
-            <div id="line-group">
-                <div class="line line-1"></div>
-                <div class="line"></div>
-                <div class="line"></div>
-            </div>
-        </div>
-        <ul id="hamburger-nav-list">
-            <div id="list">
-                <li class="nav-item {% if request.path == '/' %}nav-selected{% endif %}"><a href="{% url 'home' %}">Home</a></li>
-                <li class="nav-item {% if 'gaming' in request.path %}nav-selected{% endif %}"><a href="{% url 'gaming' %}">Gaming</a>
-                    <ul class='sublist'>
-                        <li class="{% if request.path == '/gaming/reviews' %}nav-selected{% endif %}"><a href='{% url "gaming_review" %}'>Reviews</a></li>
-                        <li class="{% if request.path == '/gaming/opinions' %}nav-selected{% endif %}"><a href='{% url "gaming_opinions" %}'>Opinions</a></li>
-                        <li class="{% if request.path == '/gaming/discussions' %}nav-selected{% endif %}"><a href='{% url "gaming_discussions" %}'>Discussions</a></li>
-                    </ul>
-                </li>
-                <li class="nav-item {% if 'essays' in request.path %}nav-selected{% endif %}"><a href="{% url 'essays' %}">Personal Essays</a>
-                    <ul class='sublist'>
-                        <li class="{% if request.path == '/essays/educational' %}nav-selected{% endif %}"><a href='{% url "essay_educational" %}'>Educational</a></li>
-                        <li class="{% if request.path == '/essays/opinions' %}nav-selected{% endif %}"><a href='{% url "essay_opinions" %}'>Opinions</a></li>
-                        <li class="{% if request.path == '/essays/discussions' %}nav-selected{% endif %}"><a href='{% url "essay_discussions" %}'>Discussions</a></li>
-                    </ul>
-                </li>
-                <li class="nav-item {% if 'contact' in request.path %}nav-selected{% endif %}"><a href="{% url 'contact' %}">Contact Me</a></li>
-                <li class="nav-item {% if 'newsletter' in request.path %}nav-selected{% endif %}"><a href="{% url 'newsletter' %}">Newsletter</a></li>
-                <li class="nav-item {% if 'projects' in request.path %}nav-selected{% endif %}"><a href="{% url 'projects' %}">Projects</a></li>
-            </div>
-        </ul>
-        <div class="nav-logo">
-            <a href="{% url 'home' %}"><img src="{% static 'blog_site/img/Logo Transparent.png' %}" alt='Logo icon which links to the home page.'></a>
-        </div>
-    </nav>
     {% block content %} {% endblock %}
     <script type="text/javascript" src="{% static 'blog_site/js/main.js' %}"></script>
 </body>
