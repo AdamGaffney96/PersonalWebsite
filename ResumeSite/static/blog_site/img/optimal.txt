@@ -1,0 +1,1 @@
+Optimal image size for thumbnails = 458 * 309
