@@ -1,8 +1,33 @@
 :root {
     --clr-dark-bg: hsl(0, 0%, 0%);
+    --clr-main-1: hsl(199, 85%, 56%);
+    --clr-text-white: hsl(0, 0%, 100%);
+}
+
+* {
+    margin: 0;
 }
 
 body {
-    background: var(--clr-dark-bg);
-    margin: 0;
+    /* background: var(--clr-dark-bg); */
+}
+
+.nav-bar {
+    background: var(--clr-main-1);
+    font-size: 1.2rem;
+    display: flex;
+    padding: 1rem;
+}
+
+.nav-list {
+    display: flex;
+    gap: 5em;
+}
+
+.nav-item {
+    list-style: none;
+    font-size: 2em;
+    color: var(--clr-text-white);
+    cursor: pointer;
+    user-select: none;
 }
