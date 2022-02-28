@@ -258,18 +258,18 @@ def singleproject(request, slug):
 def sudoku(request):
     # Uncomment below for deployment
     # projects = Project.objects.all().order_by('-post_date')
-    projects = Sudoku.objects.all()
-    paginator = Paginator(projects, 6)
-    page = request.GET.get('page')
-    projects = paginator.get_page(page)
-    try:
-        users = paginator.page(page)
-    except PageNotAnInteger:
-        users = paginator.page(1)
-    except EmptyPage:
-        users = paginator.page(paginator.num_pages)
-    context = {'projects': projects, 'users': users}
-    return render(request, 'blog_site/projects.html', context)
+    # projects = Sudoku.objects.all()
+    # paginator = Paginator(projects, 6)
+    # page = request.GET.get('page')
+    # projects = paginator.get_page(page)
+    # try:
+    #     users = paginator.page(page)
+    # except PageNotAnInteger:
+    #     users = paginator.page(1)
+    # except EmptyPage:
+    #     users = paginator.page(paginator.num_pages)
+    context = {"success": "success"}
+    return render(request, 'blog_site/base_sudoku.html', context)
 
 def singlesudoku(request, slug):
     print('test')

@@ -1,0 +1,81 @@
+:root {
+    --clr-select: hsl(177, 50%, 50%);
+}
+
+body {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.play-board {
+    width: 80%;
+    margin: 1rem;
+    display: flex;
+}
+
+.sudoku-grid {
+    width: 603px;
+    height: 603px;
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    position: relative;
+    flex-wrap: wrap;
+}
+
+.cell {
+    width: 67px;
+    height: 67px;
+    box-sizing: border-box;
+    cursor: pointer;
+    z-index: 6;
+}
+
+svg {
+    position: absolute;
+    overflow: visible;
+    cursor: pointer;
+}
+
+.grid-lines {
+    z-index: 4;
+}
+
+.selected-cells {
+    z-index: 3;
+}
+
+.added-digits {
+    z-index: 5;
+    font-size: 4em;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.centre-pencilmarks {
+    z-index: 2;
+    font-size: 1.2em;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.corner-pencilmarks {
+    z-index: 2;
+    font-size: 1.2em;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.copyright {
+    position: absolute;
+    bottom: 0.2em;
+    right: 0.2em;
+}
+
+.copyright a,
+a:active,
+a:visited,
+a:hover {
+    color: red;
+    text-decoration: none;
+}
