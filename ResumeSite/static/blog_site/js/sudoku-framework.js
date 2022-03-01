@@ -1,9 +1,13 @@
 class Sudoku {
-    constructor(borderColour, selectedColour, digitColour) {
+    constructor(borderColour, selectedColour, digitColour, givenColour, puzzleTitle, puzzleRuleset, puzzleJSON) {
         this.id;
         this.borderColour = borderColour;
         this.selectedColour = selectedColour;
         this.digitColour = digitColour;
+        this.givenColour = givenColour;
+        this.puzzleTitle = puzzleTitle;
+        this.puzzleRuleset = puzzleRuleset;
+        this.puzzleJSON = puzzleJSON;
         this.init();
         this.selecting;
         this.multiple;
@@ -16,6 +20,7 @@ class Sudoku {
     }
     init = () => {
         this.drawBoard();
+        this.loadPuzzle(this.puzzleTitle, this.puzzleRuleset, this.puzzleJSON);
     }
     drawBoard() {
         this.drawShell();
@@ -277,7 +282,8 @@ class Sudoku {
             let tempId = idList[i];
             let tempRow = tempId[0];
             let tempCol = tempId[1];
-            let tempDigit = this.createDigit(tempId, type);
+            let tempDigit = this.createDigit(tempId, type, digit);
+            if (tempDigit == "given") { continue; }
             if (type != "main") {
                 if (!!document.getElementById(`${type}-${tempRow}${tempCol}`)) {
                     let existingMark = document.getElementById(`${type}-${tempRow}${tempCol}`);
@@ -308,12 +314,10 @@ class Sudoku {
         this.digitCheck = false;
         this.digitCheckCount = 0;
     }
-    createDigit(id, type) {
-
+    createDigit(id, type, digit) {
         let tempRow = id[0];
         let tempCol = id[1];
         let tempDigit = document.createElementNS("http://www.w3.org/2000/svg", "text");
-        let digitBg = document.createElementNS("http://www.w3.org/2000/svg", "rect");
         if (type == "main") {
             tempDigit.classList.add("added-digit");
             tempDigit.id = `digit-${tempRow}${tempCol}`;
@@ -323,28 +327,44 @@ class Sudoku {
             tempDigit.setAttribute("fill", `${this.digitColour}`);
             tempDigit.setAttribute("x", `${67*(tempCol-1)+16}`);
             tempDigit.setAttribute("y", `${67*(tempRow)-11}`);
+        } else if (type == "given") {
+            tempDigit.classList.add("given-digit");
+            tempDigit.id = `given-${tempRow}${tempCol}`;
+            if (!!document.getElementById(tempDigit.id)) {
+                this.deleteDigit(tempDigit.id);
+            }
+            tempDigit.setAttribute("fill", `${this.givenColour}`);
+            tempDigit.setAttribute("x", `${67*(tempCol-1)+16}`);
+            tempDigit.setAttribute("y", `${67*(tempRow)-11}`);
         } else if (type == "centre") {
+            if (!!document.getElementById(`given-${tempRow}${tempCol}`)) { return "given"; }
             let currentDigits = document.getElementById(`${type}-${tempRow}${tempCol}`);
             tempDigit.classList.add("centre-digit");
             tempDigit.id = `${type}-${tempRow}${tempCol}`;
             tempDigit.setAttribute("font-size", `1em`);
             if (!!document.getElementById(tempDigit.id)) {
-
-                tempDigit.setAttribute("font-size", `${Math.min(1, (14-(currentDigits.innerHTML.length+1))/10)}em`);
+                if (!document.getElementById(tempDigit.id).innerHTML.includes(digit)) {
+                    tempDigit.setAttribute("font-size", `${Math.min(1, (14-(currentDigits.innerHTML.length+1))/10)}em`);
+                } else {
+                    tempDigit.setAttribute("font-size", `${Math.min(1, (14-(currentDigits.innerHTML.length-1))/10)}em`);
+                }
             }
             tempDigit.setAttribute("fill", `${this.digitColour}`);
             tempDigit.setAttribute("text-anchor", `middle`);
             tempDigit.setAttribute("x", `${67*(tempCol-1)+33}`);
             tempDigit.setAttribute("y", `${67*(tempRow)-27}`);
         } else if (type == "corner") {
-
+            if (!!document.getElementById(`given-${tempRow}${tempCol}`)) { return "given"; }
             let currentDigits = document.getElementById(`${type}-${tempRow}${tempCol}`);
             tempDigit.classList.add("corner-digit");
             tempDigit.id = `${type}-${tempRow}${tempCol}`;
             tempDigit.setAttribute("font-size", `1em`);
             if (!!document.getElementById(tempDigit.id)) {
-
-                tempDigit.setAttribute("font-size", `${Math.min(1, (14-(currentDigits.innerHTML.length+1))/10)}em`);
+                if (!document.getElementById(tempDigit.id).innerHTML.includes(digit)) {
+                    tempDigit.setAttribute("font-size", `${Math.min(1, (14-(currentDigits.innerHTML.length+1))/10)}em`);
+                } else {
+                    tempDigit.setAttribute("font-size", `${Math.min(1, (14-(currentDigits.innerHTML.length-1))/10)}em`);
+                }
             }
             tempDigit.setAttribute("fill", `${this.digitColour}`);
             tempDigit.setAttribute("x", `${67*(tempCol-1)+8}`);
@@ -395,6 +415,15 @@ class Sudoku {
     clearAll(event) {
         if (!event.target.classList.contains("cell")) {
             document.querySelector(".selected-cells").innerHTML = "";
+        }
+    }
+    loadPuzzle(title, ruleset, puzzleJSON) {
+        let givenDigits = document.querySelector(".given-digits");
+        let puzzleObject = JSON.parse(puzzleJSON);
+        for (let [key, value] of Object.entries(puzzleObject)) {
+            let tempDigit = this.createDigit(key, "given", 0);
+            tempDigit.innerHTML = value;
+            givenDigits.appendChild(tempDigit);
         }
     }
 }

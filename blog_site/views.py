@@ -258,7 +258,10 @@ def singleproject(request, slug):
 def sudoku(request):
     # Uncomment below for deployment
     # projects = Project.objects.all().order_by('-post_date')
-    # projects = Sudoku.objects.all()
+    projects = Sudoku.objects.first()
+    board_json = projects.board
+    puzzle_title = projects.title
+    puzzle_ruleset = projects.ruleset
     # paginator = Paginator(projects, 6)
     # page = request.GET.get('page')
     # projects = paginator.get_page(page)
@@ -268,7 +271,7 @@ def sudoku(request):
     #     users = paginator.page(1)
     # except EmptyPage:
     #     users = paginator.page(paginator.num_pages)
-    context = {"success": "success"}
+    context = {"puzzleJSON": board_json, "puzzleTitle": puzzle_title, "puzzleRules": puzzle_ruleset}
     return render(request, 'blog_site/base_sudoku.html', context)
 
 def singlesudoku(request, slug):

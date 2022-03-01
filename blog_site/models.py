@@ -112,7 +112,7 @@ class Sudoku(models.Model):
     title = models.CharField(max_length=50, verbose_name='Sudoku Title')
     slug = models.SlugField(max_length=100, verbose_name='Slug Title', null=True, blank=True)
     ruleset = models.CharField(max_length=500, verbose_name='Sudoku Ruleset')
-    board = models.CharField(max_length=200, verbose_name='Sudoku Board')
+    board = models.CharField(max_length=500, verbose_name='Sudoku Board')
     html = models.CharField(max_length=300, verbose_name='HTML to load')
     keywords = models.ManyToManyField('Keyword')
     type = models.ManyToManyField('Type')
