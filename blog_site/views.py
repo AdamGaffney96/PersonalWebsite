@@ -274,8 +274,7 @@ def sudoku(request):
     context = {"puzzleJSON": board_json, "puzzleTitle": puzzle_title, "puzzleRules": puzzle_ruleset}
     return render(request, 'blog_site/base_sudoku.html', context)
 
-def singlesudoku(request, slug):
-    print('test')
+def single_sudoku(request, slug):
     q = Sudoku.objects.filter(slug__iexact = slug)
     print(q)
     if q.exists(): 
@@ -286,7 +285,7 @@ def singlesudoku(request, slug):
         "q": q,
     }
     print('blog_site/'+q.html)
-    return render(request, 'blog_site/base_sudoku.html', context)
+    return render(request, 'blog_site/sudoku_submission.html', context)
 
 def newsudoku(request):
     pass

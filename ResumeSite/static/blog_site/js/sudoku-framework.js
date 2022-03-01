@@ -1,5 +1,5 @@
 class Sudoku {
-    constructor(borderColour, selectedColour, digitColour, givenColour, puzzleTitle, puzzleRuleset, puzzleJSON) {
+    constructor(borderColour, selectedColour, digitColour, givenColour, puzzleTitle = "", puzzleRuleset = "", puzzleJSON = "{}") {
         this.id;
         this.borderColour = borderColour;
         this.selectedColour = selectedColour;
@@ -21,6 +21,7 @@ class Sudoku {
     init = () => {
         this.drawBoard();
         this.loadPuzzle(this.puzzleTitle, this.puzzleRuleset, this.puzzleJSON);
+        this.deletePuzzleDataHTML();
     }
     drawBoard() {
         this.drawShell();
@@ -260,6 +261,7 @@ class Sudoku {
         for (let selectedCell of selectedList) {
             idList.push(selectedCell.id.split("-")[1]);
         }
+        let idListMod = idList.length;
         if ((type == "centre" || type == "corner") && idList.length > 1) {
             for (let i = 0; i < idList.length; i++) {
                 let checkId = idList[i];
@@ -270,9 +272,9 @@ class Sudoku {
                     if (checkElement.innerHTML.includes(digit)) {
                         this.digitCheck = true;
                         this.digitCheckCount++;
-                    } else {
-                        this.digitCheck = false;
                     }
+                } else {
+                    idListMod--;
                 }
             }
         } else {
@@ -283,13 +285,15 @@ class Sudoku {
             let tempRow = tempId[0];
             let tempCol = tempId[1];
             let tempDigit = this.createDigit(tempId, type, digit);
-            if (tempDigit == "given") { continue; }
+            if (tempDigit == "given") {
+                continue;
+            }
             if (type != "main") {
                 if (!!document.getElementById(`${type}-${tempRow}${tempCol}`)) {
                     let existingMark = document.getElementById(`${type}-${tempRow}${tempCol}`);
                     if (!existingMark.innerHTML.includes(digit)) {
                         tempDigit.innerHTML = `${existingMark.innerHTML}${digit}`.split('').sort().join('');
-                    } else if (this.digitCheckCount == idList.length) {
+                    } else if (this.digitCheckCount == idListMod) {
                         tempDigit.innerHTML = existingMark.innerHTML.replace(digit, '');
                     } else if (existingMark.innerHTML.includes(digit) && this.digitCheck) {
                         tempDigit.innerHTML = existingMark.innerHTML;
@@ -317,6 +321,7 @@ class Sudoku {
     createDigit(id, type, digit) {
         let tempRow = id[0];
         let tempCol = id[1];
+        if (!!document.getElementById(`given-${tempRow}${tempCol}`)) { return "given"; }
         let tempDigit = document.createElementNS("http://www.w3.org/2000/svg", "text");
         if (type == "main") {
             tempDigit.classList.add("added-digit");
@@ -337,7 +342,7 @@ class Sudoku {
             tempDigit.setAttribute("x", `${67*(tempCol-1)+16}`);
             tempDigit.setAttribute("y", `${67*(tempRow)-11}`);
         } else if (type == "centre") {
-            if (!!document.getElementById(`given-${tempRow}${tempCol}`)) { return "given"; }
+            if (!!document.getElementById(`digit-${tempRow}${tempCol}`)) { return "given"; }
             let currentDigits = document.getElementById(`${type}-${tempRow}${tempCol}`);
             tempDigit.classList.add("centre-digit");
             tempDigit.id = `${type}-${tempRow}${tempCol}`;
@@ -354,7 +359,7 @@ class Sudoku {
             tempDigit.setAttribute("x", `${67*(tempCol-1)+33}`);
             tempDigit.setAttribute("y", `${67*(tempRow)-27}`);
         } else if (type == "corner") {
-            if (!!document.getElementById(`given-${tempRow}${tempCol}`)) { return "given"; }
+            if (!!document.getElementById(`digit-${tempRow}${tempCol}`)) { return "given"; }
             let currentDigits = document.getElementById(`${type}-${tempRow}${tempCol}`);
             tempDigit.classList.add("corner-digit");
             tempDigit.id = `${type}-${tempRow}${tempCol}`;
@@ -425,5 +430,9 @@ class Sudoku {
             tempDigit.innerHTML = value;
             givenDigits.appendChild(tempDigit);
         }
+    }
+    deletePuzzleDataHTML() {
+        let puzzleData = document.getElementById("puzzle-json-data");
+        puzzleData.remove();
     }
 }

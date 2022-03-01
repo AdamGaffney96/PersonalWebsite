@@ -17,7 +17,7 @@ class ProjectAdmin(admin.ModelAdmin):
     readonly_fields = ('post_date', 'last_edited',)
 
 class SudokuAdmin(admin.ModelAdmin):
-    readonly_fields = ('post_date', 'last_edited',)
+    readonly_fields = ('id', 'post_date', 'last_edited',)
 
 # Register your models here.
 admin.site.register(Gaming, GamingAdmin)
