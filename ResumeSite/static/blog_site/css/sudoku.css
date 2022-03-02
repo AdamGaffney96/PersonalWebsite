@@ -15,6 +15,7 @@ body {
     width: 80%;
     margin: 1rem;
     display: flex;
+    gap: 2rem;
 }
 
 .sudoku-grid {
@@ -84,4 +85,21 @@ a:visited,
 a:hover {
     color: red;
     text-decoration: none;
+}
+
+.sudoku-info {
+    border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    align-self: center;
+    font-size: 2rem;
+    padding: 1rem 5rem;
+}
+
+.sudoku-board-entry {
+    width: 80%;
+    height: 10%;
+    border: 1px solid;
+    display: none;
 }

@@ -7,6 +7,7 @@ from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 # Import the logout function from django.contrib.auth below
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import logout
 from django.http import Http404
 from django.urls import reverse_lazy
@@ -274,9 +275,8 @@ def sudoku(request):
     context = {"puzzleJSON": board_json, "puzzleTitle": puzzle_title, "puzzleRules": puzzle_ruleset}
     return render(request, 'blog_site/base_sudoku.html', context)
 
-def single_sudoku(request, slug):
-    q = Sudoku.objects.filter(slug__iexact = slug)
-    print(q)
+def single_sudoku(request, id, slug):
+    q = Sudoku.objects.filter(id = id)
     if q.exists(): 
         q = q.first()
     else:
@@ -284,8 +284,23 @@ def single_sudoku(request, slug):
     context = {
         "q": q,
     }
-    print('blog_site/'+q.html)
-    return render(request, 'blog_site/sudoku_submission.html', context)
+    return render(request, 'blog_site/base_sudoku.html', context)
 
+@staff_member_required
 def newsudoku(request):
-    pass
+    if request.method == "POST":
+        new_sudoku = Sudoku(title = request.POST['title-entry'], ruleset = request.POST['ruleset'], board = request.POST['boardJSON'])
+        slug = slugify(request.POST["title-entry"])
+        new_sudoku.save()
+        q = Sudoku.objects.filter(slug__iexact = slug)
+        if q.exists():
+            q = q.first()
+        else:
+            raise Http404("Sudoku does not exist")
+        return redirect(single_sudoku, id = q.id, slug = q.slug)
+    else:
+        return render(request, 'blog_site/sudoku_submission.html')
+    
+def chess(request):
+    context = {"success": "success"}
+    return render(request, 'blog_site/base_chess.html', context)

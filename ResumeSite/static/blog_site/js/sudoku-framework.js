@@ -22,6 +22,7 @@ class Sudoku {
         this.drawBoard();
         this.loadPuzzle(this.puzzleTitle, this.puzzleRuleset, this.puzzleJSON);
         this.deletePuzzleDataHTML();
+        this.loadPuzzleFromLocal();
     }
     drawBoard() {
         this.drawShell();
@@ -40,7 +41,7 @@ class Sudoku {
                 grid.appendChild(tempCell);
             }
         }
-        document.querySelector(".play-board").appendChild(grid);
+        document.querySelector(".play-board").insertBefore(grid, document.querySelector(".play-board").firstChild);
         this.createSvgs();
     }
     createSvgs() {
@@ -56,12 +57,12 @@ class Sudoku {
         addedDigits.classList.add("added-digits");
         centrePencilmarks.classList.add("centre-pencilmarks");
         cornerPencilmarks.classList.add("corner-pencilmarks");
-        svg.appendChild(givenDigits);
-        svg.appendChild(addedDigits);
+        svg.appendChild(selectedCells);
         svg.appendChild(cornerPencilmarks);
         svg.appendChild(centrePencilmarks);
+        svg.appendChild(addedDigits);
+        svg.appendChild(givenDigits);
         svg.appendChild(grid);
-        svg.appendChild(selectedCells);
         document.querySelector(".sudoku-grid").appendChild(svg);
     }
     gridOverlay() {
@@ -102,7 +103,7 @@ class Sudoku {
         tempBox.setAttribute("stroke", this.borderColour);
         tempBox.setAttribute("stroke-width", "3px");
         tempBox.setAttribute("vector-effect", "non-scaling-stroke");
-        tempBox.setAttribute("d", `M${201*boxCol} ${201*boxRow} L${201*(boxCol+1)} ${201*boxRow} L${201*(boxCol+1)} ${201*(boxRow+1)} L${201*boxCol} ${201*(boxRow+1)} L${201*boxCol} ${201*boxRow}`);
+        tempBox.setAttribute("d", `M${201*boxCol} ${201*boxRow} L${201*(boxCol+1)} ${201*boxRow} L${201*(boxCol+1)} ${201*(boxRow+1)} L${201*boxCol} ${201*(boxRow+1)} Z`);
         return tempBox;
     }
     drawCells(rowOrCol, lineNo) {
@@ -123,8 +124,6 @@ class Sudoku {
         // mouse down events
         if (event.type == "mousedown") {
             // Draw selected cells
-            // console.log(event);
-            // if (!event.target.classList.contains("cell")) { document.querySelector(".selected-cells").innerHTML = ""; }
             if (event.target.classList.contains("cell")) {
                 const coordinates = { "row": event.target.getAttribute("row"), "col": event.target.getAttribute("col") };
                 this.selecting = !document.getElementById(`outline-${coordinates.row}${coordinates.col}`) ? true : false;
@@ -152,9 +151,11 @@ class Sudoku {
             // draws digits in selected cells
             if (isFinite(event.key) && event.key != 0) {
                 this.drawDigits(event, event.key);
+                this.savePuzzleToLocal();
                 // deletes digits in selected cells
             } else if (isFinite(event.code.charAt(event.code.length - 1)) && !isFinite(event.key)) {
                 this.drawDigits(event, parseInt(event.code.charAt(event.code.length - 1)), true);
+                this.savePuzzleToLocal();
             } else if (event.key == "Delete" || event.key == "Backspace") {
                 let selectedCells = document.querySelectorAll(".selected-cell");
                 for (let cell of selectedCells) {
@@ -183,6 +184,7 @@ class Sudoku {
                         }
                     }
                 }
+                this.savePuzzleToLocal();
                 this.areAnyFullDigits = false;
             } else if (event.key == "a" && event.ctrlKey) {
                 if (!this.selectedAll) {
@@ -207,6 +209,18 @@ class Sudoku {
             } else if (event.code == "Escape") {
                 document.querySelector(".selected-cells").innerHTML = "";
                 this.selectedAll = false;
+            } else if (event.key == "z" && event.ctrlKey) {
+                this.undo();
+            }
+            if (!!document.querySelector(".sudoku-submit-form")) {
+                let boardObject = {};
+                for (let digit of document.querySelectorAll(".added-digit")) {
+                    let tempId = digit.id.split("-")[1];
+                    let tempDigit = digit.innerHTML;
+                    boardObject[tempId] = tempDigit;
+                }
+
+                document.getElementById("boardJSON").value = JSON.stringify(boardObject);
             }
         }
     }
@@ -318,7 +332,7 @@ class Sudoku {
         this.digitCheck = false;
         this.digitCheckCount = 0;
     }
-    createDigit(id, type, digit) {
+    createDigit(id, type, digit, initialLoad = false) {
         let tempRow = id[0];
         let tempCol = id[1];
         if (!!document.getElementById(`given-${tempRow}${tempCol}`)) { return "given"; }
@@ -342,7 +356,7 @@ class Sudoku {
             tempDigit.setAttribute("x", `${67*(tempCol-1)+16}`);
             tempDigit.setAttribute("y", `${67*(tempRow)-11}`);
         } else if (type == "centre") {
-            if (!!document.getElementById(`digit-${tempRow}${tempCol}`)) { return "given"; }
+            if (!!document.getElementById(`digit-${tempRow}${tempCol}`) && !initialLoad) { return "given"; }
             let currentDigits = document.getElementById(`${type}-${tempRow}${tempCol}`);
             tempDigit.classList.add("centre-digit");
             tempDigit.id = `${type}-${tempRow}${tempCol}`;
@@ -358,8 +372,11 @@ class Sudoku {
             tempDigit.setAttribute("text-anchor", `middle`);
             tempDigit.setAttribute("x", `${67*(tempCol-1)+33}`);
             tempDigit.setAttribute("y", `${67*(tempRow)-27}`);
+            if (!!document.getElementById(`digit-${tempRow}${tempCol}`) && initialLoad) {
+                tempDigit.setAttribute("visibility", "hidden");
+            }
         } else if (type == "corner") {
-            if (!!document.getElementById(`digit-${tempRow}${tempCol}`)) { return "given"; }
+            if (!!document.getElementById(`digit-${tempRow}${tempCol}`) && !initialLoad) { return "given"; }
             let currentDigits = document.getElementById(`${type}-${tempRow}${tempCol}`);
             tempDigit.classList.add("corner-digit");
             tempDigit.id = `${type}-${tempRow}${tempCol}`;
@@ -374,6 +391,9 @@ class Sudoku {
             tempDigit.setAttribute("fill", `${this.digitColour}`);
             tempDigit.setAttribute("x", `${67*(tempCol-1)+8}`);
             tempDigit.setAttribute("y", `${67*(tempRow)-44}`);
+            if (!!document.getElementById(`digit-${tempRow}${tempCol}`) && initialLoad) {
+                tempDigit.setAttribute("visibility", "hidden");
+            }
         }
         return tempDigit;
     }
@@ -434,5 +454,104 @@ class Sudoku {
     deletePuzzleDataHTML() {
         let puzzleData = document.getElementById("puzzle-json-data");
         puzzleData.remove();
+    }
+    savePuzzleToLocal() {
+        let puzzleId = window.location.href.split("/")[window.location.href.split("/").length - 2];
+        let boardObject = {};
+        let digitsList = document.querySelectorAll(".added-digit, .given-digit, .corner-digit, .centre-digit");
+
+        for (let digit of digitsList) {
+            let tempId = digit.id.split("-")[1];
+            let tempDigit = `${digit.innerHTML}-${digit.classList[0].split("-")[0]}`;
+            let digitArray;
+            if (!!boardObject[tempId]) {
+                if (Array.isArray(boardObject[tempId])) {
+                    digitArray = boardObject[tempId];
+                    digitArray.push(tempDigit);
+                } else {
+                    digitArray = new Array(boardObject[tempId], tempDigit);
+                }
+                boardObject[tempId] = digitArray;
+                continue;
+            }
+            boardObject[tempId] = tempDigit;
+        }
+        let currState = !!JSON.parse(localStorage.getItem(`${puzzleId}CurrentState`)) ? JSON.parse(localStorage.getItem(`${puzzleId}CurrentState`))["boardState"] : {};
+        let prevState1 = !!JSON.parse(localStorage.getItem(`${puzzleId}CurrentState`)) ? JSON.parse(localStorage.getItem(`${puzzleId}CurrentState`))["prevState1"] : {};
+        let prevState2 = !!JSON.parse(localStorage.getItem(`${puzzleId}CurrentState`)) ? JSON.parse(localStorage.getItem(`${puzzleId}CurrentState`))["prevState2"] : {};
+        let prevState3 = !!JSON.parse(localStorage.getItem(`${puzzleId}CurrentState`)) ? JSON.parse(localStorage.getItem(`${puzzleId}CurrentState`))["prevState3"] : {};
+        let puzzleState = { "id": puzzleId, "boardState": boardObject, "prevState1": currState, "prevState2": prevState1, "prevState3": prevState2, "prevState4": prevState3 }
+        window.localStorage.setItem(`${puzzleId}CurrentState`, JSON.stringify(puzzleState));
+        console.log("Puzzle saved to local storage.");
+    }
+    loadPuzzleFromLocal() {
+        let puzzleId = window.location.href.split("/")[window.location.href.split("/").length - 2];
+        if (!!localStorage.getItem(`${puzzleId}CurrentState`)) {
+            let puzzleState = localStorage.getItem(`${puzzleId}CurrentState`);
+            let boardObject = JSON.parse(puzzleState);
+            let boardState = boardObject["boardState"];
+            for (let [key, value] of Object.entries(boardState)) {
+                if (Array.isArray(value)) {
+
+                    for (let i = 0; i < value.length; i++) {
+                        let item = value[i];
+                        let tempArrType = item.split("-")[1];
+                        if (tempArrType == "added") {
+                            tempArrType = "main";
+                        }
+                        let tempArrDigit = item.split("-")[0];
+
+
+
+                        let newArrDigit = this.createDigit(key, tempArrType, tempArrDigit, true)
+
+                        if (tempArrType != "given") {
+                            newArrDigit.innerHTML = tempArrDigit;
+                            newArrDigit.setAttribute("font-size", `${Math.min(1, (14-(newArrDigit.innerHTML.length))/10)}em`);
+                        };
+                        if (tempArrType == "main") {
+                            document.querySelector(".added-digits").appendChild(newArrDigit);
+                        } else if (tempArrType == "corner") {
+                            document.querySelector(".corner-pencilmarks").appendChild(newArrDigit);
+                        } else if (tempArrType == "centre") {
+                            document.querySelector(".centre-pencilmarks").appendChild(newArrDigit);
+                        }
+                    }
+                    continue;
+                }
+                let tempType = value.split("-")[1];
+                if (tempType == "added") {
+                    tempType = "main";
+                }
+                let tempDigit = value.split("-")[0];
+                let newDigit = this.createDigit(key, tempType, tempDigit, true);
+                if (tempType != "given") { newDigit.innerHTML = tempDigit };
+                if (tempType == "main") {
+                    document.querySelector(".added-digits").appendChild(newDigit);
+                } else if (tempType == "corner") {
+                    document.querySelector(".corner-pencilmarks").appendChild(newDigit);
+                } else if (tempType == "centre") {
+                    document.querySelector(".centre-pencilmarks").appendChild(newDigit);
+                }
+            }
+            console.log("Puzzle loaded from local storage.");
+        } else {
+            console.log("No local puzzle data found.");
+        }
+    }
+    undo() {
+        let puzzleId = window.location.href.split("/")[window.location.href.split("/").length - 2];
+        let prevState1 = !!JSON.parse(localStorage.getItem(`${puzzleId}CurrentState`)) ? JSON.parse(localStorage.getItem(`${puzzleId}CurrentState`))["prevState1"] : {};
+        if (Object.keys(prevState1).length == 0) {
+            console.log("No more undo states.");
+            return 0;
+        }
+        let prevState2 = !!JSON.parse(localStorage.getItem(`${puzzleId}CurrentState`)) ? JSON.parse(localStorage.getItem(`${puzzleId}CurrentState`))["prevState2"] : {};
+        let prevState3 = !!JSON.parse(localStorage.getItem(`${puzzleId}CurrentState`)) ? JSON.parse(localStorage.getItem(`${puzzleId}CurrentState`))["prevState3"] : {};
+        let prevState4 = !!JSON.parse(localStorage.getItem(`${puzzleId}CurrentState`)) ? JSON.parse(localStorage.getItem(`${puzzleId}CurrentState`))["prevState4"] : {};
+        let puzzleState = { "id": puzzleId, "boardState": prevState1, "prevState1": prevState2, "prevState2": prevState3, "prevState3": prevState4, "prevState4": {} }
+        window.localStorage.setItem(`${puzzleId}CurrentState`, JSON.stringify(puzzleState));
+        document.querySelectorAll(".added-digit, .corner-digit, .centre-digit").forEach(e => { e.remove() });
+        this.loadPuzzleFromLocal();
     }
 }

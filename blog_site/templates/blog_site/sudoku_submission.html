@@ -1,6 +1,18 @@
 {% extends 'blog_site/base.html' %} {% load static %} {% block head %}
 <link rel="stylesheet" href="{% static 'blog_site/css/sudoku.css' %}"> {% endblock %} {% block content %}
-<div class="play-board" ondragstart="return false;" ondrop="return false;"></div>
+<form method="POST" class="sudoku-submit-form">
+    {% csrf_token %}
+    <div class="play-board" ondragstart="return false;" ondrop="return false;">
+        <div class="sudoku-info">
+            <label for="title-entry">Title</label>
+            <input type="text" required maxlength="100" name="title-entry" id="title-entry" class="sudoku-title-entry input-box" />
+            <label for="ruleset">Ruleset</label>
+            <textarea required maxlength="500" name="ruleset" id="ruleset" class="sudoku-ruleset-entry input-box" style="resize:none;"></textarea>
+            <input type="text" id="boardJSON" name="boardJSON" class="sudoku-board-entry input-box" />
+        </div>
+    </div>
+    <button class="submit-button" type="submit">Submit</button>
+</form>
 <footer class="copyright">
     <p class="copyright-text">All code was written myself, however features were inspired by <a href="https://app.crackingthecryptic.com" target="_blank">Sven Neumann's Sudoku Pad</a>.</p>
 </footer>

@@ -4,7 +4,7 @@
 <footer class="copyright">
     <p class="copyright-text">All code was written myself, however features were inspired by <a href="https://app.crackingthecryptic.com" target="_blank">Sven Neumann's Sudoku Pad</a>.</p>
 </footer>
-{{ puzzleJSON|json_script:"puzzle-json-data"}}
+{{ q.board|json_script:"puzzle-json-data"}}
 <script src="{% static 'blog_site/js/sudoku-framework.js' %}"></script>
 <script src="{% static 'blog_site/js/sudoku.js' %}"></script>
 <!-- <script src="./static/js/check.js"></script> -->
