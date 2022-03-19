@@ -18,6 +18,9 @@ class ProjectAdmin(admin.ModelAdmin):
 
 class SudokuAdmin(admin.ModelAdmin):
     readonly_fields = ('id', 'post_date', 'last_edited',)
+    
+class CheatsheetAdmin(admin.ModelAdmin):
+    readonly_fields = ('id', 'post_date', 'last_edited',)
 
 # Register your models here.
 admin.site.register(Gaming, GamingAdmin)
@@ -27,3 +30,4 @@ admin.site.register(Keyword)
 admin.site.register(Type)
 admin.site.register(Project, ProjectAdmin)
 admin.site.register(Sudoku, SudokuAdmin)
+admin.site.register(CheatsheetSection, CheatsheetAdmin)

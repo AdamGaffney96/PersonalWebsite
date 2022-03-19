@@ -304,3 +304,12 @@ def newsudoku(request):
 def chess(request):
     context = {"success": "success"}
     return render(request, 'blog_site/base_chess.html', context)
+
+def single_cheatsheet(request, slug):
+    sections = CheatsheetSection.objects.filter(language = slug)
+    if sections.exists(): 
+        print("Cheatsheet found.")
+    else:
+        raise Http404('Cheatsheet does not exist.')
+    context = {"type": sections.first().verbose, "sections": sections}
+    return render(request, 'blog_site/base_cheatsheet.html', context)

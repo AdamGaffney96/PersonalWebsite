@@ -1,0 +1,15 @@
+{% extends 'blog_site/base.html' %} {% load static %} {% block head %}
+<link rel="stylesheet" href="{% static 'blog_site/css/cheatsheet.css' %}"> {% endblock %} {% block content %}
+<header class="cheatsheet-header">
+    <h1 class="cheatsheet-title">{{type}} Title</h1>
+</header>
+<main class="cheatsheet-body">
+    {% for section in sections %}
+    <section class="cheatsheet-section">
+        <h2 class="cheatsheet-section-title">{{section.title}}</h2>
+        <p class="code-block">{{section.code_block}}</p>
+        <p class="cheatsheet-description">{{section.description}}</p>
+    </section>
+    {% endfor %}
+</main>
+{% endblock %}

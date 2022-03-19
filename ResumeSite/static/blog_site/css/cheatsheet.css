@@ -1,0 +1,26 @@
+:root {
+    --clr-section-bg: hsl(0, 0%, 70%);
+    --clr-title-text: hsl(0 50% 0%);
+}
+
+.cheatsheet-header {
+    display: grid;
+    align-items: center;
+    justify-content: center;
+}
+
+.cheatsheet-title {
+    color: var(--clr-title-text);
+}
+
+.cheatsheet-body {
+    display: grid;
+    margin: 1rem;
+    gap: 1rem;
+}
+
+.cheatsheet-section {
+    background: var(--clr-section-bg);
+    padding: 3rem;
+    border-radius: 1rem;
+}

@@ -130,6 +130,21 @@ class Sudoku(models.Model):
     class Meta:
         verbose_name_plural = 'Sudoku Puzzles'
 
+class CheatsheetSection(models.Model):
+    language = models.CharField(max_length=50, verbose_name="Coding Language")
+    title = models.CharField(max_length=100, verbose_name="Section title")
+    verbose = models.CharField(max_length=50, verbose_name="Coding Language for Display")
+    code_block = models.CharField(max_length=500, verbose_name="Code Block Text")
+    description = models.CharField(max_length=1000, verbose_name="Section Description")
+    post_date = models.DateTimeField(auto_now_add=True)
+    last_edited = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return self.title
+    
+    class Meta:
+        verbose_name_plural = 'Cheatsheet Sections'
+
 @receiver(post_save, sender=Project)
 def pre_save_receiver(sender, instance, *args, **kwargs):
    if not instance.slug:

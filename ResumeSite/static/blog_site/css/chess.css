@@ -14,6 +14,12 @@
     width: 800px;
     height: 800px;
     position: relative;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .square {
@@ -21,7 +27,6 @@
     height: 100px;
     box-sizing: border-box;
     z-index: 6;
-    cursor: pointer;
 }
 
 .overlays {
@@ -37,6 +42,11 @@
 .piece {
     width: 100px;
     height: 100px;
+    cursor: grab;
+}
+
+.arrow {
+    pointer-events: none;
 }
 
 .copyright {
