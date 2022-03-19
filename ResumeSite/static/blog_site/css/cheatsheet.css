@@ -1,6 +1,8 @@
 :root {
-    --clr-section-bg: hsl(0, 0%, 70%);
+    --clr-section-bg: hsl(0 0% 70%);
     --clr-title-text: hsl(0 50% 0%);
+    --clr-code-bg: hsl(0 0% 40%);
+    --clr-text-light: hsl(0 0% 100%);
 }
 
 .cheatsheet-header {
@@ -23,4 +25,11 @@
     background: var(--clr-section-bg);
     padding: 3rem;
     border-radius: 1rem;
+}
+
+.code-block {
+    background: var(--clr-code-bg);
+    color: var(--clr-text-light);
+    padding: 1rem;
+    font-style: italic;
 }

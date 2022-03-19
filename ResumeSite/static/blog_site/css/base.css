@@ -10,11 +10,12 @@
 
 body {
     /* background: var(--clr-dark-bg); */
+    font-family: Merriweather;
 }
 
 .nav-bar {
     background: var(--clr-main-1);
-    font-size: 1.2rem;
+    font-size: 1rem;
     display: flex;
     padding: 1rem;
 }
