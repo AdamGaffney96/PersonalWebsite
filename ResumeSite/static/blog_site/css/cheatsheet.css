@@ -25,11 +25,27 @@
     background: var(--clr-section-bg);
     padding: 3rem;
     border-radius: 1rem;
+    box-shadow: 0 0 0.3rem 0.1rem hsl(0 0% 0% / 60%);
+}
+
+.cheatsheet-section-title {
+    position: relative;
+    padding-bottom: 0.4rem;
+}
+
+.cheatsheet-section-title::before {
+    content: "";
+    position: absolute;
+    border-bottom: 2px solid black;
+    width: 90%;
+    bottom: 0;
+    right: 0;
 }
 
 .code-block {
     background: var(--clr-code-bg);
     color: var(--clr-text-light);
     padding: 1rem;
+    margin: 0.5rem 3rem;
     font-style: italic;
 }
