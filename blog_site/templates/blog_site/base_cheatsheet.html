@@ -1,7 +1,9 @@
 {% extends 'blog_site/base.html' %} {% load static %} {% block head %}
-<link rel="stylesheet" href="{% static 'blog_site/css/cheatsheet.css' %}"> {% endblock %} {% block content %}
+<link rel="stylesheet" href="{% static 'blog_site/css/cheatsheet.css' %}">
+<title>{{type}} Cheatsheet | Adam Gaffney</title>
+{% endblock %} {% block content %}
 <header class="cheatsheet-header">
-    <h1 class="cheatsheet-title">{{type}} Title</h1>
+    <h1 class="cheatsheet-title">{{type}} Cheatsheet</h1>
 </header>
 <main class="cheatsheet-body">
     {% for section in sections %}

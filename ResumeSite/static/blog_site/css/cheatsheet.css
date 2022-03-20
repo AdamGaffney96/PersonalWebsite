@@ -13,33 +13,38 @@
 
 .cheatsheet-title {
     color: var(--clr-title-text);
+    font-size: 2.5rem;
+    margin-top: 1rem;
 }
 
 .cheatsheet-body {
     display: grid;
     margin: 1rem;
-    gap: 1rem;
+    gap: 5rem;
 }
 
 .cheatsheet-section {
     background: var(--clr-section-bg);
+    display: flex;
+    flex-direction: column;
     padding: 3rem;
+    gap: 1rem;
     border-radius: 1rem;
-    box-shadow: 0 0 0.3rem 0.1rem hsl(0 0% 0% / 60%);
+    box-shadow: -.1rem .1rem 0.3rem 0.1rem hsl(0 0% 0% / 60%);
 }
 
 .cheatsheet-section-title {
     position: relative;
     padding-bottom: 0.4rem;
+    font-size: 2rem;
 }
 
 .cheatsheet-section-title::before {
     content: "";
     position: absolute;
     border-bottom: 2px solid black;
-    width: 90%;
+    width: 100%;
     bottom: 0;
-    right: 0;
 }
 
 .code-block {
@@ -48,4 +53,9 @@
     padding: 1rem;
     margin: 0.5rem 3rem;
     font-style: italic;
+    border-radius: 1rem;
+}
+
+.cheatsheet-description {
+    font-size: 1.2rem;
 }

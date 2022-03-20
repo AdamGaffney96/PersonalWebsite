@@ -10,7 +10,7 @@
 
 body {
     /* background: var(--clr-dark-bg); */
-    font-family: Merriweather;
+    font-family: 'Roboto', 'Merriweather', Arial, sans-serif;
 }
 
 .nav-bar {
