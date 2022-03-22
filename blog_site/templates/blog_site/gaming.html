@@ -8,94 +8,92 @@
 <meta property='twitter:url' content='{{request.get_full_path}}'>
 <meta property='twitter:description' content='A collection of all my written gaming pieces.'>
 <meta property='twitter:image' content='{{request.scheme}}://{{request.get_host}}{% static "blog_site/img/Logo.png" %}'> {% endblock %} {% block content %}
-<main>
-    <div class="page-title">
-        <h1>General Gaming</h1>
-        <div class="title-border"></div>
-    </div>
-    <div class="title-desc first-paragraph">
-        <p>A collection of gaming content, be it reviews, analysis or critical discussion.</p>
-    </div>
-    <div class="page-line-break"></div>
-    <div class="page-title">
-        <h2>Most Recent in Gaming Reviews</h2>
-        <div class="title-border"></div>
-    </div>
-    <div class="sidescrolling-box article-list-box">
-        {% for item in reviews|slice:"0:3" %}
-        <div class="article-box-thumbnail">
-            <a href="{% url 'single_review' item.slug %}" class="article-link">
-                <div class="article-preview-contents">
-                    <div class="article-img-wrapper-thumbnail">
-                        <img src="{% static item.thumb %}" class="article-img-preview" />
-                    </div>
-                    <div class="article-text-wrapper-thumbnail">
-                        <div class="article-header-wrapper">
-                            {% if item.post_date|date:'Y-m-d H:i' != item.last_edited|date:'Y-m-d H:i' %}
-                            <h3 class="article-title-review-thumbnail">{{item.title}} <span class='edited'>(edited)</span></h3>
-                            {% else %}
-                            <h3 class="article-title-review-thumbnail">{{item.title}}</h3>
-                            {% endif %}
-                        </div>
+<div class="page-title">
+    <h1>General Gaming</h1>
+    <div class="title-border"></div>
+</div>
+<div class="title-desc first-paragraph">
+    <p>A collection of gaming content, be it reviews, analysis or critical discussion.</p>
+</div>
+<div class="page-line-break"></div>
+<div class="page-title">
+    <h2>Most Recent in Gaming Reviews</h2>
+    <div class="title-border"></div>
+</div>
+<div class="sidescrolling-box article-list-box">
+    {% for item in reviews|slice:"0:3" %}
+    <div class="article-box-thumbnail">
+        <a href="{% url 'single_review' item.slug %}" class="article-link">
+            <div class="article-preview-contents">
+                <div class="article-img-wrapper-thumbnail">
+                    <img src="{% static item.thumb %}" class="article-img-preview" />
+                </div>
+                <div class="article-text-wrapper-thumbnail">
+                    <div class="article-header-wrapper">
+                        {% if item.post_date|date:'Y-m-d H:i' != item.last_edited|date:'Y-m-d H:i' %}
+                        <h3 class="article-title-review-thumbnail">{{item.title}} <span class='edited'>(edited)</span></h3>
+                        {% else %}
+                        <h3 class="article-title-review-thumbnail">{{item.title}}</h3>
+                        {% endif %}
                     </div>
                 </div>
-            </a>
-        </div>
-        {% endfor %}
+            </div>
+        </a>
     </div>
-    <!-- Most recent gaming discussions -->
-    <div class="page-title">
-        <h2>Most Recent in Gaming Opinions</h2>
-        <div class="title-border"></div>
-    </div>
-    <div class="sidescrolling-box article-list-box">
-        {% for item in opinion|slice:"0:3" %}
-        <div class="article-box-thumbnail">
-            <a href="{% url 'single_review' item.slug %}" class="article-link">
-                <div class="article-preview-contents">
-                    <div class="article-img-wrapper-thumbnail">
-                        <img src="{% static item.thumb %}" class="article-img-preview" />
-                    </div>
-                    <div class="article-text-wrapper-thumbnail">
-                        <div class="article-header-wrapper">
-                            {% if item.post_date|date:'Y-m-d H:i' != item.last_edited|date:'Y-m-d H:i' %}
-                            <h3 class="article-title-review-thumbnail">{{item.title}} <span class='edited'>(edited)</span></h3>
-                            {% else %}
-                            <h3 class="article-title-review-thumbnail">{{item.title}}</h3>
-                            {% endif %}
-                        </div>
+    {% endfor %}
+</div>
+<!-- Most recent gaming discussions -->
+<div class="page-title">
+    <h2>Most Recent in Gaming Opinions</h2>
+    <div class="title-border"></div>
+</div>
+<div class="sidescrolling-box article-list-box">
+    {% for item in opinion|slice:"0:3" %}
+    <div class="article-box-thumbnail">
+        <a href="{% url 'single_review' item.slug %}" class="article-link">
+            <div class="article-preview-contents">
+                <div class="article-img-wrapper-thumbnail">
+                    <img src="{% static item.thumb %}" class="article-img-preview" />
+                </div>
+                <div class="article-text-wrapper-thumbnail">
+                    <div class="article-header-wrapper">
+                        {% if item.post_date|date:'Y-m-d H:i' != item.last_edited|date:'Y-m-d H:i' %}
+                        <h3 class="article-title-review-thumbnail">{{item.title}} <span class='edited'>(edited)</span></h3>
+                        {% else %}
+                        <h3 class="article-title-review-thumbnail">{{item.title}}</h3>
+                        {% endif %}
                     </div>
                 </div>
-            </a>
-        </div>
-        {% endfor %}
+            </div>
+        </a>
     </div>
-    <!-- Most recent opinion pieces -->
-    <div class="page-title">
-        <h2>Most Recent in Gaming Discussions</h2>
-        <div class="title-border"></div>
-    </div>
-    <div class="sidescrolling-box article-list-box">
-        {% for item in discussion|slice:"0:3" %}
-        <div class="article-box-thumbnail">
-            <a href="{% url 'single_essay' item.slug %}" class="article-link">
-                <div class="article-preview-contents">
-                    <div class="article-img-wrapper-thumbnail">
-                        <img src="{% static item.thumb %}" class="article-img-preview" />
-                    </div>
-                    <div class="article-text-wrapper-thumbnail">
-                        <div class="article-header-wrapper">
-                            {% if item.post_date|date:'Y-m-d H:i' != item.last_edited|date:'Y-m-d H:i' %}
-                            <h3 class="article-title-review-thumbnail">{{item.title}} <span class='edited'>(edited)</span></h3>
-                            {% else %}
-                            <h3 class="article-title-review-thumbnail">{{item.title}}</h3>
-                            {% endif %}
-                        </div>
+    {% endfor %}
+</div>
+<!-- Most recent opinion pieces -->
+<div class="page-title">
+    <h2>Most Recent in Gaming Discussions</h2>
+    <div class="title-border"></div>
+</div>
+<div class="sidescrolling-box article-list-box">
+    {% for item in discussion|slice:"0:3" %}
+    <div class="article-box-thumbnail">
+        <a href="{% url 'single_essay' item.slug %}" class="article-link">
+            <div class="article-preview-contents">
+                <div class="article-img-wrapper-thumbnail">
+                    <img src="{% static item.thumb %}" class="article-img-preview" />
+                </div>
+                <div class="article-text-wrapper-thumbnail">
+                    <div class="article-header-wrapper">
+                        {% if item.post_date|date:'Y-m-d H:i' != item.last_edited|date:'Y-m-d H:i' %}
+                        <h3 class="article-title-review-thumbnail">{{item.title}} <span class='edited'>(edited)</span></h3>
+                        {% else %}
+                        <h3 class="article-title-review-thumbnail">{{item.title}}</h3>
+                        {% endif %}
                     </div>
                 </div>
-            </a>
-        </div>
-        {% endfor %}
+            </div>
+        </a>
     </div>
-</main>
+    {% endfor %}
+</div>
 {% endblock %}

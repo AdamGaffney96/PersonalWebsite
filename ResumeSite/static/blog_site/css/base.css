@@ -1,19 +1,132 @@
 :root {
-    --clr-dark-bg: hsl(0, 0%, 0%);
+    --clr-bg: hsl(0, 0%, 100%);
+    --clr-sidebar: hsl(0, 0%, 0%);
     --clr-main-1: hsl(199, 85%, 56%);
     --clr-text-white: hsl(0, 0%, 100%);
+    --clr-text-light: hsl(199, 85%, 70%);
 }
 
 * {
     margin: 0;
 }
 
-body {
-    /* background: var(--clr-dark-bg); */
-    font-family: 'Roboto', 'Merriweather', Arial, sans-serif;
+.hamburger-button {
+    all: initial;
 }
 
-.nav-bar {
+a,
+a:hover,
+a:active,
+a:visited {
+    text-decoration: none;
+    color: inherit;
+}
+
+body {
+    /* background: var(--clr-bg); */
+    font-family: 'Roboto', 'Merriweather', Arial, sans-serif;
+    display: flex;
+    overflow: hidden;
+    height: 100vh;
+}
+
+.sidebar-underlay {
+    width: 3rem;
+    flex-shrink: 0;
+    padding: 0.3rem;
+}
+
+.nav-sidebar {
+    width: 3rem;
+    height: 100%;
+    padding: 0.3rem;
+    display: flex;
+    position: fixed;
+    flex-direction: column;
+    align-items: end;
+    background: var(--clr-sidebar);
+    transition: width 0.3s, padding 0.3s;
+    box-shadow: 0 0 5px 2px hsl(0 0% 0%);
+    z-index: 10;
+}
+
+.nav-list {
+    padding: 0;
+    opacity: 0;
+    font-size: 3rem;
+    list-style: none;
+    transition: opacity 0.3s, padding 0.3s;
+    white-space: nowrap;
+    visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.nav-item {
+    color: var(--clr-text-white);
+}
+
+.home-button {
+    cursor: pointer;
+}
+
+.home-button:hover,
+.home-button a:focus {
+    color: var(--clr-text-light);
+    transition: color 0.3s;
+}
+
+.nav-sublist {
+    font-size: 2rem;
+    list-style: none;
+    padding: 0;
+    padding-left: 1.5rem;
+    white-space: nowrap;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.nav-subitem {
+    cursor: pointer;
+    width: fit-content;
+}
+
+.nav-subitem:hover,
+.nav-subitem a:focus {
+    color: var(--clr-text-light);
+    transition: color 0.3s;
+}
+
+.hamburger-button:focus {
+    all: reset;
+}
+
+.hamburger-icon {
+    width: 3rem;
+    aspect-ratio: 1.4;
+    cursor: pointer;
+}
+
+main {
+    height: 100%;
+    overflow-y: auto;
+    position: relative;
+}
+
+.dialogue-box {
+    padding: 1rem;
+    background: var(--clr-bg);
+    border: 1px solid var(--clr-sidebar);
+    border-radius: 1rem;
+    z-index: 100;
+    position: absolute;
+    top: 40%;
+    left: 40%;
+}
+
+/* .nav-bar {
     background: var(--clr-main-1);
     font-size: 1rem;
     display: flex;
@@ -31,4 +144,4 @@ body {
     color: var(--clr-text-white);
     cursor: pointer;
     user-select: none;
-}
+} */

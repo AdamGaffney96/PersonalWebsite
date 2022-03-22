@@ -5,7 +5,7 @@
 <header class="cheatsheet-header">
     <h1 class="cheatsheet-title">{{type}} Cheatsheet</h1>
 </header>
-<main class="cheatsheet-body">
+<div class="cheatsheet-body">
     {% for section in sections %}
     <section class="cheatsheet-section">
         <h2 class="cheatsheet-section-title">{{section.title}}</h2>
@@ -13,5 +13,5 @@
         <p class="cheatsheet-description">{{section.description}}</p>
     </section>
     {% endfor %}
-</main>
+</div>
 {% endblock %}

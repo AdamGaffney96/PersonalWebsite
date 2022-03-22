@@ -8,15 +8,13 @@
 <meta property='twitter:url' content='{{request.get_full_path}}'>
 <meta property='twitter:description' content='Sign up for my newsletter to be the first to hear about my new projects!'>
 <meta property='twitter:image' content='{{request.scheme}}://{{request.get_host}}{% static "blog_site/img/Logo.png" %}'> {% endblock %} {% block content %}
-<main>
-    <div id='contact-title'>
-        <h5>Newsletter</h5>
-    </div>
-    <div id='contact-subtitle'>
-        <h6>Please fill out this form to subscribe to my newsletter. No schedule currently however I will send it out no more than once a week, likely less until I get a structured release schedule for content.</h6>
-    </div>
-    <div class='newsletter-form-container'>
-        <iframe src="https://cdn.forms-content.sg-form.com/e1ec1968-ee5b-11eb-8c4e-b2c5a7b29daf" class='newsletter-form'></iframe>
-    </div>
-</main>
+<div id='contact-title'>
+    <h5>Newsletter</h5>
+</div>
+<div id='contact-subtitle'>
+    <h6>Please fill out this form to subscribe to my newsletter. No schedule currently however I will send it out no more than once a week, likely less until I get a structured release schedule for content.</h6>
+</div>
+<div class='newsletter-form-container'>
+    <iframe src="https://cdn.forms-content.sg-form.com/e1ec1968-ee5b-11eb-8c4e-b2c5a7b29daf" class='newsletter-form'></iframe>
+</div>
 {% endblock %}

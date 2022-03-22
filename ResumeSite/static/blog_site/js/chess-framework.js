@@ -1,8 +1,10 @@
 class Chess {
-    constructor(darkColour, lightColour, arrowColour, perspective) {
-        this.darkColour = darkColour;
-        this.lightColour = lightColour;
+    constructor(arrowColour, perspective, boardTheme = "blue1") {
+
+        this.boardTheme = boardTheme;
         this.arrowColour = arrowColour;
+        this.boardOptions = { "dark1": "Dark Board", "blue1": "Blue Ocean", "green1": "Green Forest" };
+        this.themeColours = { "dark1": { "dark": "hsl(0, 0%, 20%)", "light": "hsl(0, 0%, 87%" }, "blue1": { "dark": "hsl(195, 100%, 25%)", "light": "hsl(0, 0%, 87%" }, "green1": { "dark": "hsl(99, 100%, 25%)", "light": "hsl(0, 0%, 87%" } }
         this.startingSquare;
         this.endingSquare;
         this.isPieceGrabbed;
@@ -17,10 +19,11 @@ class Chess {
     }
     init() {
         this.buildBoard();
+        this.openChessSettings();
     }
     buildBoard() {
         this.createSVGs();
-        this.createBoard(this.darkColour, this.lightColour);
+        this.createBoard(this.boardTheme);
         this.addBoardOverlay();
         this.setUpPieces();
     }
@@ -47,7 +50,9 @@ class Chess {
         board.appendChild(svg);
         document.querySelector(".chess-container").appendChild(board);
     }
-    createBoard(dark, light) {
+    createBoard(theme) {
+        let dark = this.themeColours[theme].dark;
+        let light = this.themeColours[theme].light;
         let boardSquares = document.querySelector(".board-squares");
         let square = document.createElementNS("http://www.w3.org/2000/svg", "rect");
         square.classList.add("square");
@@ -58,8 +63,10 @@ class Chess {
                 let tempSquare = square.cloneNode();
                 if ((i % 2 == 0 && j % 2 == 0) || (i % 2 == 1 && j % 2 == 1)) {
                     tempSquare.setAttribute('fill', light);
+                    tempSquare.classList.add("light");
                 } else {
                     tempSquare.setAttribute('fill', dark);
+                    tempSquare.classList.add("dark");
                 }
                 tempSquare.setAttribute("x", 100 * (j - 1));
                 tempSquare.setAttribute("y", 100 * (i - 1));
@@ -478,6 +485,53 @@ class Chess {
                 console.log(pieceType);
             }
         });
+    }
+    createDialogue(dialogueOptions) {
+        let dialogue = document.createElement("div");
+        dialogue.classList.add("dialogue-box");
+        if (dialogueOptions.settings == "chessSettings") {
+            console.log(dialogueOptions.settings);
+            let boardTheme = document.createElement("select");
+            boardTheme.id = "board-theme";
+            boardTheme.name = "board-theme";
+            for (let theme in this.boardOptions) {
+                let tempTheme = document.createElement("option");
+                tempTheme.value = theme;
+                tempTheme.innerHTML = this.boardOptions[theme];
+                boardTheme.append(tempTheme);
+            }
+            let settingLabel = document.createElement("label");
+            settingLabel.setAttribute("for", "board-theme")
+            settingLabel.classList.add("settings-label");
+            settingLabel.innerHTML = "Board Theme";
+            let settingsGroup = document.createElement("div");
+            settingsGroup.classList.add("settings-group");
+            settingsGroup.appendChild(settingLabel);
+            settingsGroup.appendChild(boardTheme);
+            let saveButton = document.createElement("button");
+            saveButton.innerHTML = "Save";
+            saveButton.classList.add("save-button");
+            saveButton.setAttribute("onclick", "chessboard.saveChessSettings()");
+            dialogue.appendChild(settingsGroup);
+            dialogue.appendChild(saveButton);
+            return dialogue;
+        }
+    }
+    openChessSettings() {
+        let settingsGroup = this.createDialogue({ "settings": "chessSettings" });
+        console.log(settingsGroup);
+        document.querySelector("main").appendChild(settingsGroup);
+    }
+    saveChessSettings() {
+        let chosenTheme = document.getElementById("board-theme");
+        console.log(chosenTheme);
+        localStorage.setItem("chessSettings", JSON.stringify({
+            "boardTheme": chosenTheme.value
+        }))
+        document.querySelectorAll(".light").forEach(square => { square.setAttribute("fill", this.themeColours[chosenTheme.value].light) }, this)
+        document.querySelectorAll(".dark").forEach(square => { square.setAttribute("fill", this.themeColours[chosenTheme.value].dark) }, this)
+        document.querySelector(".dialogue-box").remove();
+        console.log("%cSettings Saved.", "color: red; font-size: 16px;")
     }
     handleEvent(event) {
         // mousedown events

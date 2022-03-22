@@ -35,7 +35,7 @@ body {
     z-index: 6;
 }
 
-svg {
+.svg {
     position: absolute;
     overflow: visible;
     cursor: pointer;
@@ -80,9 +80,9 @@ svg {
 }
 
 .copyright a,
-a:active,
-a:visited,
-a:hover {
+.copyright a:active,
+.copyright a:visited,
+.copyright a:hover {
     color: red;
     text-decoration: none;
 }

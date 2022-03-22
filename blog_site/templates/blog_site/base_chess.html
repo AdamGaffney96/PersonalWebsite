@@ -1,6 +1,11 @@
 {% extends 'blog_site/base.html' %} {% load static %} {% block head %}
 <link rel="stylesheet" href="{% static 'blog_site/css/chess.css' %}"> {% endblock %} {% block content %}
-<div class="chess-container" ondragstart="return false;" ondrop="return false;"></div>
+<div class="chess-full-container">
+    <div class="chess-container" ondragstart="return false;" ondrop="return false;"></div>
+    <div class="chess-sidebar">
+        <button class="chess-settings-button" onclick="chessboard.openChessSettings()">Settings</button>
+    </div>
+</div>
 <footer class="copyright">
     <p class="copyright-text">All code was written myself, however features were inspired by <a href="https://www.chess.com" target="_blank">Chess.com</a>.</p>
 </footer>

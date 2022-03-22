@@ -8,14 +8,12 @@
 <meta property='twitter:url' content='{{request.get_full_path}}'>
 <meta property='twitter:description' content='Just a dot that moves...probably.'>
 <meta property='twitter:image' content='{{request.scheme}}://{{request.get_host}}{% static "blog_site/img/Logo.png" %}'> {% endblock %} {% block content %}
-<main>
-    <h2 class='first-paragraph project-head'>Slow and steady wins the race...</h2>
-    <div class='return-home-button'>
-        <a href="{% url 'projects' %}">Return to All Projects</a>
-    </div>
-    <div id='moving-dot-container'>
-        <div id='moving-dot-body'></div>
-    </div>
-</main>
+<h2 class='first-paragraph project-head'>Slow and steady wins the race...</h2>
+<div class='return-home-button'>
+    <a href="{% url 'projects' %}">Return to All Projects</a>
+</div>
+<div id='moving-dot-container'>
+    <div id='moving-dot-body'></div>
+</div>
 <script src='{% static "blog_site/js/movingDot.js" %}'></script>
 {% endblock %}
