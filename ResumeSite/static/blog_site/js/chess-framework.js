@@ -195,6 +195,51 @@ class Chess {
                     arrow.setAttribute("d", `M${(startCol*100)-50} ${(8 - startRow)*100+50} m30 -15 l${(endCol-startCol)*100 - 45} ${((startRow-endRow)*100 + 45)} l15 15 v-45 h-45 l15 15 l${-((endCol-startCol)*100 - 45)} ${-((startRow-endRow)*100 + 45)} Z`);
                 }
             }
+        } // Knight Arrows
+        else if ((Math.abs(startCol - endCol) == 1 && Math.abs(startRow - endRow) == 2) || (Math.abs(startRow - endRow) == 1 && Math.abs(startCol - endCol) == 2)) {
+            // Vertical Knight Arrows
+            if (Math.abs(startCol - endCol) == 1) {
+                // Right
+                if (startCol < endCol) {
+                    // Up
+                    if (startRow < endRow) {
+                        arrow.setAttribute("d", `M${(startCol*100)-20} ${(8 - startRow)*100+39} h60 v-160 h-19 l30 -30 l30 30 h-19 v182 h-82 Z`);
+                    } // Down
+                    else if (startRow > endRow) {
+                        arrow.setAttribute("d", `M${(startCol*100)-20} ${(8 - startRow)*100+61} h60 v160 h-19 l30 30 l30 -30 h-19 v-182 h-82 Z`);
+                    }
+                } // Left
+                else if (startCol > endCol) {
+                    // Up
+                    if (startRow < endRow) {
+                        arrow.setAttribute("d", `M${(startCol*100)-80} ${(8 - startRow)*100+39} h-60 v-160 h19 l-30 -30 l-30 30 h19 v182 h82 Z`);
+                    } // Down
+                    else if (startRow > endRow) {
+                        arrow.setAttribute("d", `M${(startCol*100)-80} ${(8 - startRow)*100+61} h-60 v160 h19 l-30 30 l-30 -30 h19 v-182 h82 Z`);
+                    }
+                }
+            } // Horizonal Knight Arrows
+            else if (Math.abs(startCol - endCol) == 2) {
+                // Right
+                if (startCol < endCol) {
+                    // Up
+                    if (startRow < endRow) {
+                        arrow.setAttribute("d", `M${(startCol*100)-20} ${(8 - startRow)*100+39} h160 v-60 h-19 l30 -30 l30 30 h-19 v82 h-182 Z`);
+                    } // Down
+                    else if (startRow > endRow) {
+                        arrow.setAttribute("d", `M${(startCol*100)-20} ${(8 - startRow)*100+61} h160 v60 h-19 l30 30 l30 -30 h-19 v-82 h-182 Z`);
+                    }
+                } // Left
+                else if (startCol > endCol) {
+                    // Up
+                    if (startRow < endRow) {
+                        arrow.setAttribute("d", `M${(startCol*100)-80} ${(8 - startRow)*100+39} h-160 v-60 h19 l-30 -30 l-30 30 h19 v82 h182 Z`);
+                    } // Down
+                    else if (startRow > endRow) {
+                        arrow.setAttribute("d", `M${(startCol*100)-80} ${(8 - startRow)*100+61} h-160 v60 h19 l-30 30 l-30 -30 h19 v-82 h182 Z`);
+                    }
+                }
+            }
         }
         arrows.appendChild(arrow);
     }
