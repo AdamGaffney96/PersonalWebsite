@@ -1,6 +1,7 @@
 :root {
     --clr-bg: hsl(0, 0%, 100%);
     --clr-sidebar: hsl(0, 0%, 0%);
+    --clr-overlay: hsl(0 0% 0% / 0.6);
     --clr-main-1: hsl(199, 85%, 56%);
     --clr-text-white: hsl(0, 0%, 100%);
     --clr-text-light: hsl(199, 85%, 70%);
@@ -125,8 +126,24 @@ main {
     border-radius: 1rem;
     z-index: 100;
     position: absolute;
-    top: 40%;
-    left: 40%;
+    width: 90%;
+    max-width: 800px;
+    margin: 0.5rem;
+    pointer-events: auto;
+    z-index: 9;
+}
+
+.chess-settings-dialogue {
+    top: 50%;
+    left: 50%;
+}
+
+.dialogue-overlay {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background: var(--clr-overlay);
+    z-index: 1;
 }
 
 .settings-group {
