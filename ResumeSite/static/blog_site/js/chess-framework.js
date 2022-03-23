@@ -252,6 +252,7 @@ class Chess {
     }
     dropPiece(event) {
         let piece = document.querySelector(`[row="${this.pieceGrabbed[0]}"][col="${this.pieceGrabbed[1]}"].piece`);
+        let pieceColour = piece.classList[1].split("-")[0];
         let offsetX = event.offsetX;
         let offsetY = event.offsetY;
         let newX = Math.floor(offsetX / 100) + 1;
@@ -269,6 +270,20 @@ class Chess {
         let newCol = (parseInt(piece.getAttribute("x")) / 100) + 1;
         if (!!document.querySelector(`[row="${newRow}"][col="${newCol}"].piece`)) {
             this.capturePiece(newRow, newCol);
+        } else if (piece.classList[1].split("-")[1] == "pawn" && Math.abs(newRow - piece.getAttribute("row")) == 1 && Math.abs(newCol - piece.getAttribute("col")) == 1 && !document.querySelector(`[row="${newRow}"][col="${newCol}"].piece`)) {
+            if (pieceColour == "white") {
+                this.capturePiece(newRow - 1, newCol);
+            } else if (pieceColour == "black") {
+                this.capturePiece(newRow + 1, newCol);
+            }
+        }
+        document.querySelectorAll(["[enpassant]"]).forEach(element => { element.removeAttribute("enpassant") });
+        if (piece.classList[1].split("-")[1] == "pawn" && Math.abs(piece.getAttribute("row") - newRow) == 2) {
+            if (!!document.querySelector(`[row="${newRow}"][col="${newCol+1}"].piece`) && document.querySelector(`[row="${newRow}"][col="${newCol+1}"].piece`).classList[1].split("-")[1] == "pawn" && document.querySelector(`[row="${newRow}"][col="${newCol+1}"].piece`).classList[1].split("-")[0] != pieceColour) {
+                document.querySelector(`[row="${newRow}"][col="${newCol+1}"].piece`).setAttribute("enpassant", "left");
+            } else if (!!document.querySelector(`[row="${newRow}"][col="${newCol-1}"].piece`) && document.querySelector(`[row="${newRow}"][col="${newCol-1}"].piece`).classList[1].split("-")[1] == "pawn" && document.querySelector(`[row="${newRow}"][col="${newCol-1}"].piece`).classList[1].split("-")[0] != pieceColour) {
+                document.querySelector(`[row="${newRow}"][col="${newCol-1}"].piece`).setAttribute("enpassant", "right");
+            }
         }
         piece.setAttribute("row", newRow);
         piece.setAttribute("col", newCol);
@@ -312,6 +327,14 @@ class Chess {
             if (!hasMoved && !document.querySelector(`[row="${currentRow+1}"][col="${currentCol}"].piece`) && !document.querySelector(`[row="${currentRow+2}"][col="${currentCol}"].piece`)) {
                 validMoves.push(`${currentRow + 2}${currentCol}`);
             }
+            if (!!event.target.getAttribute("enpassant")) {
+                let direction = event.target.getAttribute("enpassant");
+                if (direction == "left") {
+                    validMoves.push(`${currentRow+1}${currentCol-1}`);
+                } else if (direction == "right") {
+                    validMoves.push(`${currentRow+1}${currentCol+1}`);
+                }
+            }
         } else if (pieceColour == "black") {
             validMoves.push(`${currentRow - 1}${currentCol}`);
             if (!!document.querySelectorAll(`[row="${currentRow-1}"][col="${currentCol+1}"].piece`)[0] && document.querySelectorAll(`[row="${currentRow-1}"][col="${currentCol+1}"].piece`)[0].classList[1].split("-")[0] != pieceColour) {
@@ -322,6 +345,14 @@ class Chess {
             }
             if (!hasMoved && !document.querySelector(`[row="${currentRow-1}"][col="${currentCol}"].piece`) && !document.querySelector(`[row="${currentRow-2}"][col="${currentCol}"].piece`)) {
                 validMoves.push(`${currentRow - 2}${currentCol}`);
+            }
+            if (!!event.target.getAttribute("enpassant")) {
+                let direction = event.target.getAttribute("enpassant");
+                if (direction == "left") {
+                    validMoves.push(`${currentRow-1}${currentCol-1}`);
+                } else if (direction == "right") {
+                    validMoves.push(`${currentRow-1}${currentCol+1}`);
+                }
             }
         }
 
@@ -559,6 +590,7 @@ class Chess {
         let dialogue = document.createElement("div");
         dialogue.classList.add("dialogue-box");
         if (dialogueOptions.settings == "chessSettings") {
+            dialogue.classList.add("chess-settings-dialogue");
             let boardTheme = document.createElement("select");
             boardTheme.id = "board-theme";
             boardTheme.name = "board-theme";
@@ -633,15 +665,59 @@ class Chess {
             buttonGroup.appendChild(saveButton);
             buttonGroup.appendChild(closeButton);
             dialogue.appendChild(buttonGroup);
-            return dialogue;
+        } else if (dialogueOptions.settings == "shortcuts") {
+            // Create base elements
+            dialogue.classList.add("keyboard-shortcuts-dialogue");
+            let baseDiv = document.createElement("div");
+            let basePara = document.createElement("p");
+            let shortcutsGroup = baseDiv.cloneNode();
+            shortcutsGroup.classList.add("settings-group");
+            let shortcutName = basePara.cloneNode();
+            shortcutName.classList.add("shortcut-label");
+            let shortcutDesc = basePara.cloneNode();
+            shortcutDesc.classList.add("shortcut-description");
+            let shortcutKeys = basePara.cloneNode();
+            shortcutKeys.classList.add("shortcut-keys");
+            // Create and add unique elements
+            let keyObj = {
+                "navigate": { "name": "Page Navigation", "desc": "Navigate selectable elements using the keyboard.", "keys": "Tab" },
+                "escape": { "name": "Return to Menu Close", "desc": "When moving around the navigation bar using Tab, this returns to the menu close button.", "keys": "Esc" },
+            }
+            for (let entry in keyObj) {
+                let tempObj = keyObj[entry];
+                let tempGroup = shortcutsGroup.cloneNode();
+                let tempName = shortcutName.cloneNode();
+                let tempDesc = shortcutDesc.cloneNode();
+                let tempKeys = shortcutKeys.cloneNode();
+                tempName.innerHTML = tempObj.name;
+                tempDesc.innerHTML = tempObj.desc;
+                tempKeys.innerHTML = tempObj.keys;
+                tempGroup.appendChild(tempName);
+                tempGroup.appendChild(tempDesc);
+                tempGroup.appendChild(tempKeys);
+                dialogue.appendChild(tempGroup);
+            }
+            if (dialogueOptions.page == "chess") {
+
+            }
         }
+        return dialogue;
     }
     closeDialogue() {
         document.querySelector(".dialogue-box").remove();
+        document.querySelector("main").style = null;
+        document.querySelector(".dialogue-overlay").remove();
     }
     openChessSettings() {
+        if (!!document.querySelector(".chess-settings-dialogue")) { return; }
         let settingsGroup = this.createDialogue({ "settings": "chessSettings" });
-        document.querySelector("main").appendChild(settingsGroup);
+        document.querySelector("main").insertBefore(settingsGroup, document.querySelector(".chess-full-container"));
+        document.querySelector(".dialogue-box").style.marginTop = `-${document.querySelector(".dialogue-box").offsetHeight/2}px`;
+        document.querySelector(".dialogue-box").style.marginLeft = `-${document.querySelector(".dialogue-box").offsetWidth/2}px`;
+        document.querySelector("main").style.pointerEvents = "none";
+        let overlay = document.createElement("div");
+        overlay.classList.add("dialogue-overlay");
+        document.querySelector("body").insertBefore(overlay, document.querySelector(".sidebar-underlay"));
     }
     saveChessSettings() {
         let chosenTheme = document.getElementById("board-theme");
@@ -653,7 +729,7 @@ class Chess {
         this.setBoardColours(chosenTheme.value);
         this.boardTheme = chosenTheme.value;
         this.setMoveMarkerColours(moveMarker.value)
-        document.querySelector(".dialogue-box").remove();
+        this.closeDialogue();
         console.log("%cSettings Saved.", "color: red; font-size: 16px;")
     }
     setBoardColours(chosenTheme) {
@@ -808,9 +884,43 @@ class Chess {
             }
         } // key down events
         else if (event.type == "keydown") {
+            console.log(event);
             if (event.code == "KeyF" && event.ctrlKey) {
                 event.preventDefault();
                 this.flipBoard();
+            } else if (event.code == "Slash" && event.ctrlKey) {
+                if (!!document.querySelector(".dialogue-box")) {
+                    if (!!document.querySelector(".chess-settings-dialogue")) {
+                        this.closeDialogue();
+                        let dialogue = this.createDialogue({ "settings": "shortcuts", "page": "chess" });
+                        document.querySelector("main").insertBefore(dialogue, document.querySelector(".chess-full-container"));
+                        document.querySelector("main").style.pointerEvents = "none";
+                        let overlay = document.createElement("div");
+                        overlay.classList.add("dialogue-overlay");
+                        document.querySelector("body").insertBefore(overlay, document.querySelector(".sidebar-underlay"));
+                    } else {
+                        this.closeDialogue();
+                    }
+                } else {
+                    let dialogue = this.createDialogue({ "settings": "shortcuts", "page": "chess" });
+                    document.querySelector("main").insertBefore(dialogue, document.querySelector(".chess-full-container"));
+                    document.querySelector("main").style.pointerEvents = "none";
+                    let overlay = document.createElement("div");
+                    overlay.classList.add("dialogue-overlay");
+                    document.querySelector("body").insertBefore(overlay, document.querySelector(".sidebar-underlay"));
+                }
+            } else if (event.code == "KeyS" && event.ctrlKey) {
+                event.preventDefault();
+                if (!!document.querySelector(".dialogue-box")) {
+                    if (!!document.querySelector(".keyboard-shortcuts-dialogue")) {
+                        this.closeDialogue();
+                        this.openChessSettings();
+                    } else {
+                        this.closeDialogue();
+                    }
+                } else {
+                    this.openChessSettings();
+                }
             }
         }
     }
