@@ -1,13 +1,14 @@
 class Chess {
-    constructor(arrowColour, perspective, boardTheme = "blue1") {
-
-        this.boardTheme = boardTheme;
-        this.arrowColour = arrowColour;
+    constructor(perspective = "white") {
+        this.boardTheme = "dark1";
         this.boardOptions = { "dark1": "Dark Board", "blue1": "Blue Ocean", "green1": "Green Forest" };
-        this.themeColours = { "dark1": { "dark": "hsl(0, 0%, 20%)", "light": "hsl(0, 0%, 87%" }, "blue1": { "dark": "hsl(195, 100%, 25%)", "light": "hsl(0, 0%, 87%" }, "green1": { "dark": "hsl(99, 100%, 25%)", "light": "hsl(0, 0%, 87%" } }
+        this.themeColours = { "dark1": { "dark": "hsl(190, 20%, 20%)", "light": "hsl(0, 0%, 87%)", "moveMarker": "hsl(27, 100%, 60%)" }, "blue1": { "dark": "hsl(195, 100%, 25%)", "light": "hsl(0, 0%, 87%)", "moveMarker": "hsl(130, 60%, 45%)" }, "green1": { "dark": "hsl(99, 60%, 25%)", "light": "hsl(0, 0%, 87%)", "moveMarker": "hsl(10, 50%, 25%)" } }
         this.startingSquare;
+        this.arrowColour = this.themeColours[this.boardTheme].moveMarker;
+        this.moveMarkerColour = this.themeColours[this.boardTheme].moveMarker;
         this.endingSquare;
         this.isPieceGrabbed;
+        this.letterObj = { 1: "a", 2: "b", 3: "c", 4: "d", 5: "e", 6: "f", 7: "g", 8: "h" };
         this.pieceGrabbed;
         this.breakColLeft;
         this.breakColRight;
@@ -19,13 +20,16 @@ class Chess {
     }
     init() {
         this.buildBoard();
-        this.openChessSettings();
+        this.loadChessSettings();
     }
     buildBoard() {
         this.createSVGs();
         this.createBoard(this.boardTheme);
         this.addBoardOverlay();
         this.setUpPieces();
+        if (this.perspective == 'black') {
+            this.flipBoard();
+        }
     }
     createSVGs() {
         let board = document.createElement("div");
@@ -78,31 +82,40 @@ class Chess {
     }
     addBoardOverlay() {
         let boardOverlay = document.querySelector(".board-overlay");
-        let letterObj = { 1: "a", 2: "b", 3: "c", 4: "d", 5: "e", 6: "f", 7: "g", 8: "h" };
         let border = document.createElementNS("http://www.w3.org/2000/svg", "path");
-        let ident = document.createElementNS("http://www.w3.org/2000/svg", "text");
-        ident.classList.add("identifier");
-        border.classList.add("board-border");
         // border attributes
         border.setAttribute("d", `M0 0 L800 0 L800 800 L0 800 L0 0`);
         border.setAttribute("stroke", `black`);
         border.setAttribute("stroke-width", `1`);
         border.setAttribute("fill", `none`);
-        // digit and letter attributes
+        boardOverlay.appendChild(border);
+        this.boardIdentifiers();
+    }
+    boardIdentifiers() {
+        let boardOverlay = document.querySelector(".board-overlay");
+        document.querySelectorAll(".identifier").forEach(ident => { ident.remove(); })
+        let ident = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        ident.classList.add("identifier");
         ident.setAttribute("fill", "black");
-        for (let [key, value] of Object.entries(letterObj)) {
+        for (let [key, value] of Object.entries(this.letterObj)) {
             let tempIdentNum = ident.cloneNode();
             let tempIdentLetter = ident.cloneNode();
-            tempIdentNum.setAttribute("x", `3`);
-            tempIdentLetter.setAttribute("x", `${100*(key-1)+88}`);
-            tempIdentNum.setAttribute("y", `${100*(8-key)+18}`);
-            tempIdentLetter.setAttribute("y", `793`);
+            if (this.perspective == "white") {
+                tempIdentNum.setAttribute("x", `3`);
+                tempIdentLetter.setAttribute("x", `${100*(key-1)+88}`);
+                tempIdentNum.setAttribute("y", `${100*(8-key)+18}`);
+                tempIdentLetter.setAttribute("y", `793`);
+            } else {
+                tempIdentNum.setAttribute("x", `797`);
+                tempIdentLetter.setAttribute("x", `${100*(key-1)+88}`);
+                tempIdentNum.setAttribute("y", `${100*(8-key)+18}`);
+                tempIdentLetter.setAttribute("y", `7`);
+            }
             tempIdentNum.innerHTML = key;
             tempIdentLetter.innerHTML = value;
             boardOverlay.appendChild(tempIdentLetter);
             boardOverlay.appendChild(tempIdentNum);
         }
-        boardOverlay.appendChild(border);
     }
     addPiece(colour, piece, row, col) {
         let pieceList = document.querySelector(".pieces");
@@ -185,8 +198,30 @@ class Chess {
         }
         arrows.appendChild(arrow);
     }
+    flipBoard() {
+        let svg = document.querySelector(".overlays");
+        if (!!svg.getAttribute("transform")) {
+            svg.removeAttribute("transform");
+            document.querySelectorAll(".piece").forEach(piece => {
+                piece.setAttribute("href", piece.getAttribute("href").replace(" flipped", ""));
+            })
+        } else {
+            svg.setAttribute("transform", 'scale(-1,-1)');
+            document.querySelectorAll(".piece").forEach(piece => {
+                piece.setAttribute("href", piece.getAttribute("href").replace(".png", " flipped.png"));
+            })
+        }
+        if (this.perspective == 'white') {
+            this.perspective = 'black';
+        } else {
+            this.perspective = 'white';
+        }
+        this.boardIdentifiers();
+    }
     grabPiece(event) {
         let piece = event.target;
+        this.isPieceGrabbed = true;
+        this.pieceGrabbed = `${piece.getAttribute("row")}${piece.getAttribute("col")}`;
         let pieceType = event.target.classList[1].split("-")[1];
         if (pieceType == "king") {
             this.createMoveMarkers(this.kingMoves(event));
@@ -206,25 +241,23 @@ class Chess {
         let offsetX = event.offsetX;
         let offsetY = event.offsetY;
         piece.remove();
-        this.isPieceGrabbed = true;
-        this.pieceGrabbed = `${newPiece.getAttribute("row")}${newPiece.getAttribute("col")}`;
         newPiece.setAttribute("x", offsetX - 50);
         newPiece.setAttribute("y", offsetY - 50);
         pieceList.appendChild(newPiece);
     }
-    movePiece(event) {
-        let piece = event.target;
+    movePiece(event, pieceToMove) {
+        let piece = document.querySelector(`[row="${pieceToMove[0]}"][col="${pieceToMove[1]}"].piece`);
         piece.setAttribute("x", event.offsetX - 50);
         piece.setAttribute("y", event.offsetY - 50);
     }
     dropPiece(event) {
-        let piece = event.target;
+        let piece = document.querySelector(`[row="${this.pieceGrabbed[0]}"][col="${this.pieceGrabbed[1]}"].piece`);
         let offsetX = event.offsetX;
         let offsetY = event.offsetY;
         let newX = Math.floor(offsetX / 100) + 1;
         let newY = (8 - Math.floor(offsetY / 100));
         let moveMarkers = document.querySelector(".move-markers");
-        if (!document.querySelector(`.move-marker[row="${newY}"][col="${newX}"]`)) {
+        if (!document.querySelector(`.move-marker[row="${newY}"][col="${newX}"]`) || !event.target.classList.contains("piece")) {
             piece.setAttribute("x", (piece.getAttribute("col") - 1) * 100);
             piece.setAttribute("y", (8 - piece.getAttribute("row")) * 100);
             moveMarkers.innerHTML = "";
@@ -242,13 +275,29 @@ class Chess {
         if ((piece.classList[1].split("-")[1] == "pawn" || piece.classList[1].split("-")[1] == "rook" || piece.classList[1].split("-")[1] == "king") && !!piece.getAttribute("notmoved")) {
             piece.removeAttribute("notmoved");
         }
+        let opponentKing = document.querySelector(`.${piece.classList[1].split("-")[0] == 'white' ? 'black' : 'white'}-king`);
+        let playerKing = document.querySelector(`.${piece.classList[1].split("-")[0]}-king`);
+        let opponentKingSquare = `${opponentKing.getAttribute("row")}${opponentKing.getAttribute("col")}`;
+        let kingChecked = this.kingInCheckIfMoves(event, opponentKingSquare, piece.classList[1].split("-")[0] == 'white' ? 'black' : 'white');
+        if (kingChecked) {
+            if (opponentKing.getAttribute("href").includes("flipped")) {
+                opponentKing.setAttribute("href", opponentKing.getAttribute("href").replace(" flipped.png", " check flipped.png"));
+            } else {
+                opponentKing.setAttribute("href", opponentKing.getAttribute("href").replace(".png", " check.png"));
+            }
+            playerKing.setAttribute("href", playerKing.getAttribute("href").replace(" check", ""));
+        } else {
+            if (opponentKing.getAttribute("href").includes("check")) {
+                opponentKing.setAttribute("href", opponentKing.getAttribute("href").replace(" check", ""));
+            }
+            playerKing.setAttribute("href", playerKing.getAttribute("href").replace(" check", ""));
+        }
         moveMarkers.innerHTML = "";
-        this.checkChecker(event);
     }
-    pawnMoves(event) {
+    pawnMoves(event, colourMoved = event.target.classList[1].split("-")[0]) {
         let currentRow = parseInt(event.target.getAttribute("row"));
         let currentCol = parseInt(event.target.getAttribute("col"));
-        let pieceColour = event.target.classList[1].split("-")[0];
+        let pieceColour = colourMoved;
         let hasMoved = !!event.target.getAttribute("notmoved") ? false : true;
         let validMoves = [];
         // Creates list of ALL possible moves
@@ -260,7 +309,7 @@ class Chess {
             if (!!document.querySelectorAll(`[row="${currentRow+1}"][col="${currentCol-1}"].piece`)[0] && document.querySelectorAll(`[row="${currentRow+1}"][col="${currentCol-1}"].piece`)[0].classList[1].split("-")[0] != pieceColour) {
                 validMoves.push(`${currentRow + 1}${currentCol - 1}`);
             }
-            if (!hasMoved) {
+            if (!hasMoved && !document.querySelector(`[row="${currentRow+1}"][col="${currentCol}"].piece`) && !document.querySelector(`[row="${currentRow+2}"][col="${currentCol}"].piece`)) {
                 validMoves.push(`${currentRow + 2}${currentCol}`);
             }
         } else if (pieceColour == "black") {
@@ -271,7 +320,7 @@ class Chess {
             if (!!document.querySelectorAll(`[row="${currentRow-1}"][col="${currentCol-1}"].piece`)[0] && document.querySelectorAll(`[row="${currentRow-1}"][col="${currentCol-1}"].piece`)[0].classList[1].split("-")[0] != pieceColour) {
                 validMoves.push(`${currentRow - 1}${currentCol - 1}`);
             }
-            if (!hasMoved) {
+            if (!hasMoved && !document.querySelector(`[row="${currentRow-1}"][col="${currentCol}"].piece`) && !document.querySelector(`[row="${currentRow-2}"][col="${currentCol}"].piece`)) {
                 validMoves.push(`${currentRow - 2}${currentCol}`);
             }
         }
@@ -290,10 +339,8 @@ class Chess {
         }, this);
         return validMoves;
     }
-    knightMoves(event) {
-        let currentRow = parseInt(event.target.getAttribute("row"));
-        let currentCol = parseInt(event.target.getAttribute("col"));
-        let pieceColour = event.target.classList[1].split("-")[0];
+    knightMoves(event, currentRow = parseInt(event.target.getAttribute("row")), currentCol = parseInt(event.target.getAttribute("col")), colourMoved = event.target.classList[1].split("-")[0]) {
+        let pieceColour = colourMoved;
         let validMoves = [];
         // Creates list of ALL possible moves
         validMoves.push(`${currentRow + 2}${currentCol + 1}`);
@@ -317,10 +364,8 @@ class Chess {
         }, this);
         return validMoves;
     }
-    bishopMoves(event) {
-        let currentRow = parseInt(event.target.getAttribute("row"));
-        let currentCol = parseInt(event.target.getAttribute("col"));
-        let pieceColour = event.target.classList[1].split("-")[0];
+    bishopMoves(event, currentRow = parseInt(event.target.getAttribute("row")), currentCol = parseInt(event.target.getAttribute("col")), colourMoved = event.target.classList[1].split("-")[0]) {
+        let pieceColour = colourMoved;
         let testSquare;
         let validMoves = [];
         // Creates list of ALL possible moves
@@ -360,14 +405,13 @@ class Chess {
         }, this);
         return validMoves;
     }
-    rookMoves(event) {
+    rookMoves(event, currentRow = parseInt(event.target.getAttribute("row")), currentCol = parseInt(event.target.getAttribute("col")), colourMoved = event.target.classList[1].split("-")[0]) {
         this.breakColLeft = 0;
         this.breakColRight = 9;
         this.breakRowTop = 9;
         this.breakRowBottom = 0;
-        let currentRow = parseInt(event.target.getAttribute("row"));
-        let currentCol = parseInt(event.target.getAttribute("col"));
-        let pieceColour = event.target.classList[1].split("-")[0];
+        let pieceColour = colourMoved;
+        let pinnedPiece = true;
         let testSquare;
         let validMoves = [];
         // Creates list of ALL possible moves
@@ -406,6 +450,7 @@ class Chess {
         // Filters list of all moves to only valid moves using breakpoints
         validMoves = validMoves.filter(function(move) {
             let pieceTest = false;
+            let pinnedPiece = false;
             let testSquare = document.querySelectorAll(`[row="${move[0]}"][col="${move[1]}"].piece`)[0];
             // checks if the piece on an existing square is of the opposite colour
             if (!!testSquare) {
@@ -415,15 +460,13 @@ class Chess {
         }, this);
         return validMoves;
     }
-    queenMoves(event) {
+    queenMoves(event, currentRow = parseInt(event.target.getAttribute("row")), currentCol = parseInt(event.target.getAttribute("col"))) {
         let validMoves = [];
-        validMoves = validMoves.concat(this.rookMoves(event));
-        validMoves = validMoves.concat(this.bishopMoves(event));
+        validMoves = validMoves.concat(this.rookMoves(event, currentRow, currentCol));
+        validMoves = validMoves.concat(this.bishopMoves(event, currentRow, currentCol));
         return validMoves;
     }
-    kingMoves(event) {
-        let currentRow = parseInt(event.target.getAttribute("row"));
-        let currentCol = parseInt(event.target.getAttribute("col"));
+    kingMovesForCheckFinder(event, currentRow = parseInt(event.target.getAttribute("row")), currentCol = parseInt(event.target.getAttribute("col"))) {
         let pieceColour = event.target.classList[1].split("-")[0];
         let validMoves = [];
         for (let row = 0; row < 2; row++) {
@@ -449,93 +492,280 @@ class Chess {
                 pieceTest = document.querySelectorAll(`[row="${move[0]}"][col="${move[1]}"].piece`)[0].classList[1].split("-")[0] == pieceColour;
             }
             return !move.includes('0') && !move.includes('9') && move != `${currentRow}${currentCol}` && !pieceTest;
-        });
+        }, this);
+        return validMoves;
+    }
+    kingMoves(event, currentRow = parseInt(event.target.getAttribute("row")), currentCol = parseInt(event.target.getAttribute("col"))) {
+        let pieceColour = event.target.classList[1].split("-")[0];
+        let validMoves = [];
+        for (let row = 0; row < 2; row++) {
+            for (let col = 0; col < 2; col++) {
+                if (row == 0) {
+                    validMoves.push(`${currentRow}${currentCol + col}`);
+                    validMoves.push(`${currentRow}${currentCol - col}`);
+                } else if (col == 0) {
+                    validMoves.push(`${currentRow + row}${currentCol}`);
+                    validMoves.push(`${currentRow - row}${currentCol}`);
+                } else {
+                    validMoves.push(`${currentRow + row}${currentCol + col}`);
+                    validMoves.push(`${currentRow - row}${currentCol + col}`);
+                    validMoves.push(`${currentRow + row}${currentCol - col}`);
+                    validMoves.push(`${currentRow - row}${currentCol - col}`);
+                }
+            }
+        }
+        validMoves = validMoves.filter(function(move) {
+            let pieceTest = false;
+            // checks if the piece on an existing square is of the opposite colour
+            if (!!document.querySelectorAll(`[row="${move[0]}"][col="${move[1]}"].piece`)[0]) {
+                pieceTest = document.querySelectorAll(`[row="${move[0]}"][col="${move[1]}"].piece`)[0].classList[1].split("-")[0] == pieceColour;
+            }
+            return !move.includes('0') && !move.includes('9') && move != `${currentRow}${currentCol}` && !pieceTest && !this.kingInCheckIfMoves(event, move);
+        }, this);
         return validMoves;
     }
     createMoveMarkers(moveList) {
         let moveMarkers = document.querySelector(".move-markers");
         let moveMarker = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-        moveMarker.setAttribute("r", 15);
-        moveMarker.setAttribute("fill", "blue");
         moveMarker.classList.add("move-marker");
         for (let validMove of moveList) {
             let tempRow = validMove[0];
             let tempCol = validMove[1];
             let tempMarker = moveMarker.cloneNode();
-            tempMarker.setAttribute("row", tempRow);
-            tempMarker.setAttribute("col", tempCol);
-            tempMarker.setAttribute("cx", tempCol * 100 - 50);
-            tempMarker.setAttribute("cy", (9 - tempRow) * 100 - 50);
+            if (!!document.querySelector(`[row="${tempRow}"][col="${tempCol}"].piece`)) {
+                tempMarker.setAttribute("r", 47);
+                tempMarker.setAttribute("fill", "none");
+                tempMarker.setAttribute("stroke-width", "5");
+                tempMarker.setAttribute("stroke", this.moveMarkerColour);
+                tempMarker.setAttribute("row", tempRow);
+                tempMarker.setAttribute("col", tempCol);
+                tempMarker.setAttribute("cx", tempCol * 100 - 50);
+                tempMarker.setAttribute("cy", (9 - tempRow) * 100 - 50);
+            } else {
+                tempMarker.setAttribute("r", 15);
+                tempMarker.setAttribute("fill", this.moveMarkerColour);
+                tempMarker.setAttribute("row", tempRow);
+                tempMarker.setAttribute("col", tempCol);
+                tempMarker.setAttribute("cx", tempCol * 100 - 50);
+                tempMarker.setAttribute("cy", (9 - tempRow) * 100 - 50);
+            }
             moveMarkers.appendChild(tempMarker);
         }
     }
     capturePiece(row, col) {
         document.querySelector(`[row="${row}"][col="${col}"].piece`).remove();
     }
-    checkChecker(event) {
-        let validRookMoves = this.rookMoves(event);
-        let validBishopMoves = this.bishopMoves(event);
-        let validKnightMoves = this.knightMoves(event);
-
-        validRookMoves.forEach(validMove => {
-            let tempRow = validMove[0];
-            let tempCol = validMove[1];
-            if (!!document.querySelector(`[row="${tempRow}"][col="${tempCol}"].piece`)) {
-                let pieceType = document.querySelector(`[row="${tempRow}"][col="${tempCol}"].piece`);
-                console.log(pieceType);
-            }
-        });
-    }
     createDialogue(dialogueOptions) {
         let dialogue = document.createElement("div");
         dialogue.classList.add("dialogue-box");
         if (dialogueOptions.settings == "chessSettings") {
-            console.log(dialogueOptions.settings);
             let boardTheme = document.createElement("select");
             boardTheme.id = "board-theme";
             boardTheme.name = "board-theme";
+            let moveMarkerToggle = document.createElement("input")
+            moveMarkerToggle.type = "radio";
+            moveMarkerToggle.name = "show-move-markers";
+            moveMarkerToggle.id = "show-toggle";
+            moveMarkerToggle.value = "show";
+            let moveMarkerToggle2 = document.createElement("input")
+            moveMarkerToggle2.type = "radio";
+            moveMarkerToggle2.name = "show-move-markers";
+            moveMarkerToggle2.id = "hide-toggle";
+            moveMarkerToggle2.value = "hide";
+            let radioButtons = document.createElement("div");
+            radioButtons.classList.add("radio-group");
+            if (!localStorage.getItem("chessSettings") || JSON.parse(localStorage.getItem("chessSettings")).moveMarkers == "show") {
+                moveMarkerToggle.checked = true;
+                moveMarkerToggle2.checked = false;
+            } else {
+                moveMarkerToggle2.checked = true;
+                moveMarkerToggle.checked = false;
+            }
             for (let theme in this.boardOptions) {
                 let tempTheme = document.createElement("option");
                 tempTheme.value = theme;
                 tempTheme.innerHTML = this.boardOptions[theme];
+                if (theme == this.boardTheme) {
+                    tempTheme.selected = true;
+                }
                 boardTheme.append(tempTheme);
             }
             let settingLabel = document.createElement("label");
-            settingLabel.setAttribute("for", "board-theme")
             settingLabel.classList.add("settings-label");
-            settingLabel.innerHTML = "Board Theme";
+            let themeLabel = settingLabel.cloneNode();
+            themeLabel.setAttribute("for", "board-theme")
+            themeLabel.innerHTML = "Board Theme";
+            let markerLabel = settingLabel.cloneNode();
+            markerLabel.setAttribute("for", "show-move-markers");
+            markerLabel.innerHTML = "Show Legal Moves";
+            let moveMarkerLabel1 = settingLabel.cloneNode();
+            moveMarkerLabel1.setAttribute("for", "show-toggle");
+            moveMarkerLabel1.innerHTML = "Show";
+            let moveMarkerLabel2 = settingLabel.cloneNode();
+            moveMarkerLabel2.setAttribute("for", "Hide-toggle");
+            moveMarkerLabel2.innerHTML = "Hide";
             let settingsGroup = document.createElement("div");
             settingsGroup.classList.add("settings-group");
-            settingsGroup.appendChild(settingLabel);
-            settingsGroup.appendChild(boardTheme);
+            let themeGroup = settingsGroup.cloneNode();
+            let markerGroup = settingsGroup.cloneNode();
+            themeGroup.appendChild(themeLabel);
+            themeGroup.appendChild(boardTheme);
+            markerGroup.appendChild(markerLabel);
+            radioButtons.appendChild(moveMarkerLabel1);
+            radioButtons.appendChild(moveMarkerToggle);
+            radioButtons.appendChild(moveMarkerLabel2);
+            radioButtons.appendChild(moveMarkerToggle2);
+            markerGroup.appendChild(radioButtons);
             let saveButton = document.createElement("button");
             saveButton.innerHTML = "Save";
             saveButton.classList.add("save-button");
+            saveButton.classList.add("button");
             saveButton.setAttribute("onclick", "chessboard.saveChessSettings()");
-            dialogue.appendChild(settingsGroup);
-            dialogue.appendChild(saveButton);
+            let closeButton = document.createElement("button");
+            closeButton.innerHTML = "Close";
+            closeButton.classList.add("close-button");
+            closeButton.classList.add("button");
+            closeButton.setAttribute("onclick", "chessboard.closeDialogue()");
+            let buttonGroup = document.createElement("div");
+            buttonGroup.classList.add("buttons-group");
+            dialogue.appendChild(themeGroup);
+            dialogue.appendChild(markerGroup);
+            buttonGroup.appendChild(saveButton);
+            buttonGroup.appendChild(closeButton);
+            dialogue.appendChild(buttonGroup);
             return dialogue;
         }
     }
+    closeDialogue() {
+        document.querySelector(".dialogue-box").remove();
+    }
     openChessSettings() {
         let settingsGroup = this.createDialogue({ "settings": "chessSettings" });
-        console.log(settingsGroup);
         document.querySelector("main").appendChild(settingsGroup);
     }
     saveChessSettings() {
         let chosenTheme = document.getElementById("board-theme");
-        console.log(chosenTheme);
+        let moveMarker = document.querySelector("input[name='show-move-markers']:checked");
         localStorage.setItem("chessSettings", JSON.stringify({
-            "boardTheme": chosenTheme.value
+            "boardTheme": chosenTheme.value,
+            "moveMarkers": moveMarker.value
         }))
-        document.querySelectorAll(".light").forEach(square => { square.setAttribute("fill", this.themeColours[chosenTheme.value].light) }, this)
-        document.querySelectorAll(".dark").forEach(square => { square.setAttribute("fill", this.themeColours[chosenTheme.value].dark) }, this)
+        this.setBoardColours(chosenTheme.value);
+        this.boardTheme = chosenTheme.value;
+        this.setMoveMarkerColours(moveMarker.value)
         document.querySelector(".dialogue-box").remove();
         console.log("%cSettings Saved.", "color: red; font-size: 16px;")
     }
+    setBoardColours(chosenTheme) {
+        document.querySelectorAll(".light").forEach(square => { square.setAttribute("fill", this.themeColours[chosenTheme].light) }, this)
+        document.querySelectorAll(".dark").forEach(square => { square.setAttribute("fill", this.themeColours[chosenTheme].dark) }, this)
+    }
+    setMoveMarkerColours(moveMarker) {
+        if (moveMarker == 'show') {
+            this.moveMarkerColour = this.themeColours[this.boardTheme].moveMarker;
+            this.arrowColour = this.themeColours[this.boardTheme].moveMarker;
+        } else if (moveMarker == 'hide') {
+            this.moveMarkerColour = "transparent";
+        }
+    }
+    loadChessSettings() {
+        if (!!localStorage.getItem("chessSettings")) {
+            let chessSettings = JSON.parse(localStorage.getItem("chessSettings"));
+            this.boardTheme = chessSettings.boardTheme;
+            this.setMoveMarkerColours(chessSettings.moveMarkers);
+        } else {
+            console.log("%cNo local storage data found, using default settings.", "color: red; font-size: 16px;");
+        }
+        this.setBoardColours(this.boardTheme);
+    }
+    kingInCheckIfMoves(event, move, colourMoved = event.target.classList[1].split("-")[0]) {
+        let tempRow = parseInt(move[0]);
+        let tempCol = parseInt(move[1]);
+        let pieceColour = colourMoved;
+        let knightValidMoves;
+        let rookValidMoves;
+        let bishopValidMoves;
+        let kingValidMoves;
+        knightValidMoves = this.knightMoves(event, tempRow, tempCol, colourMoved);
+        rookValidMoves = this.rookMoves(event, tempRow, tempCol, colourMoved);
+        bishopValidMoves = this.bishopMoves(event, tempRow, tempCol, colourMoved);
+        kingValidMoves = this.kingMovesForCheckFinder(event, tempRow, tempCol, colourMoved);
+        let pawnValidMoves = [];
+        if (pieceColour == 'white') {
+            pawnValidMoves.push(`${tempRow + 1}${tempCol + 1}`);
+            pawnValidMoves.push(`${tempRow + 1}${tempCol - 1}`);
+        } else {
+            pawnValidMoves.push(`${tempRow - 1}${tempCol + 1}`);
+            pawnValidMoves.push(`${tempRow - 1}${tempCol - 1}`);
+        }
+        knightValidMoves = knightValidMoves.filter(function(square) {
+            if (!!document.querySelectorAll(`[row="${square[0]}"][col="${square[1]}"].piece`)[0]) {
+                if (document.querySelectorAll(`[row="${square[0]}"][col="${square[1]}"].piece`)[0].classList[1].split("-")[0] == pieceColour ||
+                    document.querySelectorAll(`[row="${square[0]}"][col="${square[1]}"].piece`)[0].classList[1].split("-")[1] != "knight") {
+                    return false;
+                } else {
+                    return true;
+                }
+            } else {
+                return false;
+            }
+        });
+        rookValidMoves = rookValidMoves.filter(function(square) {
+            if (!!document.querySelectorAll(`[row="${square[0]}"][col="${square[1]}"].piece`)[0]) {
+                if (document.querySelectorAll(`[row="${square[0]}"][col="${square[1]}"].piece`)[0].classList[1].split("-")[0] == pieceColour ||
+                    (document.querySelectorAll(`[row="${square[0]}"][col="${square[1]}"].piece`)[0].classList[1].split("-")[1] != "rook" && document.querySelectorAll(`[row="${square[0]}"][col="${square[1]}"].piece`)[0].classList[1].split("-")[1] != "queen")) {
+                    return false;
+                } else {
+                    return true;
+                }
+            } else {
+                return false;
+            }
+        });
+        bishopValidMoves = bishopValidMoves.filter(function(square) {
+            if (!!document.querySelectorAll(`[row="${square[0]}"][col="${square[1]}"].piece`)[0]) {
+                if (document.querySelectorAll(`[row="${square[0]}"][col="${square[1]}"].piece`)[0].classList[1].split("-")[0] == pieceColour ||
+                    (document.querySelectorAll(`[row="${square[0]}"][col="${square[1]}"].piece`)[0].classList[1].split("-")[1] != "bishop" && document.querySelectorAll(`[row="${square[0]}"][col="${square[1]}"].piece`)[0].classList[1].split("-")[1] != "queen")) {
+                    return false;
+                } else {
+                    return true;
+                }
+            } else {
+                return false;
+            }
+        });
+        pawnValidMoves = pawnValidMoves.filter(function(square) {
+            if (!!document.querySelectorAll(`[row="${square[0]}"][col="${square[1]}"].piece`)[0]) {
+                if (document.querySelectorAll(`[row="${square[0]}"][col="${square[1]}"].piece`)[0].classList[1].split("-")[0] == pieceColour ||
+                    document.querySelectorAll(`[row="${square[0]}"][col="${square[1]}"].piece`)[0].classList[1].split("-")[1] != "pawn") {
+                    return false;
+                } else {
+                    return true;
+                }
+            } else {
+                return false;
+            }
+        })
+        kingValidMoves = kingValidMoves.filter(function(square) {
+            if (!!document.querySelectorAll(`[row="${square[0]}"][col="${square[1]}"].piece`)[0]) {
+                if (document.querySelectorAll(`[row="${square[0]}"][col="${square[1]}"].piece`)[0].classList[1].split("-")[0] == pieceColour ||
+                    document.querySelectorAll(`[row="${square[0]}"][col="${square[1]}"].piece`)[0].classList[1].split("-")[1] != "king") {
+                    return false;
+                } else {
+                    return true;
+                }
+            } else {
+                return false;
+            }
+        })
+        if (knightValidMoves.length != 0 || rookValidMoves != 0 || bishopValidMoves != 0 || pawnValidMoves != 0 || kingValidMoves != 0) {
+            return true;
+        }
+        return false;
+    }
     handleEvent(event) {
         // mousedown events
-        if (event.type == "mousedown") {
+        if (event.type == "pointerdown") {
             if (event.button == "2") {
                 this.startingSquare = event.target;
             } else if (event.button == "0") {
@@ -547,7 +777,7 @@ class Chess {
                 document.querySelector(".arrows").innerHTML = "";
             }
         } // mouse up events
-        else if (event.type == "mouseup") {
+        else if (event.type == "pointerup") {
             if (event.button == "2") {
                 this.endingSquare = event.target;
                 if (this.startingSquare != this.endingSquare) {
@@ -566,14 +796,21 @@ class Chess {
                 }
             }
         } // mouse move events
-        else if (event.type == "mousemove") {
-            if (event.buttons == "1") {
-                if (event.target.classList.contains("piece")) {
-                    let checker = `${event.target.getAttribute("row")}${event.target.getAttribute("col")}`;
-                    if (checker == this.pieceGrabbed) {
-                        this.movePiece(event);
+        else if (event.type == "pointermove") {
+            const events = event.getCoalescedEvents();
+            for (let i = 0; i < events.length; i++) {
+                let event = events[i];
+                if (event.buttons == "1") {
+                    if (this.pieceGrabbed != "") {
+                        this.movePiece(event, this.pieceGrabbed);
                     }
                 }
+            }
+        } // key down events
+        else if (event.type == "keydown") {
+            if (event.code == "KeyF" && event.ctrlKey) {
+                event.preventDefault();
+                this.flipBoard();
             }
         }
     }

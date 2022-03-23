@@ -1,9 +1,24 @@
 {% extends 'blog_site/base.html' %} {% load static %} {% block head %}
-<link rel="stylesheet" href="{% static 'blog_site/css/chess.css' %}"> {% endblock %} {% block content %}
+<link rel="stylesheet" href="{% static 'blog_site/css/chess.css' %}">
+<link rel="preload" href="{% static 'blog_site/img/black king flipped.png' %}" as="image">
+<link rel="preload" href="{% static 'blog_site/img/black king check flipped.png' %}" as="image">
+<link rel="preload" href="{% static 'blog_site/img/black rook flipped.png' %}" as="image">
+<link rel="preload" href="{% static 'blog_site/img/black queen flipped.png' %}" as="image">
+<link rel="preload" href="{% static 'blog_site/img/black bishop flipped.png' %}" as="image">
+<link rel="preload" href="{% static 'blog_site/img/black knight flipped.png' %}" as="image">
+<link rel="preload" href="{% static 'blog_site/img/black pawn flipped.png' %}" as="image">
+<link rel="preload" href="{% static 'blog_site/img/white king flipped.png' %}" as="image">
+<link rel="preload" href="{% static 'blog_site/img/white king check flipped.png' %}" as="image">
+<link rel="preload" href="{% static 'blog_site/img/white queen flipped.png' %}" as="image">
+<link rel="preload" href="{% static 'blog_site/img/white rook flipped.png' %}" as="image">
+<link rel="preload" href="{% static 'blog_site/img/white bishop flipped.png' %}" as="image">
+<link rel="preload" href="{% static 'blog_site/img/white knight flipped.png' %}" as="image">
+<link rel="preload" href="{% static 'blog_site/img/white pawn flipped.png' %}" as="image"> {% endblock %} {% block content %}
 <div class="chess-full-container">
     <div class="chess-container" ondragstart="return false;" ondrop="return false;"></div>
     <div class="chess-sidebar">
-        <button class="chess-settings-button" onclick="chessboard.openChessSettings()">Settings</button>
+        <button class="chess-settings-button chess-button" onclick="chessboard.openChessSettings()">Settings</button>
+        <button class="flip-board-button chess-button" onclick="chessboard.flipBoard()">Flip Board</button>
     </div>
 </div>
 <footer class="copyright">
