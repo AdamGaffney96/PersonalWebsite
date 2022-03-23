@@ -313,3 +313,7 @@ def single_cheatsheet(request, slug):
         raise Http404('Cheatsheet does not exist.')
     context = {"type": sections.first().verbose, "sections": sections}
     return render(request, 'blog_site/base_cheatsheet.html', context)
+
+def periodic_table(request):
+    context = {}
+    return render(request, 'blog_site/periodic_table.html', context)
