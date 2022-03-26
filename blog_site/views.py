@@ -317,3 +317,7 @@ def single_cheatsheet(request, slug):
 def periodic_table(request):
     context = {}
     return render(request, 'blog_site/periodic_table.html', context)
+
+def tv_license(request):
+    context = {}
+    return render(request, 'blog_site/tv_license.html', context)

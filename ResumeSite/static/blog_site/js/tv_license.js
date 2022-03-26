@@ -54,11 +54,11 @@ const fadeIn = content => {
     }
 }
 
-startButton.addEventListener("click", e => {
-    fadeOut("start");
+// startButton.addEventListener("click", e => {
+//     fadeOut("start");
 
-    setTimeout(fadeIn, 500, "online");
-})
+//     setTimeout(fadeIn, 500, "online");
+// })
 
 onlineButton.addEventListener("mousedown", e => {
     onlineButton.classList.add("click-start");
@@ -113,3 +113,4 @@ const fetchOnlineAnswers = () => {
 }
 
 onlineButton.addEventListener("click", fetchOnlineAnswers);
+fetchOnlineAnswers()

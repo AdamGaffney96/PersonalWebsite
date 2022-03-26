@@ -6,15 +6,17 @@ class Chess {
         this.startingSquare;
         this.arrowColour = this.themeColours[this.boardTheme].moveMarker;
         this.moveMarkerColour = this.themeColours[this.boardTheme].moveMarker;
+        this.highlightColours = { "main": "hsla(0, 100%, 50%, 60%)", "ctrl": "hsla(90, 100%, 50%, 60%)", "alt": "hsla(180, 100%, 50%, 60%)", "ctrlalt": "hsla(270, 100%, 50%, 60%)", "lastmove": "hsla(210, 100%, 50%, 60%)" };
         this.endingSquare;
         this.isPieceGrabbed;
         this.letterObj = { 1: "a", 2: "b", 3: "c", 4: "d", 5: "e", 6: "f", 7: "g", 8: "h" };
-        this.pieceGrabbed;
+        this.pieceGrabbed = '';
         this.breakColLeft;
         this.breakColRight;
         this.breakRowTop;
         this.breakRowBottom;
         this.breakBishop;
+        this.colourToMove = 'white';
         this.perspective = perspective;
         this.init();
     }
@@ -38,16 +40,19 @@ class Chess {
         let pieces = document.createElementNS("http://www.w3.org/2000/svg", "g");
         let arrows = document.createElementNS("http://www.w3.org/2000/svg", "g");
         let moves = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        let highlights = document.createElementNS("http://www.w3.org/2000/svg", "g");
         let boardOverlay = document.createElementNS("http://www.w3.org/2000/svg", "g");
         let boardBackground = document.createElementNS("http://www.w3.org/2000/svg", "g");
         svg.classList.add("overlays");
         pieces.classList.add("pieces");
         boardOverlay.classList.add("board-overlay");
+        highlights.classList.add("highlights");
         arrows.classList.add("arrows");
         moves.classList.add("move-markers");
         boardBackground.classList.add("board-squares");
         svg.appendChild(boardBackground);
         svg.appendChild(boardOverlay);
+        svg.appendChild(highlights);
         svg.appendChild(moves);
         svg.appendChild(pieces);
         svg.appendChild(arrows);
@@ -264,23 +269,39 @@ class Chess {
         this.boardIdentifiers();
     }
     grabPiece(event) {
-        let piece = event.target;
-        this.isPieceGrabbed = true;
-        this.pieceGrabbed = `${piece.getAttribute("row")}${piece.getAttribute("col")}`;
-        let pieceType = event.target.classList[1].split("-")[1];
-        if (pieceType == "king") {
-            this.createMoveMarkers(this.kingMoves(event));
-        } else if (pieceType == "rook") {
-            this.createMoveMarkers(this.rookMoves(event));
-        } else if (pieceType == "queen") {
-            this.createMoveMarkers(this.queenMoves(event));
-        } else if (pieceType == "pawn") {
-            this.createMoveMarkers(this.pawnMoves(event));
-        } else if (pieceType == "knight") {
-            this.createMoveMarkers(this.knightMoves(event));
-        } else if (pieceType == "bishop") {
-            this.createMoveMarkers(this.bishopMoves(event));
-        }
+            let piece = event.target;
+            let pieceRow = piece.getAttribute("row");
+            let pieceCol = piece.getAttribute("col");
+            let validMoves;
+            let pieceColour = event.target.classList[1].split("-")[0];
+            if (pieceColour != this.colourToMove) { return; }
+            this.isPieceGrabbed = true;
+            this.pieceGrabbed = `${piece.getAttribute("row")}${piece.getAttribute("col")}`;
+            let pieceType = event.target.classList[1].split("-")[1];
+            if (pieceType == "king") {
+                validMoves = this.kingMoves(event);
+            } else if (pieceType == "rook") {
+                validMoves = this.rookMoves(event);
+            } else if (pieceType == "queen") {
+                validMoves = this.queenMoves(event);
+            } else if (pieceType == "pawn") {
+                validMoves = this.pawnMoves(event);
+            } else if (pieceType == "knight") {
+                validMoves = this.knightMoves(event);
+            } else if (pieceType == "bishop") {
+                validMoves = this.bishopMoves(event);
+            }
+            validMoves = validMoves.filter(
+                    function(move) {
+                        piece.setAttribute("row", move[0]);
+                        piece.setAttribute("col", move[1]);
+                        if (!this.kingInCheckIfMoves(event, `${document.querySelector(`.${pieceColour}-king`).getAttribute("row")}${document.querySelector(`.${pieceColour}-king`).getAttribute("col")}`, pieceColour)) {
+                            return move;
+                        }
+        }, this)
+        piece.setAttribute("row", pieceRow);
+        piece.setAttribute("col", pieceCol);
+        this.createMoveMarkers(validMoves);
         let pieceList = document.querySelector(".pieces");
         let newPiece = piece.cloneNode();
         let offsetX = event.offsetX;
@@ -297,6 +318,7 @@ class Chess {
     }
     dropPiece(event) {
         let piece = document.querySelector(`[row="${this.pieceGrabbed[0]}"][col="${this.pieceGrabbed[1]}"].piece`);
+        this.startingSquare = piece.cloneNode();
         let pieceColour = piece.classList[1].split("-")[0];
         let offsetX = event.offsetX;
         let offsetY = event.offsetY;
@@ -330,6 +352,23 @@ class Chess {
                 document.querySelector(`[row="${newRow}"][col="${newCol-1}"].piece`).setAttribute("enpassant", "right");
             }
         }
+        // Castling Rook Move
+        if (piece.classList[1].split("-")[1] == "king" && Math.abs(piece.getAttribute("col") - newCol) == 2) {
+            // Kingside Castling
+            if (piece.getAttribute("col") < newCol) {
+                let rook = document.querySelector(`[row="${piece.getAttribute("row")}"][col="8"].piece`);
+                rook.setAttribute("col", 6);
+                rook.setAttribute("x", 500);
+                rook.removeAttribute("notmoved");
+            }
+            // Queenside Castling
+            if (piece.getAttribute("col") > newCol) {
+                let rook = document.querySelector(`[row="${piece.getAttribute("row")}"][col="1"].piece`);
+                rook.setAttribute("col", 4);
+                rook.setAttribute("x", 300);
+                rook.removeAttribute("notmoved");
+            }
+        }
         piece.setAttribute("row", newRow);
         piece.setAttribute("col", newCol);
         if ((piece.classList[1].split("-")[1] == "pawn" || piece.classList[1].split("-")[1] == "rook" || piece.classList[1].split("-")[1] == "king") && !!piece.getAttribute("notmoved")) {
@@ -352,7 +391,10 @@ class Chess {
             }
             playerKing.setAttribute("href", playerKing.getAttribute("href").replace(" check", ""));
         }
+        this.endingSquare = piece;
+        this.createSquareHighlight(event, true);
         moveMarkers.innerHTML = "";
+        this.switchColours();
     }
     pawnMoves(event, colourMoved = event.target.classList[1].split("-")[0]) {
         let currentRow = parseInt(event.target.getAttribute("row"));
@@ -545,6 +587,7 @@ class Chess {
     kingMovesForCheckFinder(event, currentRow = parseInt(event.target.getAttribute("row")), currentCol = parseInt(event.target.getAttribute("col"))) {
         let pieceColour = event.target.classList[1].split("-")[0];
         let validMoves = [];
+        // Normal King Moves
         for (let row = 0; row < 2; row++) {
             for (let col = 0; col < 2; col++) {
                 if (row == 0) {
@@ -573,7 +616,9 @@ class Chess {
     }
     kingMoves(event, currentRow = parseInt(event.target.getAttribute("row")), currentCol = parseInt(event.target.getAttribute("col"))) {
         let pieceColour = event.target.classList[1].split("-")[0];
+        let pieceRow = parseInt(event.target.getAttribute("row"));
         let validMoves = [];
+        // Normal King Moves
         for (let row = 0; row < 2; row++) {
             for (let col = 0; col < 2; col++) {
                 if (row == 0) {
@@ -587,6 +632,43 @@ class Chess {
                     validMoves.push(`${currentRow - row}${currentCol + col}`);
                     validMoves.push(`${currentRow + row}${currentCol - col}`);
                     validMoves.push(`${currentRow - row}${currentCol - col}`);
+                }
+            }
+        }
+        // Castling
+        if (event.target.getAttribute("notmoved")) {
+            let broken = false;
+            // Kingside castle
+            if (!!document.querySelector(`[col="8"][notmoved="true"].${pieceColour}-rook`)) {
+                broken = false;
+                for (let i = parseInt(event.target.getAttribute("col")) + 1; i < 8; i++) {
+                    if (!!document.querySelector(`[row="${pieceRow}"][col="${i}"].piece`) || this.kingInCheckIfMoves(event, `${pieceRow}${i}`) || event.target.getAttribute("href").includes("check")) {
+                        broken = true;
+                        break;
+                    } else {
+                        continue;
+                    }
+                }
+                if (!broken) {
+                    validMoves.push(`${currentRow}${currentCol + 2}`);
+                }
+            }
+            // Queenside castle
+            if (!!document.querySelector(`[col="1"][notmoved="true"].${pieceColour}-rook`)) {
+                broken = false;
+                for (let i = parseInt(event.target.getAttribute("col")) - 1; i > 1; i--) {
+                    if (!!document.querySelector(`[row="${pieceRow}"][col="${i}"].piece`) || event.target.getAttribute("href").includes("check")) {
+                        broken = true;
+                        break;
+                    } else if (this.kingInCheckIfMoves(event, `${pieceRow}${i}`) && i > 2) {
+                        broken = true;
+                        break;
+                    } else {
+                        continue;
+                    }
+                }
+                if (!broken) {
+                    validMoves.push(`${currentRow}${currentCol - 2}`);
                 }
             }
         }
@@ -803,6 +885,7 @@ class Chess {
         let tempRow = parseInt(move[0]);
         let tempCol = parseInt(move[1]);
         let pieceColour = colourMoved;
+        let oppositeColour = pieceColour == "white" ? "black" : "white";
         let knightValidMoves;
         let rookValidMoves;
         let bishopValidMoves;
@@ -821,8 +904,15 @@ class Chess {
         }
         knightValidMoves = knightValidMoves.filter(function(square) {
             if (!!document.querySelectorAll(`[row="${square[0]}"][col="${square[1]}"].piece`)[0]) {
-                if (document.querySelectorAll(`[row="${square[0]}"][col="${square[1]}"].piece`)[0].classList[1].split("-")[0] == pieceColour ||
-                    document.querySelectorAll(`[row="${square[0]}"][col="${square[1]}"].piece`)[0].classList[1].split("-")[1] != "knight") {
+                let sameSquareTest = document.querySelectorAll(`[row="${square[0]}"][col="${square[1]}"].piece`).length > 1;
+                let pieceCheck;
+                if (sameSquareTest) {
+                    pieceCheck = document.querySelector(`[row="${square[0]}"][col="${square[1]}"].piece[class*="${pieceColour}"]`);
+                } else {
+                    pieceCheck = document.querySelector(`[row="${square[0]}"][col="${square[1]}"].piece[class*="${oppositeColour}"]`);
+                }
+                if (pieceCheck.classList[1].split("-")[0] == pieceColour ||
+                    pieceCheck.classList[1].split("-")[1] != "knight") {
                     return false;
                 } else {
                     return true;
@@ -833,8 +923,15 @@ class Chess {
         });
         rookValidMoves = rookValidMoves.filter(function(square) {
             if (!!document.querySelectorAll(`[row="${square[0]}"][col="${square[1]}"].piece`)[0]) {
-                if (document.querySelectorAll(`[row="${square[0]}"][col="${square[1]}"].piece`)[0].classList[1].split("-")[0] == pieceColour ||
-                    (document.querySelectorAll(`[row="${square[0]}"][col="${square[1]}"].piece`)[0].classList[1].split("-")[1] != "rook" && document.querySelectorAll(`[row="${square[0]}"][col="${square[1]}"].piece`)[0].classList[1].split("-")[1] != "queen")) {
+                let sameSquareTest = document.querySelectorAll(`[row="${square[0]}"][col="${square[1]}"].piece`).length > 1;
+                let pieceCheck;
+                if (sameSquareTest) {
+                    pieceCheck = document.querySelector(`[row="${square[0]}"][col="${square[1]}"].piece[class*="${pieceColour}"]`);
+                } else {
+                    pieceCheck = document.querySelector(`[row="${square[0]}"][col="${square[1]}"].piece[class*="${oppositeColour}"]`);
+                }
+                if (pieceCheck.classList[1].split("-")[0] == pieceColour ||
+                    (pieceCheck.classList[1].split("-")[1] != "rook" && pieceCheck.classList[1].split("-")[1] != "queen")) {
                     return false;
                 } else {
                     return true;
@@ -845,8 +942,15 @@ class Chess {
         });
         bishopValidMoves = bishopValidMoves.filter(function(square) {
             if (!!document.querySelectorAll(`[row="${square[0]}"][col="${square[1]}"].piece`)[0]) {
-                if (document.querySelectorAll(`[row="${square[0]}"][col="${square[1]}"].piece`)[0].classList[1].split("-")[0] == pieceColour ||
-                    (document.querySelectorAll(`[row="${square[0]}"][col="${square[1]}"].piece`)[0].classList[1].split("-")[1] != "bishop" && document.querySelectorAll(`[row="${square[0]}"][col="${square[1]}"].piece`)[0].classList[1].split("-")[1] != "queen")) {
+                let sameSquareTest = document.querySelectorAll(`[row="${square[0]}"][col="${square[1]}"].piece`).length > 1;
+                let pieceCheck;
+                if (sameSquareTest) {
+                    pieceCheck = document.querySelector(`[row="${square[0]}"][col="${square[1]}"].piece[class*="${pieceColour}"]`);
+                } else {
+                    pieceCheck = document.querySelector(`[row="${square[0]}"][col="${square[1]}"].piece[class*="${oppositeColour}"]`);
+                }
+                if (pieceCheck.classList[1].split("-")[0] == pieceColour ||
+                    (pieceCheck.classList[1].split("-")[1] != "bishop" && pieceCheck.classList[1].split("-")[1] != "queen")) {
                     return false;
                 } else {
                     return true;
@@ -884,6 +988,80 @@ class Chess {
         }
         return false;
     }
+    createSquareHighlight(event, lastMove = false) {
+        let tempRow;
+        let tempCol;
+        tempRow = parseInt(this.endingSquare.getAttribute("row"));
+        tempCol = parseInt(this.endingSquare.getAttribute("col"));
+        let colour;
+        let square = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+        let highlights = document.querySelector(".highlights");
+        if (lastMove) {
+            colour = this.highlightColours["lastmove"];
+        } else if (event.ctrlKey && event.altKey) {
+            colour = this.highlightColours["ctrlalt"];
+        } else if (event.ctrlKey) {
+            colour = this.highlightColours["ctrl"];
+        } else if (event.altKey) {
+            colour = this.highlightColours["alt"];
+        } else {
+            colour = this.highlightColours["main"];
+        }
+        square.classList.add("highlight");
+        square.setAttribute('width', 100);
+        square.setAttribute('height', 100);
+        square.setAttribute("fill", colour);
+        if (lastMove) {
+            if (!!document.querySelector(`[lastMove]`)) {
+                document.querySelectorAll(`[lastMove]`).forEach(highlight => highlight.remove());
+            }
+            square.setAttribute('lastMove', true);
+            for (let i = 0; i < 2; i++) {
+                let tempSquare = square.cloneNode();
+                if (i == 0) {
+                    tempRow = parseInt(this.startingSquare.getAttribute("row"));
+                    tempCol = parseInt(this.startingSquare.getAttribute("col"));
+                } else {
+                    tempRow = parseInt(this.endingSquare.getAttribute("row"));
+                    tempCol = parseInt(this.endingSquare.getAttribute("col"));
+                }
+                if (!!document.querySelector(`[row="${tempRow}"][col="${tempCol}"].highlight`)) {
+                    document.querySelector(`[row="${tempRow}"][col="${tempCol}"].highlight`).remove();
+                    return;
+                }
+                tempSquare.setAttribute("x", 100 * (tempCol - 1));
+                tempSquare.setAttribute("y", 100 * (8 - tempRow));
+                tempSquare.setAttribute("row", (tempRow));
+                tempSquare.setAttribute("col", tempCol);
+                highlights.appendChild(tempSquare);
+            }
+        } else {
+            if (!!document.querySelector(`[row="${tempRow}"][col="${tempCol}"].highlight`)) {
+                document.querySelector(`[row="${tempRow}"][col="${tempCol}"].highlight`).remove();
+                return;
+            }
+            square.setAttribute("x", 100 * (tempCol - 1));
+            square.setAttribute("y", 100 * (8 - tempRow));
+            square.setAttribute("row", (tempRow));
+            square.setAttribute("col", tempCol);
+            highlights.appendChild(square);
+        }
+        return 0;
+    }
+    clearTemporaryMarks() {
+        document.querySelector(".arrows").innerHTML = "";
+        let highlights = document.querySelectorAll(".highlight:not([lastMove = true])");
+        for (let i = 0; i < highlights.length; i++) {
+            highlights[i].remove();
+        }
+    }
+    switchColours() {
+        if (this.colourToMove == "white") {
+            this.colourToMove = "black";
+        } else {
+            this.colourToMove = "white";
+        }
+    }
     handleEvent(event) {
         // mousedown events
         if (event.type == "pointerdown") {
@@ -895,7 +1073,7 @@ class Chess {
                 }
             }
             if (this.pieceGrabbed) {
-                document.querySelector(".arrows").innerHTML = "";
+                this.clearTemporaryMarks();
             }
         } // mouse up events
         else if (event.type == "pointerup") {
@@ -903,9 +1081,11 @@ class Chess {
                 this.endingSquare = event.target;
                 if (this.startingSquare != this.endingSquare) {
                     this.drawArrow(this.startingSquare, this.endingSquare);
+                } else {
+                    this.createSquareHighlight(event);
                 }
             } else if (event.button == "0") {
-                document.querySelector(".arrows").innerHTML = "";
+                this.clearTemporaryMarks();
                 if (this.pieceGrabbed) {
                     this.dropPiece(event);
                     this.pieceGrabbed = "";
@@ -929,7 +1109,6 @@ class Chess {
             }
         } // key down events
         else if (event.type == "keydown") {
-            console.log(event);
             if (event.code == "KeyF" && event.ctrlKey) {
                 event.preventDefault();
                 this.flipBoard();
