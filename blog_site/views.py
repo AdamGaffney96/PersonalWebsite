@@ -40,6 +40,10 @@ def home(request):
     "essays": essays, "combined": combined}
     return render(request, 'blog_site/base.html', context)
 
+def coming_soon(request):
+    context = {}
+    return render(request, "blog_site/coming_soon.html", context)
+
 def gaming(request):
     gaming = Gaming.objects.all()
     reviews = Gaming.objects.filter(type__type = 'Review').order_by('-post_date')

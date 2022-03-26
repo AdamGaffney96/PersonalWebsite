@@ -8,13 +8,37 @@
 }
 
 .chess-container {
-    width: 100%;
+    width: 90vw;
+    height: 90vh;
     margin: 1rem;
     display: flex;
     gap: 2rem;
 }
 
 .chess-board {
+    display: inline-block;
+    position: relative;
+    width: 100%;
+    vertical-align: middle;
+    overflow: hidden;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.overlays {
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    max-height: 90vh;
+}
+
+
+/* .chess-board {
     width: 800px;
     height: 800px;
     position: relative;
@@ -24,20 +48,38 @@
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    transform: scale(0.25);
+    transform-origin: top left;
+} */
+
+
+/* 
+@media screen and (min-width: 400px) {
+    .chess-board {
+        transform: scale(0.4);
+    }
 }
 
-.square {
+@media screen and (min-width: 500px) {
+    .chess-board {
+        transform: scale(0.5);
+    }
+} */
+
+
+/* .square {
     width: 100px;
     height: 100px;
     box-sizing: border-box;
     z-index: 6;
-}
+} */
 
-.overlays {
+
+/* .overlays {
     width: 100%;
     aspect-ratio: 1;
     position: absolute;
-}
+} */
 
 .identifier {
     font-size: 1.2rem;

@@ -44,6 +44,7 @@ class Chess {
         let boardOverlay = document.createElementNS("http://www.w3.org/2000/svg", "g");
         let boardBackground = document.createElementNS("http://www.w3.org/2000/svg", "g");
         svg.classList.add("overlays");
+        svg.setAttribute("viewBox", "0 0 800 800");
         pieces.classList.add("pieces");
         boardOverlay.classList.add("board-overlay");
         highlights.classList.add("highlights");
@@ -307,23 +308,34 @@ class Chess {
         let offsetX = event.offsetX;
         let offsetY = event.offsetY;
         piece.remove();
-        newPiece.setAttribute("x", offsetX - 50);
-        newPiece.setAttribute("y", offsetY - 50);
+        let dim = piece.getBoundingClientRect();
+        let pt = document.querySelector(".overlays").createSVGPoint();
+        pt.x = event.clientX
+        pt.y = event.clientY
+        let cursorpt = pt.matrixTransform(document.querySelector(".overlays").getScreenCTM().inverse());
+        newPiece.setAttribute("x", cursorpt.x - 50);
+        newPiece.setAttribute("y", cursorpt.y - 50);
         pieceList.appendChild(newPiece);
     }
     movePiece(event, pieceToMove) {
         let piece = document.querySelector(`[row="${pieceToMove[0]}"][col="${pieceToMove[1]}"].piece`);
-        piece.setAttribute("x", event.offsetX - 50);
-        piece.setAttribute("y", event.offsetY - 50);
+        let pt = document.querySelector(".overlays").createSVGPoint();
+        pt.x = event.clientX
+        pt.y = event.clientY
+        let cursorpt = pt.matrixTransform(document.querySelector(".overlays").getScreenCTM().inverse());
+        piece.setAttribute("x", cursorpt.x - 50);
+        piece.setAttribute("y", cursorpt.y - 50);
     }
     dropPiece(event) {
         let piece = document.querySelector(`[row="${this.pieceGrabbed[0]}"][col="${this.pieceGrabbed[1]}"].piece`);
         this.startingSquare = piece.cloneNode();
         let pieceColour = piece.classList[1].split("-")[0];
-        let offsetX = event.offsetX;
-        let offsetY = event.offsetY;
-        let newX = Math.floor(offsetX / 100) + 1;
-        let newY = (8 - Math.floor(offsetY / 100));
+        let pt = document.querySelector(".overlays").createSVGPoint();
+        pt.x = event.clientX
+        pt.y = event.clientY
+        let cursorpt = pt.matrixTransform(document.querySelector(".overlays").getScreenCTM().inverse());
+        let newX = Math.floor(cursorpt.x / 100) + 1;
+        let newY = (8 - Math.floor(cursorpt.y / 100));
         let moveMarkers = document.querySelector(".move-markers");
         if (!document.querySelector(`.move-marker[row="${newY}"][col="${newX}"]`) || !event.target.classList.contains("piece")) {
             piece.setAttribute("x", (piece.getAttribute("col") - 1) * 100);
@@ -331,8 +343,8 @@ class Chess {
             moveMarkers.innerHTML = "";
             return 0;
         }
-        piece.setAttribute("x", Math.floor(offsetX / 100) * 100);
-        piece.setAttribute("y", Math.floor(offsetY / 100) * 100);
+        piece.setAttribute("x", Math.floor(cursorpt.x / 100) * 100);
+        piece.setAttribute("y", Math.floor(cursorpt.y / 100) * 100);
         let newRow = 8 - parseInt(piece.getAttribute("y")) / 100;
         let newCol = (parseInt(piece.getAttribute("x")) / 100) + 1;
         if (!!document.querySelector(`[row="${newRow}"][col="${newCol}"].piece`)) {
