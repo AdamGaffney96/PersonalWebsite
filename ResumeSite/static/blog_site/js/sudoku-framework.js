@@ -30,17 +30,7 @@ class Sudoku {
     }
     drawShell() {
         let grid = document.createElement("div");
-        let cell = document.createElement("div");
         grid.classList.add("sudoku-grid");
-        cell.classList.add("cell");
-        for (let i = 1; i < 10; i++) {
-            for (let j = 1; j < 10; j++) {
-                let tempCell = cell.cloneNode();
-                tempCell.setAttribute('row', i);
-                tempCell.setAttribute('col', j);
-                grid.appendChild(tempCell);
-            }
-        }
         document.querySelector(".play-board").insertBefore(grid, document.querySelector(".play-board").firstChild);
         this.createSvgs();
     }
@@ -52,6 +42,8 @@ class Sudoku {
         let centrePencilmarks = document.createElementNS("http://www.w3.org/2000/svg", "g");
         let cornerPencilmarks = document.createElementNS("http://www.w3.org/2000/svg", "g");
         let givenDigits = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        let cells = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        cells.classList.add("cells");
         givenDigits.classList.add('given-digits');
         selectedCells.classList.add('selected-cells');
         addedDigits.classList.add("added-digits");
@@ -63,37 +55,36 @@ class Sudoku {
         svg.appendChild(addedDigits);
         svg.appendChild(givenDigits);
         svg.appendChild(grid);
+        svg.appendChild(cells);
         document.querySelector(".sudoku-grid").appendChild(svg);
     }
     gridOverlay() {
         let svg = document.querySelector(".svg");
-        let grid = document.querySelector(".grid-lines")
+        let grid = document.querySelector(".grid-lines");
+        let cells = document.querySelector(".cells");
         for (let i = 0; i < 3; i++) {
             for (let j = 0; j < 3; j++) {
                 let box = this.drawBox(i, j);
                 grid.appendChild(box);
             }
         }
-        for (let k = 0; k < 9; k++) {
-            let rowLine = this.drawCells("row", k);
-            let colLine = this.drawCells("col", k);
-            grid.appendChild(colLine)
-            grid.appendChild(rowLine);
+        for (let k = 1; k < 10; k++) {
+            for (let l = 1; l < 10; l++) {
+                let cell = this.drawCells(k, l);
+                cells.appendChild(cell);
+            }
         }
         svg.appendChild(grid);
     }
     drawOutline() {
         let svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        svg.setAttribute("viewBox", "0 0 900 900");
         svg.classList.add('svg');
-        svg.setAttribute('width', '603px');
-        svg.setAttribute('height', '603px');
         return svg;
     }
     drawGrid() {
         let grid = document.createElementNS("http://www.w3.org/2000/svg", "g");
         grid.classList.add('grid-lines');
-        grid.setAttribute('width', '603px');
-        grid.setAttribute('height', '603px');
         return grid;
     }
     drawBox(boxRow, boxCol) {
@@ -101,24 +92,22 @@ class Sudoku {
         tempBox.classList.add('box');
         tempBox.setAttribute("fill", "none");
         tempBox.setAttribute("stroke", this.borderColour);
-        tempBox.setAttribute("stroke-width", "3px");
+        tempBox.setAttribute("stroke-width", "5px");
         tempBox.setAttribute("vector-effect", "non-scaling-stroke");
-        tempBox.setAttribute("d", `M${201*boxCol} ${201*boxRow} L${201*(boxCol+1)} ${201*boxRow} L${201*(boxCol+1)} ${201*(boxRow+1)} L${201*boxCol} ${201*(boxRow+1)} Z`);
+        tempBox.setAttribute("d", `M${301*boxCol + (boxCol*3)} ${301*boxRow + (boxRow*3)} h303 v303 h-303 z`);
         return tempBox;
     }
-    drawCells(rowOrCol, lineNo) {
-        let cellLine = document.createElementNS("http://www.w3.org/2000/svg", "path");
-        cellLine.classList.add('cell-line');
-        cellLine.setAttribute("fill", "none");
-        cellLine.setAttribute("stroke", this.borderColour);
-        cellLine.setAttribute("stroke-width", "1px");
-        cellLine.setAttribute("vector-effect", "non-scaling-stroke");
-        if (rowOrCol == 'col') {
-            cellLine.setAttribute("d", `M${67*(lineNo+1)} 0 L${67*(lineNo+1)} 603`);
-        } else if (rowOrCol == 'row') {
-            cellLine.setAttribute("d", `M0 ${67*(lineNo+1)} L603 ${67*(lineNo+1)}`)
-        }
-        return cellLine;
+    drawCells(rowNo, colNo) {
+        let cell = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        cell.classList.add('cell');
+        cell.setAttribute("stroke", this.borderColour);
+        cell.setAttribute("stroke-width", "1px");
+        cell.setAttribute("fill-opacity", "0");
+        cell.setAttribute("row", rowNo);
+        cell.setAttribute("col", colNo);
+        cell.setAttribute("vector-effect", "non-scaling-stroke");
+        cell.setAttribute("d", `M${100*(colNo-1) + (Math.floor((colNo/3) - 0.1))*5} ${100*(rowNo-1) + (Math.floor((rowNo/3) - 0.1))*5} h100 v100 h-100 z`);
+        return cell;
     }
     handleEvent(event) {
         // mouse down events
@@ -241,13 +230,13 @@ class Sudoku {
             return 0;
         }
         cellOutline.id = `outline-${row}${col}`;
-        cellOutline.setAttribute("x", `${67*(col-1)+4}`);
-        cellOutline.setAttribute("y", `${67*(row-1)+4}`);
-        cellOutline.setAttribute("width", `59`);
-        cellOutline.setAttribute("height", `59`);
+        cellOutline.setAttribute("x", `${100*(col-1)+4+(Math.floor((col/3) - 0.1)*5)}`);
+        cellOutline.setAttribute("y", `${100*(row-1)+4+(Math.floor((row/3) - 0.1)*5)}`);
+        cellOutline.setAttribute("width", `92`);
+        cellOutline.setAttribute("height", `92`);
         cellOutline.setAttribute("fill", "none");
         cellOutline.setAttribute("stroke", this.selectedColour);
-        cellOutline.setAttribute("stroke-width", "8px");
+        cellOutline.setAttribute("stroke-width", "6px");
         cellOutline.setAttribute("vector-effect", "non-scaling-stroke");
         this.lastSelected = cellOutline.id;
         selectedCells.appendChild(cellOutline);
@@ -257,7 +246,6 @@ class Sudoku {
         document.getElementById(`outline-${row}${col}`).remove();
     }
     drawDigits(event, digit, isShiftDigit = false) {
-
         let selectedList = document.querySelectorAll(".selected-cell");
         let addedDigits;
         let type;
@@ -344,8 +332,8 @@ class Sudoku {
                 this.deleteDigit(tempDigit.id);
             }
             tempDigit.setAttribute("fill", `${this.digitColour}`);
-            tempDigit.setAttribute("x", `${67*(tempCol-1)+16}`);
-            tempDigit.setAttribute("y", `${67*(tempRow)-11}`);
+            tempDigit.setAttribute("x", `${100*(tempCol-1)+26 + (Math.floor((tempCol/3) - 0.1)*6)}`);
+            tempDigit.setAttribute("y", `${100*(tempRow)-18 + (Math.floor((tempRow/3) - 0.1)*6)}`);
         } else if (type == "given") {
             tempDigit.classList.add("given-digit");
             tempDigit.id = `given-${tempRow}${tempCol}`;
@@ -353,8 +341,8 @@ class Sudoku {
                 this.deleteDigit(tempDigit.id);
             }
             tempDigit.setAttribute("fill", `${this.givenColour}`);
-            tempDigit.setAttribute("x", `${67*(tempCol-1)+16}`);
-            tempDigit.setAttribute("y", `${67*(tempRow)-11}`);
+            tempDigit.setAttribute("x", `${100*(tempCol-1)+26 + (Math.floor((tempCol/3) - 0.1)*6)}`);
+            tempDigit.setAttribute("y", `${100*(tempRow)-18 + (Math.floor((tempRow/3) - 0.1)*6)}`);
         } else if (type == "centre") {
             if (!!document.getElementById(`digit-${tempRow}${tempCol}`) && !initialLoad) { return "given"; }
             let currentDigits = document.getElementById(`${type}-${tempRow}${tempCol}`);
@@ -370,8 +358,8 @@ class Sudoku {
             }
             tempDigit.setAttribute("fill", `${this.digitColour}`);
             tempDigit.setAttribute("text-anchor", `middle`);
-            tempDigit.setAttribute("x", `${67*(tempCol-1)+33}`);
-            tempDigit.setAttribute("y", `${67*(tempRow)-27}`);
+            tempDigit.setAttribute("x", `${100*(tempCol-1)+49 + (Math.floor((tempCol/3) - 0.1)*6)}`);
+            tempDigit.setAttribute("y", `${100*(tempRow)-38 + (Math.floor((tempRow/3) - 0.1)*6)}`);
             if (!!document.getElementById(`digit-${tempRow}${tempCol}`) && initialLoad) {
                 tempDigit.setAttribute("visibility", "hidden");
             }
@@ -389,8 +377,8 @@ class Sudoku {
                 }
             }
             tempDigit.setAttribute("fill", `${this.digitColour}`);
-            tempDigit.setAttribute("x", `${67*(tempCol-1)+8}`);
-            tempDigit.setAttribute("y", `${67*(tempRow)-44}`);
+            tempDigit.setAttribute("x", `${100*(tempCol-1)+8 + (Math.floor((tempCol/3) - 0.1)*6)}`);
+            tempDigit.setAttribute("y", `${100*(tempRow-1)+28 + (Math.floor((tempRow/3) - 0.1)*6)}`);
             if (!!document.getElementById(`digit-${tempRow}${tempCol}`) && initialLoad) {
                 tempDigit.setAttribute("visibility", "hidden");
             }
@@ -492,7 +480,6 @@ class Sudoku {
             let boardState = boardObject["boardState"];
             for (let [key, value] of Object.entries(boardState)) {
                 if (Array.isArray(value)) {
-
                     for (let i = 0; i < value.length; i++) {
                         let item = value[i];
                         let tempArrType = item.split("-")[1];
@@ -500,20 +487,27 @@ class Sudoku {
                             tempArrType = "main";
                         }
                         let tempArrDigit = item.split("-")[0];
-
-
-
                         let newArrDigit = this.createDigit(key, tempArrType, tempArrDigit, true)
-
                         if (tempArrType != "given") {
                             newArrDigit.innerHTML = tempArrDigit;
                             newArrDigit.setAttribute("font-size", `${Math.min(1, (14-(newArrDigit.innerHTML.length))/10)}em`);
                         };
                         if (tempArrType == "main") {
+                            if (!!document.querySelector(`#corner-${key}`)) {
+                                document.querySelector(`#corner-${key}`).setAttribute("visibility", "hidden");
+                            } else if (!!document.querySelector(`centre-${key}`)) {
+                                document.querySelector(`#centre-${key}`).setAttribute("visibility", "hidden");
+                            }
                             document.querySelector(".added-digits").appendChild(newArrDigit);
                         } else if (tempArrType == "corner") {
+                            if (!!document.querySelector(`#digit-${key}`)) {
+                                newArrDigit.setAttribute("visibility", "hidden");
+                            }
                             document.querySelector(".corner-pencilmarks").appendChild(newArrDigit);
                         } else if (tempArrType == "centre") {
+                            if (!!document.querySelector(`#digit-${key}`)) {
+                                newArrDigit.setAttribute("visibility", "hidden");
+                            }
                             document.querySelector(".centre-pencilmarks").appendChild(newArrDigit);
                         }
                     }
@@ -525,7 +519,10 @@ class Sudoku {
                 }
                 let tempDigit = value.split("-")[0];
                 let newDigit = this.createDigit(key, tempType, tempDigit, true);
-                if (tempType != "given") { newDigit.innerHTML = tempDigit };
+                if (tempType != "given") {
+                    newDigit.innerHTML = tempDigit;
+                    newDigit.setAttribute("font-size", `${Math.min(1, (14-(newDigit.innerHTML.length))/10)}em`);
+                };
                 if (tempType == "main") {
                     document.querySelector(".added-digits").appendChild(newDigit);
                 } else if (tempType == "corner") {

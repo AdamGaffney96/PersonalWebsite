@@ -12,33 +12,43 @@ body {
 }
 
 .play-board {
-    width: 80%;
+    width: 90vw;
+    height: 90vh;
     margin: 1rem;
     display: flex;
     gap: 2rem;
 }
 
 .sudoku-grid {
-    width: 603px;
-    height: 603px;
-    display: grid;
-    grid-template-columns: repeat(9, 1fr);
+    display: inline-block;
     position: relative;
-    flex-wrap: wrap;
+    width: 100%;
+    vertical-align: middle;
+    overflow: visible;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.box {
+    shape-rendering: crispEdges;
 }
 
 .cell {
-    width: 67px;
-    height: 67px;
-    box-sizing: border-box;
     cursor: pointer;
-    z-index: 6;
+    fill: var(--clr-bg);
 }
 
 .svg {
+    display: inline-block;
     position: absolute;
+    top: 0;
+    left: 0;
+    max-height: 90vh;
     overflow: visible;
-    cursor: pointer;
 }
 
 .grid-lines {
@@ -51,25 +61,25 @@ body {
 
 .added-digits {
     z-index: 5;
-    font-size: 4em;
+    font-size: 5.5em;
     font-family: Arial, Helvetica, sans-serif;
 }
 
 .given-digits {
     z-index: 5;
-    font-size: 4em;
+    font-size: 5.5em;
     font-family: Arial, Helvetica, sans-serif;
 }
 
 .centre-pencilmarks {
     z-index: 2;
-    font-size: 1.2em;
+    font-size: 2em;
     font-family: Arial, Helvetica, sans-serif;
 }
 
 .corner-pencilmarks {
     z-index: 2;
-    font-size: 1.2em;
+    font-size: 1.6em;
     font-family: Arial, Helvetica, sans-serif;
 }
 

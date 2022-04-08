@@ -1074,6 +1074,7 @@ class Chess {
             this.colourToMove = "white";
         }
     }
+    
     handleEvent(event) {
         // mousedown events
         if (event.type == "pointerdown") {

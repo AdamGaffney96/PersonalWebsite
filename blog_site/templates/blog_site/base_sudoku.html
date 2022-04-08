@@ -1,6 +1,11 @@
 {% extends 'blog_site/base.html' %} {% load static %} {% block head %}
 <link rel="stylesheet" href="{% static 'blog_site/css/sudoku.css' %}"> {% endblock %} {% block content %}
-<div class="play-board"></div>
+<div class="play-board">
+    <div class="sudoku-sidebar">
+        <p class="sudoku-title">{{q.title}}</p>
+        <p class="sudoku-rules">{{q.ruleset}}</p>
+    </div>
+</div>
 <footer class="copyright">
     <p class="copyright-text">All code was written myself, however features were inspired by <a href="https://app.crackingthecryptic.com" target="_blank">Sven Neumann's Sudoku Pad</a>.</p>
 </footer>
