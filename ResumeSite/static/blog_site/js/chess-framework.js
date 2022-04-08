@@ -331,8 +331,8 @@ class Chess {
         this.startingSquare = piece.cloneNode();
         let pieceColour = piece.classList[1].split("-")[0];
         let pt = document.querySelector(".overlays").createSVGPoint();
-        pt.x = event.clientX
-        pt.y = event.clientY
+        pt.x = event.clientX;
+        pt.y = event.clientY;
         let cursorpt = pt.matrixTransform(document.querySelector(".overlays").getScreenCTM().inverse());
         let newX = Math.floor(cursorpt.x / 100) + 1;
         let newY = (8 - Math.floor(cursorpt.y / 100));
@@ -347,6 +347,7 @@ class Chess {
         piece.setAttribute("y", Math.floor(cursorpt.y / 100) * 100);
         let newRow = 8 - parseInt(piece.getAttribute("y")) / 100;
         let newCol = (parseInt(piece.getAttribute("x")) / 100) + 1;
+        this.createPGNCode(piece, newRow, newCol, piece.classList[1].split("-")[1] == "king" && Math.abs(piece.getAttribute("col") - newCol) == 2);
         if (!!document.querySelector(`[row="${newRow}"][col="${newCol}"].piece`)) {
             this.capturePiece(newRow, newCol);
         } else if (piece.classList[1].split("-")[1] == "pawn" && Math.abs(newRow - piece.getAttribute("row")) == 1 && Math.abs(newCol - piece.getAttribute("col")) == 1 && !document.querySelector(`[row="${newRow}"][col="${newCol}"].piece`)) {
@@ -1073,6 +1074,44 @@ class Chess {
         } else {
             this.colourToMove = "white";
         }
+    }
+    createPGNCode(piece, targetRow, targetCol, castling, check) {
+        console.log(piece);
+        let colour = piece.classList[1].split("-")[0];
+        let pieceType = piece.classList[1].split("-")[1];
+        let col = this.letterObj[parseInt(targetCol)];
+        let pieceAbb = "";
+        let capture = "";
+        let pgn;
+
+        if (!!document.querySelector(`[row="${targetRow}"][col="${targetCol}"].piece`)) {
+            capture = "x";
+        }
+
+        if (pieceType == "knight") {
+            pieceAbb = "N";
+        } else if (pieceType == "bishop") {
+            pieceAbb = "B";
+        } else if (pieceType == "rook") {
+            pieceAbb = "R";
+        } else if (pieceType == "queen") {
+            pieceAbb = "Q";
+        } else if (pieceType == "king") {
+            pieceAbb = "K";
+        } else if (pieceType == "pawn" && capture == "x") {
+            pieceAbb = this.letterObj[parseInt(piece.getAttribute("col"))];
+        }
+        
+        if (castling) {
+            if (parseInt(piece.getAttribute("col")) < parseInt(targetCol)) {
+                pgn = "O-O";
+            } else {
+                pgn = "O-O-O";
+            }
+        } else {
+            pgn = `${pieceAbb}${capture}${col}${targetRow}`;
+        }
+        console.log(pgn);
     }
     handleEvent(event) {
         // mousedown events
