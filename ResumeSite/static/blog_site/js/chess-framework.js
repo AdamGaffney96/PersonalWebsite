@@ -330,6 +330,8 @@ class Chess {
         let piece = document.querySelector(`[row="${this.pieceGrabbed[0]}"][col="${this.pieceGrabbed[1]}"].piece`);
         this.startingSquare = piece.cloneNode();
         let pieceColour = piece.classList[1].split("-")[0];
+        let captured = false;
+        let castling = false;
         let pt = document.querySelector(".overlays").createSVGPoint();
         pt.x = event.clientX;
         pt.y = event.clientY;
@@ -347,8 +349,8 @@ class Chess {
         piece.setAttribute("y", Math.floor(cursorpt.y / 100) * 100);
         let newRow = 8 - parseInt(piece.getAttribute("y")) / 100;
         let newCol = (parseInt(piece.getAttribute("x")) / 100) + 1;
-        this.createPGNCode(piece, newRow, newCol, piece.classList[1].split("-")[1] == "king" && Math.abs(piece.getAttribute("col") - newCol) == 2);
         if (!!document.querySelector(`[row="${newRow}"][col="${newCol}"].piece`)) {
+            captured = true;
             this.capturePiece(newRow, newCol);
         } else if (piece.classList[1].split("-")[1] == "pawn" && Math.abs(newRow - piece.getAttribute("row")) == 1 && Math.abs(newCol - piece.getAttribute("col")) == 1 && !document.querySelector(`[row="${newRow}"][col="${newCol}"].piece`)) {
             if (pieceColour == "white") {
@@ -367,6 +369,7 @@ class Chess {
         }
         // Castling Rook Move
         if (piece.classList[1].split("-")[1] == "king" && Math.abs(piece.getAttribute("col") - newCol) == 2) {
+            castling = true;
             // Kingside Castling
             if (piece.getAttribute("col") < newCol) {
                 let rook = document.querySelector(`[row="${piece.getAttribute("row")}"][col="8"].piece`);
@@ -404,6 +407,7 @@ class Chess {
             }
             playerKing.setAttribute("href", playerKing.getAttribute("href").replace(" check", ""));
         }
+        movePGN = this.createPGNCode(this.startingSquare, newRow, newCol, castling, kingChecked, captured);
         this.endingSquare = piece;
         this.createSquareHighlight(event, true);
         moveMarkers.innerHTML = "";
@@ -1075,31 +1079,117 @@ class Chess {
             this.colourToMove = "white";
         }
     }
-    createPGNCode(piece, targetRow, targetCol, castling, check) {
+    createPGNCode(piece, targetRow, targetCol, castling, check, captured) {
         console.log(piece);
         let colour = piece.classList[1].split("-")[0];
         let pieceType = piece.classList[1].split("-")[1];
         let col = this.letterObj[parseInt(targetCol)];
         let pieceAbb = "";
         let capture = "";
+        let checked = "";
+        let pieceId = "";
+        this.breakColLeft = 0;
+        this.breakColRight = 9;
+        this.breakRowTop = 9;
+        this.breakRowBottom = 0;
+        let testSquare;
+        let validMoves = [];
         let pgn;
 
-        if (!!document.querySelector(`[row="${targetRow}"][col="${targetCol}"].piece`)) {
+        if (captured) {
             capture = "x";
         }
 
         if (pieceType == "knight") {
             pieceAbb = "N";
+            validMoves.push(`${targetRow + 2}${targetCol + 1}`);
+            validMoves.push(`${targetRow + 2}${targetCol - 1}`);
+            validMoves.push(`${targetRow - 2}${targetCol + 1}`);
+            validMoves.push(`${targetRow - 2}${targetCol - 1}`);
+            validMoves.push(`${targetRow + 1}${targetCol + 2}`);
+            validMoves.push(`${targetRow + 1}${targetCol - 2}`);
+            validMoves.push(`${targetRow - 1}${targetCol + 2}`);
+            validMoves.push(`${targetRow - 1}${targetCol - 2}`);
+            validMoves.forEach(move => {
+                if (!!document.querySelector(`[row="${move[0]}"][col="${move[1]}"].piece.${colour}-knight`)) {
+                    if (move[1] == piece.getAttribute("col")) {
+                        pieceId = piece.getAttribute("row");
+                    }
+                    else {
+                        pieceId = this.letterObj[parseInt(piece.getAttribute("col"))]
+                    }
+                }
+            })
         } else if (pieceType == "bishop") {
             pieceAbb = "B";
         } else if (pieceType == "rook") {
             pieceAbb = "R";
+                    // Creates list of ALL possible moves
+        for (let switcher = 0; switcher < 2; switcher++) {
+            for (let dir = 0; dir < 8; dir++) {
+                if (switcher == 0) {
+                    validMoves.push(`${targetRow}${targetCol + dir}`);
+                    validMoves.push(`${targetRow}${targetCol - dir}`);
+                } else if (switcher == 1) {
+                    validMoves.push(`${targetRow + dir}${targetCol}`);
+                    validMoves.push(`${targetRow - dir}${targetCol}`);
+                }
+            }
+        }
+        // Creates breakpoints regarding pieces
+        for (let move of validMoves) {
+            testSquare = document.querySelectorAll(`[row="${move[0]}"][col="${move[1]}"].piece`)[0];
+            if (!!testSquare) {
+                if (testSquare.getAttribute("row") == targetRow) {
+                    if (testSquare.getAttribute("col") == targetCol) { continue; }
+                    if (testSquare.getAttribute("col") < targetCol) {
+                        this.breakColLeft = Math.max(parseInt(testSquare.getAttribute("col")), this.breakColLeft);
+                    } else {
+                        this.breakColRight = Math.min(parseInt(testSquare.getAttribute("col")), this.breakColRight);
+                    }
+                } else if (testSquare.getAttribute("col") == targetCol) {
+                    if (testSquare.getAttribute("row") == targetRow) { continue; }
+                    if (testSquare.getAttribute("row") < targetRow) {
+                        this.breakRowBottom = Math.max(parseInt(testSquare.getAttribute("row")), this.breakRowBottom);
+                    } else {
+                        this.breakRowTop = Math.min(parseInt(testSquare.getAttribute("row")), this.breakRowTop);
+                    }
+                }
+            }
+        }
+        // Filters list of all moves to only valid moves using breakpoints
+        validMoves = validMoves.filter(function(move) {
+            let pieceTest = false;
+            let rookTest = false;
+            let pinnedPiece = false;
+            let testSquare = document.querySelectorAll(`[row="${move[0]}"][col="${move[1]}"].piece`)[0];
+            // checks if the piece on an existing square is of the opposite colour
+            if (!!testSquare) {
+                pieceTest = testSquare.classList[1].split("-")[0] == colour;
+                rookTest = testSquare.classList[1].split("-")[1] == "rook";
+            }
+            return !move.includes('0') && !move.includes('9') && !move.includes("-") && !(move.length > 2) && move != `${targetRow}${targetCol}` && pieceTest && rookTest && (parseInt(move[1]) <= this.breakColRight && parseInt(move[1]) >= this.breakColLeft) && (parseInt(move[0]) <= this.breakRowTop && parseInt(move[0]) >= this.breakRowBottom);
+        }, this);
+        validMoves.forEach(move => {
+            if (!!document.querySelector(`[row="${move[0]}"][col="${move[1]}"].piece.${colour}-rook`)) {
+                if (move[1] == piece.getAttribute("col")) {
+                    pieceId = piece.getAttribute("row");
+                }
+                else {
+                    pieceId = this.letterObj[parseInt(piece.getAttribute("col"))]
+                }
+            }
+        })
         } else if (pieceType == "queen") {
             pieceAbb = "Q";
         } else if (pieceType == "king") {
             pieceAbb = "K";
         } else if (pieceType == "pawn" && capture == "x") {
             pieceAbb = this.letterObj[parseInt(piece.getAttribute("col"))];
+        }
+
+        if (check) {
+            checked = "+";
         }
         
         if (castling) {
@@ -1109,9 +1199,9 @@ class Chess {
                 pgn = "O-O-O";
             }
         } else {
-            pgn = `${pieceAbb}${capture}${col}${targetRow}`;
+            pgn = `${pieceAbb}${pieceId}${capture}${col}${targetRow}${checked}`;
         }
-        console.log(pgn);
+        return pgn;
     }
     handleEvent(event) {
         // mousedown events
