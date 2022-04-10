@@ -16,6 +16,8 @@ class Chess {
         this.breakRowTop;
         this.breakRowBottom;
         this.breakBishop;
+        this.pawnToPromote;
+        this.lastMoveCapture = false;
         this.colourToMove = 'white';
         this.perspective = perspective;
         this.init();
@@ -305,8 +307,6 @@ class Chess {
         this.createMoveMarkers(validMoves);
         let pieceList = document.querySelector(".pieces");
         let newPiece = piece.cloneNode();
-        let offsetX = event.offsetX;
-        let offsetY = event.offsetY;
         piece.remove();
         let dim = piece.getBoundingClientRect();
         let pt = document.querySelector(".overlays").createSVGPoint();
@@ -351,13 +351,19 @@ class Chess {
         let newCol = (parseInt(piece.getAttribute("x")) / 100) + 1;
         if (!!document.querySelector(`[row="${newRow}"][col="${newCol}"].piece`)) {
             captured = true;
+            this.lastMoveCapture = true;
             this.capturePiece(newRow, newCol);
         } else if (piece.classList[1].split("-")[1] == "pawn" && Math.abs(newRow - piece.getAttribute("row")) == 1 && Math.abs(newCol - piece.getAttribute("col")) == 1 && !document.querySelector(`[row="${newRow}"][col="${newCol}"].piece`)) {
+            captured = true;
+            this.lastMoveCapture = true;
             if (pieceColour == "white") {
                 this.capturePiece(newRow - 1, newCol);
             } else if (pieceColour == "black") {
                 this.capturePiece(newRow + 1, newCol);
             }
+        } else {
+            captured = false;
+            this.lastMoveCapture = false;
         }
         document.querySelectorAll(["[enpassant]"]).forEach(element => { element.removeAttribute("enpassant") });
         if (piece.classList[1].split("-")[1] == "pawn" && Math.abs(piece.getAttribute("row") - newRow) == 2) {
@@ -407,10 +413,23 @@ class Chess {
             }
             playerKing.setAttribute("href", playerKing.getAttribute("href").replace(" check", ""));
         }
-        movePGN = this.createPGNCode(this.startingSquare, newRow, newCol, castling, kingChecked, captured);
         this.endingSquare = piece;
         this.createSquareHighlight(event, true);
         moveMarkers.innerHTML = "";
+        if (piece.classList[1].split("-")[1] == "pawn") {
+            if ((pieceColour == "white" && newRow == 8) || (pieceColour == "black" && newRow == 1)) {
+                this.pawnToPromote = `${newRow}${newCol}`;
+                let dialogue = this.createDialogue({"settings": "promotion", "colour": pieceColour});
+                document.querySelector("main").insertBefore(dialogue, document.querySelector(".chess-full-container"));
+                document.querySelector("main").style.pointerEvents = "none";
+                let overlay = document.createElement("div");
+                overlay.classList.add("dialogue-overlay");
+                document.querySelector("body").insertBefore(overlay, document.querySelector(".sidebar-underlay"));
+                return;
+            }
+        }
+        let movePGN = this.createPGNCode(this.startingSquare, newRow, newCol, castling, kingChecked, captured, false, "", false);
+        console.log(movePGN);
         this.switchColours();
     }
     pawnMoves(event, colourMoved = event.target.classList[1].split("-")[0]) {
@@ -844,6 +863,21 @@ class Chess {
             if (dialogueOptions.page == "chess") {
 
             }
+        } else if (dialogueOptions.settings == "promotion") {
+            dialogue.classList.add("promotion-dialogue");
+            let tempNode = document.createElement("div");
+            tempNode.classList.add("pieces-container");
+            let pieceNode = document.createElement("img");
+            pieceNode.classList.add("piece");
+            pieceNode.classList.add("promotion-piece");
+            ["knight", "bishop", "rook", "queen"].forEach(piece => {
+                let tempPiece = pieceNode.cloneNode();
+                tempPiece.classList.add(`${dialogueOptions.colour}-${piece}`);
+                tempPiece.setAttribute("src", `/static/blog_site/img/${dialogueOptions.colour} ${piece}.png`);
+                tempPiece.addEventListener("click", this.promotePawn.bind(this));
+                tempNode.appendChild(tempPiece);
+            });
+            dialogue.appendChild(tempNode);
         }
         return dialogue;
     }
@@ -898,7 +932,7 @@ class Chess {
         }
         this.setBoardColours(this.boardTheme);
     }
-    kingInCheckIfMoves(event, move, colourMoved = event.target.classList[1].split("-")[0]) {
+    kingInCheckIfMoves(event, move, colourMoved = event.target.classList[1].split("-")[0], checkmate = false) {
         let tempRow = parseInt(move[0]);
         let tempCol = parseInt(move[1]);
         let pieceColour = colourMoved;
@@ -922,9 +956,12 @@ class Chess {
         knightValidMoves = knightValidMoves.filter(function(square) {
             if (!!document.querySelectorAll(`[row="${square[0]}"][col="${square[1]}"].piece`)[0]) {
                 let sameSquareTest = document.querySelectorAll(`[row="${square[0]}"][col="${square[1]}"].piece`).length > 1;
+                if (checkmate) {sameSquareTest == true;}
                 let pieceCheck;
                 if (sameSquareTest) {
+                    console.log(square);
                     pieceCheck = document.querySelector(`[row="${square[0]}"][col="${square[1]}"].piece[class*="${pieceColour}"]`);
+                    console.log(pieceCheck);
                 } else {
                     pieceCheck = document.querySelector(`[row="${square[0]}"][col="${square[1]}"].piece[class*="${oppositeColour}"]`);
                 }
@@ -941,6 +978,7 @@ class Chess {
         rookValidMoves = rookValidMoves.filter(function(square) {
             if (!!document.querySelectorAll(`[row="${square[0]}"][col="${square[1]}"].piece`)[0]) {
                 let sameSquareTest = document.querySelectorAll(`[row="${square[0]}"][col="${square[1]}"].piece`).length > 1;
+                if (checkmate) {sameSquareTest == true;}
                 let pieceCheck;
                 if (sameSquareTest) {
                     pieceCheck = document.querySelector(`[row="${square[0]}"][col="${square[1]}"].piece[class*="${pieceColour}"]`);
@@ -960,6 +998,7 @@ class Chess {
         bishopValidMoves = bishopValidMoves.filter(function(square) {
             if (!!document.querySelectorAll(`[row="${square[0]}"][col="${square[1]}"].piece`)[0]) {
                 let sameSquareTest = document.querySelectorAll(`[row="${square[0]}"][col="${square[1]}"].piece`).length > 1;
+                if (checkmate) {sameSquareTest == true;}
                 let pieceCheck;
                 if (sameSquareTest) {
                     pieceCheck = document.querySelector(`[row="${square[0]}"][col="${square[1]}"].piece[class*="${pieceColour}"]`);
@@ -1079,8 +1118,42 @@ class Chess {
             this.colourToMove = "white";
         }
     }
-    createPGNCode(piece, targetRow, targetCol, castling, check, captured) {
-        console.log(piece);
+    promotePawn(event) {
+        let pieceChosen = event.target;
+        let pieceType = pieceChosen.classList[2].split("-")[1];
+        let pawnRow = this.pawnToPromote[0];
+        let pawnCol = this.pawnToPromote[1];
+        let pawn = document.querySelector(`[row="${pawnRow}"][col="${pawnCol}"].piece`);
+        let newClass = `${pawn.classList[1].split("-")[0]}-${pieceType}`;
+        let newHref = `/static/blog_site/img/${pawn.classList[1].split("-")[0]} ${pieceType}.png`;
+        pawn.classList.remove(`${pawn.classList[1]}`);
+        pawn.classList.add(newClass);
+        pawn.setAttribute("href", newHref);
+        this.closeDialogue();
+        this.pawnToPromote = "";
+        let opponentKing = document.querySelector(`.${pieceChosen.classList[2].split("-")[0] == 'white' ? 'black' : 'white'}-king`);
+        let playerKing = document.querySelector(`.${pieceChosen.classList[2].split("-")[0]}-king`);
+        let opponentKingSquare = `${opponentKing.getAttribute("row")}${opponentKing.getAttribute("col")}`;
+        console.log(opponentKingSquare);
+        let kingChecked = this.kingInCheckIfMoves(event, opponentKingSquare, pieceChosen.classList[2].split("-")[0] == 'white' ? 'black' : 'white');
+        if (kingChecked) {
+            if (opponentKing.getAttribute("href").includes("flipped")) {
+                opponentKing.setAttribute("href", opponentKing.getAttribute("href").replace(" flipped.png", " check flipped.png"));
+            } else {
+                opponentKing.setAttribute("href", opponentKing.getAttribute("href").replace(".png", " check.png"));
+            }
+            playerKing.setAttribute("href", playerKing.getAttribute("href").replace(" check", ""));
+        } else {
+            if (opponentKing.getAttribute("href").includes("check")) {
+                opponentKing.setAttribute("href", opponentKing.getAttribute("href").replace(" check", ""));
+            }
+            playerKing.setAttribute("href", playerKing.getAttribute("href").replace(" check", ""));
+        }
+        let movePGN = this.createPGNCode(pawn, pawn.getAttribute("row"), pawn.getAttribute("col"), false, kingChecked, this.lastMoveCapture, true, pieceType);
+        console.log(movePGN);
+        this.switchColours();
+    }
+    createPGNCode(piece, targetRow, targetCol, castling, check, captured, promoted = false, promotedPiece = "", checkmate = false) {
         let colour = piece.classList[1].split("-")[0];
         let pieceType = piece.classList[1].split("-")[1];
         let col = this.letterObj[parseInt(targetCol)];
@@ -1088,6 +1161,8 @@ class Chess {
         let capture = "";
         let checked = "";
         let pieceId = "";
+        let promotion = "";
+        let promotedAbb = "";
         this.breakColLeft = 0;
         this.breakColRight = 9;
         this.breakRowTop = 9;
@@ -1191,7 +1266,33 @@ class Chess {
         if (check) {
             checked = "+";
         }
+
+        if (checkmate) {
+            checked = "#";
+        }
         
+        if (promoted) {
+            pieceAbb = captured ? this.letterObj[parseInt(this.startingSquare.getAttribute("col"))] : "";
+            switch (promotedPiece) {
+                case "queen":
+                    promotedAbb = "Q";
+                    break;
+                case "knight":
+                    promotedAbb = "N";
+                    break;
+                case "bishop":
+                    promotedAbb = "B";
+                    break;
+                case "rook":
+                    promotedAbb = "R";
+                    break;
+                default:
+                    console.log("Error: no valid promoted piece found.");
+                    break;
+            }
+            promotion = `=${promotedAbb}`;
+        }
+
         if (castling) {
             if (parseInt(piece.getAttribute("col")) < parseInt(targetCol)) {
                 pgn = "O-O";
@@ -1199,7 +1300,7 @@ class Chess {
                 pgn = "O-O-O";
             }
         } else {
-            pgn = `${pieceAbb}${pieceId}${capture}${col}${targetRow}${checked}`;
+            pgn = `${pieceAbb}${pieceId}${capture}${col}${targetRow}${promotion}${checked}`;
         }
         return pgn;
     }
