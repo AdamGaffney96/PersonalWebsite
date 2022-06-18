@@ -3,23 +3,25 @@ class Chess {
         this.boardTheme = "dark1";
         this.boardOptions = { "dark1": "Dark Board", "blue1": "Blue Ocean", "green1": "Green Forest" };
         this.themeColours = { "dark1": { "dark": "hsl(190, 20%, 20%)", "light": "hsl(0, 0%, 87%)", "moveMarker": "hsl(27, 100%, 60%)" }, "blue1": { "dark": "hsl(195, 100%, 25%)", "light": "hsl(0, 0%, 87%)", "moveMarker": "hsl(130, 60%, 45%)" }, "green1": { "dark": "hsl(99, 60%, 25%)", "light": "hsl(0, 0%, 87%)", "moveMarker": "hsl(10, 50%, 25%)" } }
-        this.startingSquare;
         this.arrowColour = this.themeColours[this.boardTheme].moveMarker;
         this.moveMarkerColour = this.themeColours[this.boardTheme].moveMarker;
         this.highlightColours = { "main": "hsla(0, 100%, 50%, 60%)", "ctrl": "hsla(90, 100%, 50%, 60%)", "alt": "hsla(180, 100%, 50%, 60%)", "ctrlalt": "hsla(270, 100%, 50%, 60%)", "lastmove": "hsla(210, 100%, 50%, 60%)" };
-        this.endingSquare;
-        this.isPieceGrabbed;
         this.letterObj = { 1: "a", 2: "b", 3: "c", 4: "d", 5: "e", 6: "f", 7: "g", 8: "h" };
         this.pieceGrabbed = '';
+        this.moveNumber = 1;
+        this.halfMoves = 0;
+        this.lastMoveCapture = false;
+        this.colourToMove = 'white';
+        this.perspective = perspective;
+        this.startingSquare;
+        this.endingSquare;
+        this.isPieceGrabbed;
         this.breakColLeft;
         this.breakColRight;
         this.breakRowTop;
         this.breakRowBottom;
         this.breakBishop;
         this.pawnToPromote;
-        this.lastMoveCapture = false;
-        this.colourToMove = 'white';
-        this.perspective = perspective;
         this.init();
     }
     init() {
@@ -349,13 +351,16 @@ class Chess {
         piece.setAttribute("y", Math.floor(cursorpt.y / 100) * 100);
         let newRow = 8 - parseInt(piece.getAttribute("y")) / 100;
         let newCol = (parseInt(piece.getAttribute("x")) / 100) + 1;
+        // captures
         if (!!document.querySelector(`[row="${newRow}"][col="${newCol}"].piece`)) {
             captured = true;
             this.lastMoveCapture = true;
+            this.halfMoves = 0;
             this.capturePiece(newRow, newCol);
         } else if (piece.classList[1].split("-")[1] == "pawn" && Math.abs(newRow - piece.getAttribute("row")) == 1 && Math.abs(newCol - piece.getAttribute("col")) == 1 && !document.querySelector(`[row="${newRow}"][col="${newCol}"].piece`)) {
             captured = true;
             this.lastMoveCapture = true;
+            this.halfMoves = 0;
             if (pieceColour == "white") {
                 this.capturePiece(newRow - 1, newCol);
             } else if (pieceColour == "black") {
@@ -364,6 +369,12 @@ class Chess {
         } else {
             captured = false;
             this.lastMoveCapture = false;
+            // half moves
+            if (piece.classList[1].split("-")[1] == "pawn") {
+                this.halfMoves = 0;
+            } else {
+                this.halfMoves++;
+            }
         }
         document.querySelectorAll(["[enpassant]"]).forEach(element => { element.removeAttribute("enpassant") });
         if (piece.classList[1].split("-")[1] == "pawn" && Math.abs(piece.getAttribute("row") - newRow) == 2) {
@@ -422,8 +433,6 @@ class Chess {
                 let dialogue = this.createDialogue({"settings": "promotion", "colour": pieceColour});
                 document.querySelector("main").insertBefore(dialogue, document.querySelector(".chess-full-container"));
                 document.querySelector("main").style.pointerEvents = "none";
-                let overlay = document.createElement("div");
-                overlay.classList.add("dialogue-overlay");
                 document.querySelector("body").insertBefore(overlay, document.querySelector(".sidebar-underlay"));
                 return;
             }
@@ -431,6 +440,8 @@ class Chess {
         let movePGN = this.createPGNCode(this.startingSquare, newRow, newCol, castling, kingChecked, captured, false, "", false);
         console.log(movePGN);
         this.switchColours();
+        let fen = this.generateFEN();
+        console.log(fen);
     }
     pawnMoves(event, colourMoved = event.target.classList[1].split("-")[0]) {
         let currentRow = parseInt(event.target.getAttribute("row"));
@@ -752,6 +763,24 @@ class Chess {
     createDialogue(dialogueOptions) {
         let dialogue = document.createElement("div");
         dialogue.classList.add("dialogue-box");
+        document.querySelector("main").style.pointerEvents = "none";
+        switch(dialogueOptions.type) {
+            case "gameEnd":
+                dialogue.classList.add("ending-dialogue");
+                let content = document.createElement("div");
+                let paragraph = document.createElement("p");
+
+                let result = paragraph.cloneNode();
+                let reason = paragraph.cloneNode();
+
+                result.innerText = dialogueOptions.result;
+                reason.innerText = dialogueOptions.reason;
+
+                content.appendChild(result);
+                content.appendChild(reason);
+                dialogue.appendChild(content);
+                break;
+        }
         if (dialogueOptions.settings == "chessSettings") {
             dialogue.classList.add("chess-settings-dialogue");
             let boardTheme = document.createElement("select");
@@ -884,7 +913,6 @@ class Chess {
     closeDialogue() {
         document.querySelector(".dialogue-box").remove();
         document.querySelector("main").style = null;
-        document.querySelector(".dialogue-overlay").remove();
     }
     openChessSettings() {
         if (!!document.querySelector(".chess-settings-dialogue")) { return; }
@@ -892,9 +920,7 @@ class Chess {
         document.querySelector("main").insertBefore(settingsGroup, document.querySelector(".chess-full-container"));
         document.querySelector(".dialogue-box").style.marginTop = `-${document.querySelector(".dialogue-box").offsetHeight/2}px`;
         document.querySelector(".dialogue-box").style.marginLeft = `-${document.querySelector(".dialogue-box").offsetWidth/2}px`;
-        document.querySelector("main").style.pointerEvents = "none";
         let overlay = document.createElement("div");
-        overlay.classList.add("dialogue-overlay");
         document.querySelector("body").insertBefore(overlay, document.querySelector(".sidebar-underlay"));
     }
     saveChessSettings() {
@@ -1116,6 +1142,7 @@ class Chess {
             this.colourToMove = "black";
         } else {
             this.colourToMove = "white";
+            this.moveNumber++;
         }
     }
     promotePawn(event) {
@@ -1304,6 +1331,85 @@ class Chess {
         }
         return pgn;
     }
+    generateFEN() {
+        let fen = "";
+        // loop for piece location for fen
+        for (let i = 8; i >= 1; i--) {
+            let counter = 0;
+            for (let j = 1; j <= 8; j++) {
+                if (!!document.querySelector(`[row="${i}"][col="${j}"].piece`)) {
+                    if (counter > 0) {
+                        fen += `${counter}`;
+                    }
+                    let piece = document.querySelector(`[row="${i}"][col="${j}"].piece`);
+                    let colour = piece.classList[1].split("-")[0];
+                    let pieceType = piece.classList[1].split("-")[1] == "knight" ? "night" : piece.classList[1].split("-")[1];
+                    let initial = colour == "black" ? pieceType[0] : pieceType[0].toUpperCase();
+
+                    fen += initial;
+                    counter = 0;
+                } else {
+                    counter++;
+                    if (j == 8) {
+                        fen += counter;
+                    }
+                }
+            }
+            if (i != 1) {
+                fen += "/";
+            }
+        }
+        // piece to move to fen
+        fen += ` ${this.colourToMove[0]}`;
+        // add castling potential to fen
+        let castle = " ";
+        let castlingCheckPieces = [...document.querySelectorAll(`[notmoved="true"][class*="rook"], [notmoved="true"][class*="king"]`)];
+        let whitePieces = castlingCheckPieces.filter(element => element.classList[1].split("-")[0] == "white");
+        let blackPieces = castlingCheckPieces.filter(element => element.classList[1].split("-")[0] == "black");
+        if (whitePieces[whitePieces.findIndex(element => element.classList[1].split("-")[1] == "king")]) {
+            if (whitePieces[whitePieces.findIndex(element => element.classList[1].split("-")[1] == "rook" && element.getAttribute("col") == 8)]) {
+                castle += "K";
+            }
+            if (whitePieces[whitePieces.findIndex(element => element.classList[1].split("-")[1] == "rook" && element.getAttribute("col") == 1)]) {
+                castle += "Q";
+            }
+        }
+        if (blackPieces[blackPieces.findIndex(element => element.classList[1].split("-")[1] == "king")]) {
+            if (blackPieces[blackPieces.findIndex(element => element.classList[1].split("-")[1] == "rook" && element.getAttribute("col") == 8)]) {
+                castle += "k";
+            }
+            if (blackPieces[blackPieces.findIndex(element => element.classList[1].split("-")[1] == "rook" && element.getAttribute("col") == 1)]) {
+                castle += "q";
+            }
+        }
+        if (castle == " ") {
+            castle += "-";
+        }
+        castle += " ";
+        fen += castle;
+        // Add en passant to fen
+        if (this.endingSquare.classList[1].split("-")[1] == "pawn" && (Math.abs(this.endingSquare.getAttribute("row") - this.startingSquare.getAttribute("row")) == 2)) {
+            let square = "";
+            if (this.endingSquare.classList[1].split("-")[0] == "black") {
+                square += `${this.letterObj[this.endingSquare.getAttribute("col")]}6 `;
+            } else {
+                square += `${this.letterObj[this.endingSquare.getAttribute("col")]}3 `;
+            }
+            fen += square;
+        } else {
+            fen += "- ";
+        }
+        // Adds half move to fen
+        fen += `${this.halfMoves} `;
+        // Adds full move to fen
+        fen += this.moveNumber;
+        // prints to console
+        return fen;
+    }
+    finishGame(result, reason) {
+        let finishDialogue = this.createDialogue({"type": "gameEnd", "result": result, "reason": reason});
+        document.querySelector("main").insertBefore(finishDialogue, document.querySelector(".chess-full-container"));
+    }
     handleEvent(event) {
         // mousedown events
         if (event.type == "pointerdown") {
@@ -1330,6 +1436,7 @@ class Chess {
                 this.clearTemporaryMarks();
                 if (this.pieceGrabbed) {
                     this.dropPiece(event);
+                    if (this.halfMoves == 50) {this.finishGame("draw", "by the 50-move rule")};
                     this.pieceGrabbed = "";
                     this.isPieceGrabbed = false;
                     this.breakColLeft = 0;
@@ -1361,8 +1468,6 @@ class Chess {
                         let dialogue = this.createDialogue({ "settings": "shortcuts", "page": "chess" });
                         document.querySelector("main").insertBefore(dialogue, document.querySelector(".chess-full-container"));
                         document.querySelector("main").style.pointerEvents = "none";
-                        let overlay = document.createElement("div");
-                        overlay.classList.add("dialogue-overlay");
                         document.querySelector("body").insertBefore(overlay, document.querySelector(".sidebar-underlay"));
                     } else {
                         this.closeDialogue();
@@ -1371,8 +1476,6 @@ class Chess {
                     let dialogue = this.createDialogue({ "settings": "shortcuts", "page": "chess" });
                     document.querySelector("main").insertBefore(dialogue, document.querySelector(".chess-full-container"));
                     document.querySelector("main").style.pointerEvents = "none";
-                    let overlay = document.createElement("div");
-                    overlay.classList.add("dialogue-overlay");
                     document.querySelector("body").insertBefore(overlay, document.querySelector(".sidebar-underlay"));
                 }
             } else if (event.code == "KeyS" && event.ctrlKey) {

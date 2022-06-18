@@ -3,6 +3,7 @@
 
 <head>
     <link rel="icon" type="image/png" href="{% static 'blog_site/img/Logo.png' %}">
+    <link rel='stylesheet' type='text/css' href="{% static 'blog_site/css/reset.css' %}">
     <link rel='stylesheet' type='text/css' href="{% static 'blog_site/css/base.css' %}">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300&display=swap" rel="stylesheet">
@@ -24,9 +25,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> {% block head %} {% endblock %} </head>
 
 <body>
-    <div class="sidebar-underlay"></div>
     <nav class="nav-sidebar" role="navigation" aria-label="Navigation Menu">
-        <button class="hamburger-button" aria-expanded="false">
+        <!-- <button class="hamburger-button" aria-expanded="false">
             <svg class="hamburger-icon" focusable="false">
                 <path class="hamburger-line line-1" id="line-1" stroke-width="3" stroke="hsl(0 0% 100%)" d="M10 10 h28 z" stroke-linejoin="round"></path>
                 <path class="hamburger-line line-2" id="line-2" stroke-width="3" stroke="hsl(0 0% 100%)" d="M10 18 h28 z" stroke-linejoin="round" opacity="1"></path>
@@ -38,11 +38,11 @@
                 <animateTransform id="line3-animate-1" xlink:href="#line-3" attributeName="transform" attributeType="XML" type="rotate" from="0 10 26" to="-45 16 21" dur="0.3s" begin="indefinite" fill="freeze"/>
                 <animateTransform id="line3-animate-2" xlink:href="#line-3" attributeName="transform" attributeType="XML" type="rotate" to="0 10 26" from="-45 16 21" dur="0.3s" begin="indefinite" fill="freeze"/>
             </svg>
-        </button>
-        <ul class="nav-list">
+        </button> -->
+        <ul class="nav-list" role="list">
             <li class="nav-item home-button"><a href="{% url 'home' %}">Home</a></li>
             <li class="nav-item">Projects
-                <ul class="nav-sublist">
+                <ul class="nav-sublist" role="list">
                     <li class="nav-subitem"><a href="{% url 'chess' %}" class="navitem-link">Chess</a></li>
                     <li class="nav-subitem"><a href="{% url 'sudoku' %}" class="navitem-link">Sudoku</a></li>
                     <li class="nav-subitem"><a href="{% url 'single_cheatsheet' 'git' %}" class="navitem-link">Cheatsheets</a></li>

@@ -1,3 +1,5 @@
+/* base styles */
+
 :root {
     --clr-bg: hsl(0, 0%, 100%);
     --clr-sidebar: hsl(0, 0%, 0%);
@@ -7,114 +9,33 @@
     --clr-text-light: hsl(199, 85%, 70%);
 }
 
-* {
-    margin: 0;
-}
-
-.hamburger-button {
-    all: initial;
-}
-
-a,
-a:hover,
-a:active,
-a:visited {
-    text-decoration: none;
-    color: inherit;
-}
-
 body {
-    /* background: var(--clr-bg); */
-    font-family: 'Roboto', 'Merriweather', Arial, sans-serif;
-    display: flex;
-    overflow: hidden;
-    height: 100vh;
+    display: grid;
+    grid-template-areas: "nav main" "nav main" "nav footer";
+    grid-template-columns: 3rem 1fr;
 }
 
-.sidebar-underlay {
-    width: 3rem;
-    flex-shrink: 0;
-    padding: 0.3rem;
+
+/* navigation */
+
+nav {
+    grid-area: nav;
+    background-color: var(--clr-sidebar);
 }
 
-.nav-sidebar {
-    width: 3rem;
-    height: 100%;
-    padding: 0.3rem;
-    display: flex;
-    position: fixed;
-    flex-direction: column;
-    align-items: end;
-    background: var(--clr-sidebar);
-    transition: width 0.3s, padding 0.3s;
-    box-shadow: 0 0 5px 2px hsl(0 0% 0%);
-    z-index: 10;
-}
 
-.nav-list {
-    padding: 0;
-    opacity: 0;
-    font-size: 3rem;
-    list-style: none;
-    transition: opacity 0.3s, padding 0.3s;
-    white-space: nowrap;
-    visibility: hidden;
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-}
-
-.nav-item {
-    color: var(--clr-text-white);
-}
-
-.home-button {
-    cursor: pointer;
-}
-
-.home-button:hover,
-.home-button a:focus {
-    color: var(--clr-text-light);
-    transition: color 0.3s;
-}
-
-.nav-sublist {
-    font-size: 2rem;
-    list-style: none;
-    padding: 0;
-    padding-left: 1.5rem;
-    white-space: nowrap;
-    display: flex;
-    flex-direction: column;
-    gap: 0.3rem;
-}
-
-.nav-subitem {
-    cursor: pointer;
-    width: fit-content;
-}
-
-.nav-subitem:hover,
-.nav-subitem a:focus {
-    color: var(--clr-text-light);
-    transition: color 0.3s;
-}
-
-.hamburger-button:focus {
-    all: reset;
-}
-
-.hamburger-icon {
-    width: 3rem;
-    aspect-ratio: 1.4;
-    cursor: pointer;
-}
+/* main content */
 
 main {
-    height: 100%;
-    overflow-y: auto;
-    position: relative;
+    grid-area: main;
 }
+
+footer {
+    grid-area: footer;
+}
+
+
+/* chess dialogue styles */
 
 .dialogue-box {
     padding: 1rem;
@@ -131,6 +52,7 @@ main {
     margin: 0.5rem;
     pointer-events: auto;
     z-index: 9;
+    box-shadow: 0 0 0 100vmax var(--clr-overlay);
 }
 
 .chess-settings-dialogue {
@@ -138,60 +60,21 @@ main {
     left: 50%;
 }
 
-.dialogue-overlay {
+
+/* .dialogue-overlay {
     width: 100%;
     height: 100%;
     position: absolute;
     background: var(--clr-overlay);
     z-index: 1;
-}
-
-.settings-group {
-    display: flex;
-    gap: 1rem;
-    justify-content: space-between;
-}
-
-.settings-label {
-    font-size: 1.2rem;
-}
-
-.settings-label::after {
-    content: ":";
-}
-
-.radio-group {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.buttons-group {
-    display: flex;
-    gap: 1rem;
-}
-
-.button {
-    width: 100%;
-}
-
-
-/* .nav-bar {
-    background: var(--clr-main-1);
-    font-size: 1rem;
-    display: flex;
-    padding: 1rem;
-}
-
-.nav-list {
-    display: flex;
-    gap: 5em;
-}
-
-.nav-item {
-    list-style: none;
-    font-size: 2em;
-    color: var(--clr-text-white);
-    cursor: pointer;
-    user-select: none;
 } */
+
+
+/* desktop edits */
+
+@media screen and (min-width: 720px) {
+    body {
+        grid-template-areas: "nav nav nav" "main main main" "footer footer footer";
+        grid-template-rows: 3rem 90% 1fr;
+    }
+}
