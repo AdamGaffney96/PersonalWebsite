@@ -4,15 +4,18 @@
 }
 
 .chess-full-container {
-    display: flex;
+    display: grid;
+    grid-template-areas: "board board board" "sidebar sidebar sidebar";
+    grid-template-columns: 90vw 10vw;
 }
 
 .chess-container {
-    width: 90vw;
-    height: 90vh;
+    /* width: 90vw; */
+    height: 60vh;
     margin: 1rem;
     display: flex;
     gap: 2rem;
+    grid-area: board;
 }
 
 .chess-board {
@@ -34,7 +37,7 @@
     position: absolute;
     top: 0;
     left: 0;
-    max-height: 90vh;
+    max-height: 60vh;
 }
 
 .promotion-dialogue {
@@ -66,10 +69,27 @@
     align-self: flex-end;
     margin: 1rem;
     padding: 1rem;
+    grid-area: sidebar;
 }
 
 .copyright {
     position: absolute;
     bottom: 0.2em;
     right: 0.2em;
+}
+
+
+/* desktop edits */
+
+@media screen and (min-width: 720px) {
+    .chess-full-container {
+        grid-template-areas: "board board sidebar";
+        grid-template-columns: 90vw 10vw;
+    }
+    .chess-container {
+        height: 90vh;
+    }
+    .overlays {
+        max-height: 90vh;
+    }
 }

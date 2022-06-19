@@ -1409,6 +1409,13 @@ class Chess {
     finishGame(result, reason) {
         let finishDialogue = this.createDialogue({"type": "gameEnd", "result": result, "reason": reason});
         document.querySelector("main").insertBefore(finishDialogue, document.querySelector(".chess-full-container"));
+        this.preventMovement();
+    }
+    preventMovement() {
+        document.querySelector(".overlays").pointerEvents = "none";
+    }
+    allowMovement() {
+        document.querySelector(".overlays").pointerEvents = null;
     }
     handleEvent(event) {
         // mousedown events
