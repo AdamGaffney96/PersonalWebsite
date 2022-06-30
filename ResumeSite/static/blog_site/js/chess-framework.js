@@ -1443,7 +1443,7 @@ class Chess {
                 this.clearTemporaryMarks();
                 if (this.pieceGrabbed) {
                     this.dropPiece(event);
-                    if (this.halfMoves == 50) {this.finishGame("draw", "by the 50-move rule")};
+                    if (this.halfMoves == 100) {this.finishGame("draw", "by the 50-move rule")};
                     this.pieceGrabbed = "";
                     this.isPieceGrabbed = false;
                     this.breakColLeft = 0;
