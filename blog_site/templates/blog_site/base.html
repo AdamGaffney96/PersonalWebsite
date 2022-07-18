@@ -41,13 +41,9 @@
         </button> -->
         <ul class="nav-list" role="list">
             <li class="nav-item home-button"><a href="{% url 'home' %}">Home</a></li>
-            <li class="nav-item">Projects
-                <ul class="nav-sublist" role="list">
-                    <li class="nav-subitem"><a href="{% url 'chess' %}" class="navitem-link">Chess</a></li>
-                    <li class="nav-subitem"><a href="{% url 'sudoku' %}" class="navitem-link">Sudoku</a></li>
-                    <li class="nav-subitem"><a href="{% url 'single_cheatsheet' 'git' %}" class="navitem-link">Cheatsheets</a></li>
-                </ul>
-            </li>
+            <li class="nav-item"><a href="{% url 'projects' %}">Projects</a></li>
+            <li class="nav-item"><a href="{% url 'chess' %}">Chess</a></li>
+            <li class="nav-item"><a href="{% url 'sudoku' %}">Sudoku</a></li>
         </ul>
     </nav>
     <main>

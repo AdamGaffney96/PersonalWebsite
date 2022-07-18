@@ -11,7 +11,7 @@
 
 body {
     display: grid;
-    grid-template-areas: "nav main" "nav main" "nav footer";
+    grid-template-areas: "nav nav nav" "main main main" "footer footer footer";
     grid-template-columns: 3rem 1fr;
 }
 
@@ -21,6 +21,15 @@ body {
 nav {
     grid-area: nav;
     background-color: var(--clr-sidebar);
+    display: grid;
+    place-items: center;
+}
+
+.nav-list {
+    display: flex;
+    color: var(--clr-text-white);
+    margin: 0;
+    gap: 1em;
 }
 
 

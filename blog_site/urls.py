@@ -10,4 +10,8 @@ urlpatterns = [
     path('cheatsheets/<slug>', views.single_cheatsheet, name = "single_cheatsheet"),
     path('periodic-table', views.periodic_table, name = "periodic_table"),
     path('tv-license', views.tv_license, name = "tv_license"),
+    path('projects', views.projects, name = "projects"),
+    path('projects/movie-project', views.movie_project, name = "movie_project"),
+    path('projects/countdown', views.countdown, name = "countdown"),
+    path('projects/password-gen', views.password_gen, name = 'password_gen'),
 ]

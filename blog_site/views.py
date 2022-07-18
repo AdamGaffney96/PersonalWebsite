@@ -14,18 +14,14 @@ from django.urls import reverse_lazy
 from django.contrib.auth.forms import UserCreationForm
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-import smtplib
 from django.utils.text import slugify
 from datetime import datetime, timezone
-import pytz
-import requests
 from django.http import HttpResponse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 import os
 import math
-import json
 
 # Create your views here.
 
@@ -325,3 +321,15 @@ def periodic_table(request):
 def tv_license(request):
     context = {}
     return render(request, 'blog_site/tv_license.html', context)
+
+def movie_project(request):
+    context = {}
+    return render(request, 'blog_site/movie_project.html', context)
+
+def countdown(request):
+    context = {}
+    return render(request, 'blog_site/countdown.html', context)
+
+def password_gen(request):
+    context = {}
+    return render(request, 'blog_site/password_gen.html', context)
