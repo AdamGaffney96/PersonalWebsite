@@ -25,8 +25,52 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> {% block head %} {% endblock %} </head>
 
 <body>
-    <nav class="nav-sidebar" role="navigation" aria-label="Navigation Menu">
-        <!-- <button class="hamburger-button" aria-expanded="false">
+    <nav class="nav-sidebar" role="navigation">
+        <div class="main-logo">
+            <a href="{% url 'home' %}"><img src="{% static 'blog_site/img/Logo Transparent.png' %}" alt="Company Logo" class="logo-img"></a>
+        </div>
+        <ul class="nav-list" role="list" aria-label="Primary">
+            <li class="nav-item home-button"><a href="{% url 'home' %}">Home</a></li>
+            <li class="nav-item"><a href="{% url 'projects' %}">Projects</a></li>
+            <li class="nav-item"><a href="{% url 'chess' %}">Chess</a></li>
+            <li class="nav-item"><a href="{% url 'sudoku' %}">Sudoku</a></li>
+        </ul>
+        <form action="POST" class="search-bar">
+            {% csrf_token %}
+            <input type="text" class="search-input" placeholder="Still in development" disabled>
+            <button type="submit" disabled>Search</button>
+        </form>
+    </nav>
+    <main>
+        {% block content %} {% endblock %}
+    </main>
+    <footer>
+        <div class="social-links" aria-label="Social Links">
+            <ul class="social-link-list" role="list">
+                <li class="twitter">
+                    <a href="https://www.twitter.com/AdamGaffney96" target="_blank"><img src="{% static 'blog_site/img/twitter_logo.svg' %}" alt="Twitter" class="twitter-img" aria-label="Adam's Twitter (Opens In New Tab)"></a>
+                </li>
+                <li class="instagram">
+                    <a href="https://www.instagram.com/gaffers1996/" target="_blank"><img src="{% static 'blog_site/img/instagram_logo.svg' %}" alt="Instagram" class="instagram-img" aria-label="Adam's Instagram (Opens In New Tab)"></a>
+                </li>
+                <li class="youtube">
+                    <a href="https://www.youtube.com/channel/UCDAt359qpRgchTVXMuOY5rg" target="_blank"><img src="{% static 'blog_site/img/youtube_logo.svg' %}" alt="Youtube" class="youtube-img" aria-label="Adam's YouTube (Opens In New Tab)"></a>
+                </li>
+                <li class="github">
+                    <a href="https://github.com/AdamGaffney96" target="_blank"><img src="{% static 'blog_site/img/github_logo.png' %}" alt="Github" class="github-img" aria-label="Adam's Github (Opens In New Tab)"></a>
+                </li>
+            </ul>
+        </div>
+        <div class="copyright">
+            <p>Adam Gaffney<span class="copyright-symbol">&copy;</span> 2022-2022</p>
+        </div>
+    </footer>
+    <script type="text/javascript" src="{% static 'blog_site/js/base.js' %}"></script>
+</body>
+
+</html>
+<!-- Code for hamburger button remnants -->
+<!-- <button class="hamburger-button" aria-expanded="false">
             <svg class="hamburger-icon" focusable="false">
                 <path class="hamburger-line line-1" id="line-1" stroke-width="3" stroke="hsl(0 0% 100%)" d="M10 10 h28 z" stroke-linejoin="round"></path>
                 <path class="hamburger-line line-2" id="line-2" stroke-width="3" stroke="hsl(0 0% 100%)" d="M10 18 h28 z" stroke-linejoin="round" opacity="1"></path>
@@ -39,17 +83,3 @@
                 <animateTransform id="line3-animate-2" xlink:href="#line-3" attributeName="transform" attributeType="XML" type="rotate" to="0 10 26" from="-45 16 21" dur="0.3s" begin="indefinite" fill="freeze"/>
             </svg>
         </button> -->
-        <ul class="nav-list" role="list">
-            <li class="nav-item home-button"><a href="{% url 'home' %}">Home</a></li>
-            <li class="nav-item"><a href="{% url 'projects' %}">Projects</a></li>
-            <li class="nav-item"><a href="{% url 'chess' %}">Chess</a></li>
-            <li class="nav-item"><a href="{% url 'sudoku' %}">Sudoku</a></li>
-        </ul>
-    </nav>
-    <main>
-        {% block content %} {% endblock %}
-    </main>
-    <script type="text/javascript" src="{% static 'blog_site/js/base.js' %}"></script>
-</body>
-
-</html>

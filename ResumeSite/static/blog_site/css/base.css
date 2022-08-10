@@ -9,39 +9,19 @@
     --clr-text-light: hsl(199, 85%, 70%);
 }
 
-body {
-    display: grid;
-    grid-template-areas: "nav nav nav" "main main main" "footer footer footer";
-    grid-template-columns: 3rem 1fr;
+html {
+    font-family: 'Roboto', Arial, sans-serif;
 }
 
 
 /* navigation */
 
 nav {
-    grid-area: nav;
-    background-color: var(--clr-sidebar);
-    display: grid;
-    place-items: center;
-}
-
-.nav-list {
-    display: flex;
-    color: var(--clr-text-white);
-    margin: 0;
-    gap: 1em;
+    max-height: 20px;
 }
 
 
-/* main content */
-
-main {
-    grid-area: main;
-}
-
-footer {
-    grid-area: footer;
-}
+/* footer */
 
 
 /* chess dialogue styles */
@@ -77,13 +57,3 @@ footer {
     background: var(--clr-overlay);
     z-index: 1;
 } */
-
-
-/* desktop edits */
-
-@media screen and (min-width: 720px) {
-    body {
-        grid-template-areas: "nav nav nav" "main main main" "footer footer footer";
-        grid-template-rows: 3rem 90% 1fr;
-    }
-}
