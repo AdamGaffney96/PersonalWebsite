@@ -37,8 +37,8 @@
         </ul>
         <form action="POST" class="search-bar">
             {% csrf_token %}
-            <input type="text" class="search-input" placeholder="Still in development" disabled>
-            <button type="submit" disabled>Search</button>
+            <input type="text" class="search-input" id="search-box" placeholder="Still in development" disabled>
+            <button type="submit" aria-label="Search" aria-controls="search-box" disabled><img src="{% static 'blog_site/img/mag_glass.svg' %}" alt="" width="30px" height="24px"></button>
         </form>
     </nav>
     <main>
@@ -46,6 +46,7 @@
     </main>
     <footer>
         <div class="social-links" aria-label="Social Links">
+            <h3 class="list-heading">Social Links</h3>
             <ul class="social-link-list" role="list">
                 <li class="twitter">
                     <a href="https://www.twitter.com/AdamGaffney96" target="_blank"><img src="{% static 'blog_site/img/twitter_logo.svg' %}" alt="Twitter" class="twitter-img" aria-label="Adam's Twitter (Opens In New Tab)"></a>
@@ -56,13 +57,32 @@
                 <li class="youtube">
                     <a href="https://www.youtube.com/channel/UCDAt359qpRgchTVXMuOY5rg" target="_blank"><img src="{% static 'blog_site/img/youtube_logo.svg' %}" alt="Youtube" class="youtube-img" aria-label="Adam's YouTube (Opens In New Tab)"></a>
                 </li>
+                <li class="linkedin">
+                    <a href="https://uk.linkedin.com/in/adam-gaffney-b3b8a191" target="_blank"><img src="{% static 'blog_site/img/linkedin_logo.svg' %}" alt="LinkedIn" class="linkedin-img" aria-label="Adam's LinkedIn (Opens In New Tab)"></a>
+                </li>
                 <li class="github">
-                    <a href="https://github.com/AdamGaffney96" target="_blank"><img src="{% static 'blog_site/img/github_logo.png' %}" alt="Github" class="github-img" aria-label="Adam's Github (Opens In New Tab)"></a>
+                    <a href="https://github.com/AdamGaffney96" target="_blank"><img src="{% static 'blog_site/img/github_logo.svg' %}" alt="Github" class="github-img" aria-label="Adam's Github (Opens In New Tab)"></a>
                 </li>
             </ul>
         </div>
+        <div class="other-links" aria-label="Secondary">
+            <div class="link-container">
+                <h3 class="list-heading">Information</h3>
+                <ul class="other-link-list" role="list">
+                    <li class="about">
+                        <a href="#" target="_blank">About Me</a>
+                    </li>
+                    <li class="contact">
+                        <a href="#" target="_blank">Contact Me</a>
+                    </li>
+                    <li class="faq">
+                        <a href="#" target="_blank">FAQ's</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
         <div class="copyright">
-            <p>Adam Gaffney<span class="copyright-symbol">&copy;</span> 2022-2022</p>
+            <p><span style="padding-right: 0.25rem;" class="copyright-symbol">&copy;</span>Adam Gaffney, 2022-2022</p>
         </div>
     </footer>
     <script type="text/javascript" src="{% static 'blog_site/js/base.js' %}"></script>
