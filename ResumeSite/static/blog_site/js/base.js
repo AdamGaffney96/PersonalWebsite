@@ -41,3 +41,37 @@
 
 // hamburgerButton.addEventListener("click", hamburgerClick);
 // window.addEventListener("keyup", escapeMenu);
+
+const body = document.body;
+const moon = document.querySelector('.moon');
+const sun = document.querySelector('.sun');
+const lightDarkButton = document.querySelector('.light-dark-container');
+const basePreference = window.matchMedia('(prefers-color-scheme: dark)').matches ? "dark" : "light";
+const lightPreference = localStorage.getItem("lightPreference") ? localStorage.getItem("lightPreference") : basePreference;
+
+if (lightPreference == "dark") {
+    lightDarkButton.firstElementChild.style.transform = "translateX(200%)";
+    sun.style.display = "none";
+    moon.style.display = null;
+} else {
+    moon.style.display = "none";
+    sun.style.display = null;
+}
+
+lightDarkButton.addEventListener('click', (e) => {
+    if (lightDarkButton.firstElementChild.style.transform == "translateX(200%)") {
+        lightDarkButton.firstElementChild.style.transform = null;
+        body.classList.add("light-mode");
+        body.classList.remove("dark-mode");
+        moon.style.display = "none";
+        sun.style.display = null;
+        localStorage.setItem("lightPreference", "light");
+    } else {
+        lightDarkButton.firstElementChild.style.transform = "translateX(200%)";
+        body.classList.remove("light-mode");
+        body.classList.add("dark-mode");
+        sun.style.display = "none";
+        moon.style.display = null;
+        localStorage.setItem("lightPreference", "dark");
+    }
+})

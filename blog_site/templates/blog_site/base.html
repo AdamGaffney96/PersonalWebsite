@@ -25,6 +25,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> {% block head %} {% endblock %} </head>
 
 <body>
+    <script type="text/javascript" src="{% static 'blog_site/js/base-theme.js' %}"></script>
+    <button class="skip-nav" type="button" onclick="location.href='#main'">Skip Navigation</button>
     <nav class="nav-sidebar" role="navigation">
         <div class="main-logo">
             <a href="{% url 'home' %}"><img src="{% static 'blog_site/img/Logo Transparent.png' %}" alt="Company Logo" class="logo-img"></a>
@@ -35,13 +37,40 @@
             <li class="nav-item"><a href="{% url 'chess' %}">Chess</a></li>
             <li class="nav-item"><a href="{% url 'sudoku' %}">Sudoku</a></li>
         </ul>
-        <form action="POST" class="search-bar">
-            {% csrf_token %}
-            <input type="text" class="search-input" id="search-box" placeholder="Still in development" disabled>
-            <button type="submit" aria-label="Search" aria-controls="search-box" disabled><img src="{% static 'blog_site/img/mag_glass.svg' %}" alt="" width="30px" height="24px"></button>
-        </form>
+        <div class="options-container">
+            <div class="light-dark-button">
+                <div class="light-dark-container">
+                    <div class="light-dark-selector">
+                        <svg fill="#f7f7f7" viewBox="0 0 20 20" class="light-dark-svg sun">
+                            <circle cx="10" cy="10" r="4"></circle>
+                            <rect width="2" height="4" x="9" y="1"></rect>
+                            <rect width="2" height="4" x="9" y="-5" transform="rotate(90)"></rect>
+                            <rect width="2" height="4" x="9" y="-19" transform="rotate(90)"></rect>
+                            <rect width="2" height="4" x="9" y="15"></rect>
+                            <rect width="2" height="4" x="13" y="-9" transform="rotate(45)"></rect>
+                            <rect width="2" height="4" x="-1" y="5" transform="rotate(-45)"></rect>
+                            <rect width="2" height="4" x="13" y="5" transform="rotate(45)"></rect>
+                            <rect width="2" height="4" x="-1" y="19" transform="rotate(-45)"></rect>
+                        </svg>
+                        <svg fill="#1d1e25" viewBox="0 0 20 20" class="light-dark-svg moon">
+                            <circle cx="10" cy="10" r="9"/>
+                            <circle cx="7" cy="10" r="7" fill="#f7f7f7" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            <form action="POST" class="search-bar">
+                {% csrf_token %}
+                <input type="text" class="search-input" id="search-box" placeholder="Still in development" disabled>
+                <button type="submit" aria-label="Search" aria-controls="search-box" class="search-button" disabled>
+                    <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 490.4 490.4" xml:space="preserve" width="30px" height="24px">
+                        <path d="M484.1,454.796l-110.5-110.6c29.8-36.3,47.6-82.8,47.6-133.4c0-116.3-94.3-210.6-210.6-210.6S0,94.496,0,210.796 s94.3,210.6,210.6,210.6c50.8,0,97.4-18,133.8-48l110.5,110.5c12.9,11.8,25,4.2,29.2,0C492.5,475.596,492.5,463.096,484.1,454.796z M41.1,210.796c0-93.6,75.9-169.5,169.5-169.5s169.6,75.9,169.6,169.5s-75.9,169.5-169.5,169.5S41.1,304.396,41.1,210.796z"/>
+                    </svg>
+                </button>
+            </form>
+        </div>
     </nav>
-    <main>
+    <main id="main">
         {% block content %} {% endblock %}
     </main>
     <footer>
@@ -66,6 +95,20 @@
             </ul>
         </div>
         <div class="other-links" aria-label="Secondary">
+            <div class="link-container">
+                <h3 class="list-heading">Test</h3>
+                <ul class="other-link-list" role="list">
+                    <li class="about">
+                        <a href="#" target="_blank">About Me</a>
+                    </li>
+                    <li class="contact">
+                        <a href="#" target="_blank">Contact Me</a>
+                    </li>
+                    <li class="faq">
+                        <a href="#" target="_blank">FAQ's</a>
+                    </li>
+                </ul>
+            </div>
             <div class="link-container">
                 <h3 class="list-heading">Information</h3>
                 <ul class="other-link-list" role="list">
@@ -102,4 +145,4 @@
                 <animateTransform id="line3-animate-1" xlink:href="#line-3" attributeName="transform" attributeType="XML" type="rotate" from="0 10 26" to="-45 16 21" dur="0.3s" begin="indefinite" fill="freeze"/>
                 <animateTransform id="line3-animate-2" xlink:href="#line-3" attributeName="transform" attributeType="XML" type="rotate" to="0 10 26" from="-45 16 21" dur="0.3s" begin="indefinite" fill="freeze"/>
             </svg>
-        </button> -->
+    </button> -->

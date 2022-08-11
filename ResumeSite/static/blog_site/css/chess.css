@@ -10,9 +10,8 @@
 }
 
 .chess-container {
-    /* width: 90vw; */
     height: 60vh;
-    margin: 1rem;
+    margin-bottom: 1rem;
     display: flex;
     gap: 2rem;
     grid-area: board;
@@ -83,8 +82,8 @@
 
 @media screen and (min-width: 720px) {
     .chess-full-container {
-        grid-template-areas: "board board sidebar";
-        grid-template-columns: 90vw 10vw;
+        grid-template-areas: "board sidebar";
+        grid-template-columns: 70vw 30vw;
     }
     .chess-container {
         height: 90vh;
