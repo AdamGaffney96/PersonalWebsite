@@ -83,7 +83,7 @@
 @media screen and (min-width: 720px) {
     .chess-full-container {
         grid-template-areas: "board sidebar";
-        grid-template-columns: 70vw 30vw;
+        grid-template-columns: 70vw 27vw;
     }
     .chess-container {
         height: 90vh;

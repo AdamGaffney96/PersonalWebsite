@@ -67,6 +67,7 @@ body {
     max-height: 100%;
     position: relative;
     display: grid;
+    grid-template-columns: 1fr 80% 1fr;
     grid-template-areas: "nav" "main" "footer";
     background-color: var(--clr-background);
     color: var(--clr-text);
@@ -98,14 +99,15 @@ img {
 
 nav {
     display: grid;
-    position: fixed;
+    /* position: stic; */
+    clip-path: inset(5px -100vmax);
     z-index: 10;
     width: 100%;
     font-size: var(--fs-400);
     background-color: var(--clr-background);
-    box-shadow: 0 0 var(--size-100) 0 var(--clr-neutral-950);
+    box-shadow: 0 5px var(--size-100) calc(var(--size-100)*-1) var(--clr-neutral-950), 0 5px 0 100vmax var(--clr-background);
     transition: background-color .3s, color .3s;
-    grid-area: nav;
+    grid-column: 2/3;
 }
 
 .nav-list {
@@ -124,38 +126,46 @@ nav {
     outline: none;
 }
 
-.nav-list li::after {
+.nav-list li::after,
+.other-link-list li::after {
     content: '';
     border-bottom: 2px solid var(--clr-accent-100);
     width: 100%;
     position: absolute;
     bottom: 0;
     left: 0;
-    transform: translateX(-100%);
+    transform: translateX(-105%);
     transition: transform .3s ease-in .27s;
 }
 
-.nav-list li::before {
+.nav-list li::before,
+.other-link-list li::before {
     content: '';
     border-right: 2px solid var(--clr-accent-100);
     height: 100%;
     position: absolute;
     bottom: 0;
     right: 0;
-    transform: translateY(100%);
+    transform: translateY(105%);
     transition: transform .3s ease-in;
 }
 
 .nav-list li:hover::before,
 .nav-list li:focus::before,
-.nav-list li:focus-within::before {
+.nav-list li:focus-within::before,
+.other-link-list li:hover::before,
+.other-link-list li:focus::before,
+.other-link-list li:focus-within::before {
     transition: transform .3s ease-in .27s;
     transform: translateY(0);
 }
 
 .nav-list li:hover::after,
 .nav-list li:focus::after,
-.nav-list li:focus-within::after {
+.nav-list li:focus-within::after,
+.other-link-list li:hover::after,
+.other-link-list li:focus::after,
+.other-link-list li:focus-within::after {
     transition: transform .3s ease-in;
     transform: translateX(0);
 }
@@ -223,6 +233,7 @@ nav {
 
 main {
     grid-area: main;
+    grid-column: 2/3;
 }
 
 
@@ -230,6 +241,7 @@ main {
 
 footer {
     display: grid;
+    grid-column: 2/3;
     width: 100%;
     position: absolute;
     bottom: 0;
@@ -237,7 +249,8 @@ footer {
     background-color: var(--clr-accent-300);
     font-size: var(--fs-400);
     place-items: center center;
-    grid-area: footer;
+    box-shadow: 0 0 0 100vmax var(--clr-accent-300);
+    clip-path: inset(0 -100vmax);
 }
 
 .list-heading {
@@ -257,6 +270,21 @@ footer {
 .other-links {
     display: flex;
     gap: var(--size-500);
+}
+
+.other-link-list li {
+    position: relative;
+    overflow: hidden;
+    width: fit-content;
+}
+
+.other-link-list li::before,
+.other-link-list li::after {
+    border-color: var(--clr-neutral-200);
+}
+
+.other-link-list li a {
+    padding: 6px;
 }
 
 .copyright {
