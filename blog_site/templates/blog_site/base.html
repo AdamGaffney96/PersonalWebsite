@@ -59,7 +59,7 @@
                     </div>
                 </div>
             </div>
-            <form action="POST" class="search-bar">
+            <!-- <form action="POST" class="search-bar">
                 {% csrf_token %}
                 <input type="text" class="search-input" id="search-box" placeholder="Still in development" disabled>
                 <button type="submit" aria-label="Search" aria-controls="search-box" class="search-button" disabled>
@@ -67,13 +67,15 @@
                         <path d="M484.1,454.796l-110.5-110.6c29.8-36.3,47.6-82.8,47.6-133.4c0-116.3-94.3-210.6-210.6-210.6S0,94.496,0,210.796 s94.3,210.6,210.6,210.6c50.8,0,97.4-18,133.8-48l110.5,110.5c12.9,11.8,25,4.2,29.2,0C492.5,475.596,492.5,463.096,484.1,454.796z M41.1,210.796c0-93.6,75.9-169.5,169.5-169.5s169.6,75.9,169.6,169.5s-75.9,169.5-169.5,169.5S41.1,304.396,41.1,210.796z"/>
                     </svg>
                 </button>
-            </form>
+            </form> -->
         </div>
     </nav>
     <main id="main">
         {% block content %} {% endblock %}
     </main>
     <footer>
+        <button onclick="minimiseNav()">min</button>
+        <button onclick="maximiseNav()">max</button>
         <div class="social-links" aria-label="Social Links">
             <h3 class="list-heading">Social Links</h3>
             <ul class="social-link-list" role="list">

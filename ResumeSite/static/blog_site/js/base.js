@@ -43,6 +43,8 @@
 // window.addEventListener("keyup", escapeMenu);
 
 const body = document.body;
+const nav = document.querySelector("nav");
+const main = document.querySelector("main");
 const moon = document.querySelector('.moon');
 const sun = document.querySelector('.sun');
 const lightDarkButton = document.querySelector('.light-dark-container');
@@ -58,7 +60,7 @@ if (lightPreference == "dark") {
     sun.style.display = null;
 }
 
-lightDarkButton.addEventListener('click', (e) => {
+function lightDarkSwap() {
     if (lightDarkButton.firstElementChild.style.transform == "translateX(200%)") {
         lightDarkButton.firstElementChild.style.transform = null;
         body.classList.add("light-mode");
@@ -74,4 +76,33 @@ lightDarkButton.addEventListener('click', (e) => {
         moon.style.display = null;
         localStorage.setItem("lightPreference", "dark");
     }
-})
+}
+
+function minimiseNav() {
+    if (body.scrollHeight > document.querySelector("html").clientHeight || body.style == undefined) {
+        console.log("scrollable.")
+        main.style.transform = "translateY(-80px)";
+        nav.style.transform = "translateY(-100%)";
+        setTimeout(e => {
+                body.style.gridTemplateRows = "0 1fr 160px";
+                main.style.transform = null;
+            }, 300)
+            // main.style.gridRow = "1/3";
+    } else {
+        nav.style = null;
+        main.style = null;
+    }
+}
+
+function maximiseNav() {
+    body.style.gridTemplateRows = "80px 1fr 160px";
+    main.style.transform = "translateY(0)";
+    nav.style.transform = "translateY(0)";
+    setTimeout(e => {
+        main.style.transform = null;
+        nav.style.transform = null;
+    }, 300)
+}
+
+lightDarkButton.addEventListener('click', lightDarkSwap)
+minimiseNav();

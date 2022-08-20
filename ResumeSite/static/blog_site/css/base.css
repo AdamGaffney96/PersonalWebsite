@@ -68,7 +68,6 @@ body {
     position: relative;
     display: grid;
     grid-template-columns: 1fr 80% 1fr;
-    grid-template-areas: "nav" "main" "footer";
     background-color: var(--clr-background);
     color: var(--clr-text);
     transition: background-color .3s, color .3s;
@@ -100,14 +99,23 @@ img {
 nav {
     display: grid;
     /* position: stic; */
-    clip-path: inset(5px -100vmax);
+    clip-path: inset(-5px -100vmax);
     z-index: 10;
     width: 100%;
     font-size: var(--fs-400);
     background-color: var(--clr-background);
-    box-shadow: 0 5px var(--size-100) calc(var(--size-100)*-1) var(--clr-neutral-950), 0 5px 0 100vmax var(--clr-background);
-    transition: background-color .3s, color .3s;
+    box-shadow: 0 5px 0 100vmax var(--clr-background);
+    transition: background-color .3s, color .3s, box-shadow .3s, transform .3s;
     grid-column: 2/3;
+}
+
+nav::after {
+    content: '';
+    width: 100%;
+    height: 80px;
+    position: absolute;
+    box-shadow: 0 5px var(--size-100) calc(var(--size-100)*-1) var(--clr-neutral-950);
+    z-index: -1;
 }
 
 .nav-list {
@@ -232,8 +240,8 @@ nav {
 /* main */
 
 main {
-    grid-area: main;
     grid-column: 2/3;
+    transition: transform .3s;
 }
 
 
