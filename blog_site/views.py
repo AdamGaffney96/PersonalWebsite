@@ -20,6 +20,8 @@ from django.http import HttpResponse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
+from rest_framework import viewsets
+from .serializers import *
 import os
 import math
 
@@ -29,6 +31,7 @@ def home(request):
     # Uncomment these for production and comment out the others. Reason being order by doesn't work correctly on SQLite but is fine on Postgres
     # gaming = Gaming.objects.all().order_by('-post_date')
     # essays = Essay.objects.all().order_by('-post_date')
+    serializer_class = GamingSerializer
     gaming = Gaming.objects.all()
     essays = Essay.objects.all()
     combined = gaming.union(essays).order_by('-post_date')
@@ -36,11 +39,12 @@ def home(request):
     "essays": essays, "combined": combined}
     return render(request, 'blog_site/base.html', context)
 
-def coming_soon(request):
-    context = {}
-    return render(request, "blog_site/coming_soon.html", context)
+class homeView(viewsets.ModelViewSet):
+    serializer_class = GamingSerializer
+    queryset = Gaming.objects.all()
 
 def gaming(request):
+    gaming_serializer = GamingSerializer
     gaming = Gaming.objects.all()
     reviews = Gaming.objects.filter(type__type = 'Review').order_by('-post_date')
     opinion = Gaming.objects.filter(type__type = 'Opinion').order_by('-post_date')
@@ -49,6 +53,7 @@ def gaming(request):
     return render(request, 'blog_site/gaming.html', context)
 
 def gaming_review(request):
+    gaming_serializer = GamingSerializer
     gaming = Gaming.objects.filter(type__type='Review').order_by('-post_date')
     paginator = Paginator(gaming, 6)
     page = request.GET.get('page')
@@ -63,6 +68,7 @@ def gaming_review(request):
     return render(request, 'blog_site/gaming_reviews.html', context)
 
 def gaming_opinion(request):
+    gaming_serializer = GamingSerializer
     gaming = Gaming.objects.filter(type__type='Opinion').order_by('-post_date')
     paginator = Paginator(gaming, 6)
     page = request.GET.get('page')
@@ -77,6 +83,7 @@ def gaming_opinion(request):
     return render(request, 'blog_site/gaming_opinions.html', context)
 
 def gaming_discussion(request):
+    gaming_serializer = GamingSerializer
     gaming = Gaming.objects.filter(type__type='Discussion').order_by('-post_date')
     paginator = Paginator(gaming, 6)
     page = request.GET.get('page')
@@ -91,6 +98,7 @@ def gaming_discussion(request):
     return render(request, 'blog_site/gaming_discussions.html', context)
 
 def essays(request):
+    essay_serializer = EssaySerializer
     essays = Essay.objects.all()
     educational = Essay.objects.filter(type__type = 'Educational').order_by('-post_date')
     discussion = Essay.objects.filter(type__type = 'Discussion').order_by('-post_date')
@@ -99,6 +107,7 @@ def essays(request):
     return render(request, 'blog_site/essays.html', context)
 
 def essay_educational(request):
+    essay_serializer = EssaySerializer
     essay = Essay.objects.filter(type__type='Educational').order_by('-post_date')
     paginator = Paginator(essay, 6)
     page = request.GET.get('page')
@@ -113,6 +122,7 @@ def essay_educational(request):
     return render(request, 'blog_site/essay_educational.html', context)
 
 def essay_discussions(request):
+    essay_serializer = EssaySerializer
     essay = Essay.objects.filter(type__type='Discussion').order_by('-post_date')
     paginator = Paginator(essay, 6)
     page = request.GET.get('page')
@@ -127,6 +137,7 @@ def essay_discussions(request):
     return render(request, 'blog_site/essay_discussions.html', context)
 
 def essay_opinions(request):
+    essay_serializer = EssaySerializer
     essay = Essay.objects.filter(type__type='Opinions').order_by('-post_date')
     paginator = Paginator(essay, 6)
     page = request.GET.get('page')
@@ -191,6 +202,7 @@ def contactfailure(request):
     return render(request, 'blog_site/contact_failure.html')
 
 def singlereview(request, slug):
+    gaming_serializer = GamingSerializer
     q = Gaming.objects.filter(slug__iexact = slug)
     if q.exists(): 
         q = q.first()
@@ -207,7 +219,7 @@ def singlereview(request, slug):
     return render(request, 'blog_site/base_review.html', context)
 
 def singleessay(request, slug):
-
+    essay_serializer = EssaySerializer
     q = Essay.objects.filter(slug__iexact = slug)
     print(q)
     if q.exists(): 
@@ -230,6 +242,7 @@ def newsletter(request):
 def projects(request):
     # Uncomment below for deployment
     # projects = Project.objects.all().order_by('-post_date')
+    project_serializer = ProjectSerializer
     projects = Project.objects.all()
     paginator = Paginator(projects, 6)
     page = request.GET.get('page')
@@ -244,6 +257,7 @@ def projects(request):
     return render(request, 'blog_site/projects.html', context)
 
 def singleproject(request, slug):
+    project_serializer = ProjectSerializer
     q = Project.objects.filter(slug__iexact = slug)
     print(q)
     if q.exists(): 
@@ -259,6 +273,7 @@ def singleproject(request, slug):
 def sudoku(request):
     # Uncomment below for deployment
     # projects = Project.objects.all().order_by('-post_date')
+    project_serializer = SudokuSerializer
     projects = Sudoku.objects.first()
     board_json = projects.board
     puzzle_title = projects.title
@@ -276,6 +291,7 @@ def sudoku(request):
     return render(request, 'blog_site/base_sudoku.html', context)
 
 def single_sudoku(request, id, slug):
+    project_serializer = SudokuSerializer
     q = Sudoku.objects.filter(id = id)
     if q.exists(): 
         q = q.first()
@@ -306,6 +322,7 @@ def chess(request):
     return render(request, 'blog_site/base_chess.html', context)
 
 def single_cheatsheet(request, slug):
+    project_serializer = CheatsheetSectionSerializer
     sections = CheatsheetSection.objects.filter(language = slug)
     if sections.exists(): 
         print("Cheatsheet found.")

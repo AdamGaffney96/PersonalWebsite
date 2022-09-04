@@ -3,7 +3,7 @@ from django.utils.text import slugify
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-# Create your models here.
+# Create your models here.\
 class Gaming(models.Model):
     title = models.CharField(max_length=50, verbose_name='Gaming Article Title')
     thumb = models.CharField(max_length=100, verbose_name='Thumbnail Image')

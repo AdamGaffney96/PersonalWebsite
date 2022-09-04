@@ -37,7 +37,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', '7%%t6c(7kq*m%g#mnv(3e_n0&3ud@2j@p8&shb!-w0
 # SECURE_SSL_REDIRECT = True
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['localhost', '.adamgaffney.co.uk', '.adam-gaffney-blog-site.herokuapp.com', '127.0.0.1']
 
@@ -53,6 +53,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'blog_site',
     'django_summernote',
+    'corsheaders',
+    'rest_framework',
 ]
 
 # REMOVE BEFORE PUSHING TO DEPLOYMENT
@@ -80,6 +82,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware'
 ]
 
 ROOT_URLCONF = 'ResumeSite.urls'
@@ -164,6 +167,11 @@ STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Code for linking Django to React
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:3000'
+]
 
 CONTACT_EMAIL = 'newsletter@adamgaffney.co.uk'
 ADMIN_EMAILS = 'adamgaffney96@gmail.com'

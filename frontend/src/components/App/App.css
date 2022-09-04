@@ -1,0 +1,150 @@
+/* base styles */
+
+:root {
+    /* --clr-bg: hsl(0, 0%, 100%);
+    --clr-sidebar: hsl(0, 0%, 0%);
+    --clr-overlay: hsl(0 0% 0% / 0.6);
+    --clr-main-1: hsl(199, 85%, 56%);
+    --clr-text-white: hsl(0, 0%, 100%);
+    --clr-text-light: hsl(199, 85%, 70%); */
+    /* Primary Colours */
+    --clr-primary-400: hsl(199 85% 56%);
+    /* Accent Colours */
+    --clr-accent-500: hsl(209 100% 10%);
+    --clr-accent-400: hsl(209 100% 20%);
+    --clr-accent-300: hsl(209 100% 30%);
+    --clr-accent-200: hsl(209 100% 40%);
+    --clr-accent-100: hsl(209 100% 50%);
+    /* Neutral Colours */
+    --clr-neutral-950: hsl(232 12% 7%);
+    --clr-neutral-900: hsl(232 12% 13%);
+    --clr-neutral-200: hsl(0 0% 97%);
+    --clr-neutral-100: hsl(0 0% 100%);
+    /* Font Family */
+    --ff-primary: 'Roboto', Arial, sans-serif;
+    /* Font Weight */
+    --fw-regular: 400;
+    --fw-semi-bold: 500;
+    --fw-bold: 700;
+    /* Font Size */
+    --fs-100: 0.8125rem;
+    --fs-200: 0.875rem;
+    --fs-300: 0.9375rem;
+    --fs-400: 1rem;
+    --fs-500: 1.25rem;
+    --fs-600: 1.5rem;
+    --fs-700: 1.75rem;
+    --fs-800: 2rem;
+    --fs-900: 3rem;
+    /* --fs-body: var(--fs-400);
+    --fs-primary-heading: var(--fs-800);
+    --fs-secondary-heading: var(--fs-700);
+    --fs-nav: var(--fs-500);
+    --fs-button: var(--fs-300); */
+    /* Sizes */
+    --size-100: 0.25rem;
+    --size-200: 0.5rem;
+    --size-300: 0.75rem;
+    --size-400: 1rem;
+    --size-500: 1.5rem;
+    --size-600: 2rem;
+    --size-700: 3rem;
+    --size-800: 4rem;
+    --size-900: 5rem;
+    --size-1000: 10rem;
+}
+
+html {
+    font-family: var(--ff-primary);
+}
+
+body {
+    /* variables for light mode */
+    --clr-background: var(--clr-neutral-200);
+    --clr-text: var(--clr-neutral-900);
+    /* other styles */
+    background-color: var(--clr-background);
+    color: var(--clr-text);
+    transition: background-color .3s, color .3s;
+}
+
+#root {
+    position: relative;
+    display: grid;
+    min-height: 100vh;
+    max-height: 100%;
+    grid-template-columns: 1fr minmax(650px, 60%) 1fr;
+}
+
+.dark-mode {
+    --clr-background: var(--clr-neutral-900);
+    --clr-text: var(--clr-neutral-200);
+}
+
+img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+
+/* main */
+
+main {
+    grid-column: 2/3;
+    transition: transform .3s;
+}
+
+
+/* chess dialogue styles */
+
+.dialogue-box {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    background: var(--clr-neutral-200);
+    border: 1px solid var(--clr-accent-400);
+    border-radius: 1rem;
+    z-index: 100;
+    position: absolute;
+    width: 90%;
+    max-width: 800px;
+    margin: 0.5rem;
+    pointer-events: auto;
+    z-index: 9;
+    box-shadow: 0 0 0 100vmax var(--clr-neutral-900);
+}
+
+.chess-settings-dialogue {
+    top: 50%;
+    left: 50%;
+}
+
+
+/* .dialogue-overlay {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background: var(--clr-overlay);
+    z-index: 1;
+} */
+
+
+/* media queries */
+
+@media screen and (min-width: 45rem) {
+
+    /* base styles */
+    #root {
+        grid-template-rows: 80px 1fr 160px;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+
+    /* base styles */
+    :root {
+        --clr-background: var(--clr-neutral-900);
+        --clr-text: var(--clr-neutral-200);
+    }
+}

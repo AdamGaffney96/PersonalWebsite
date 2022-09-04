@@ -1,5 +1,9 @@
-from django.urls import path, re_path
+from django.urls import path, re_path, include
+from rest_framework import routers
 from . import views
+
+router = routers.DefaultRouter()
+router.register(r'home', views.homeView, 'home')
 
 urlpatterns = [
     path('', views.home, name = "home"),
@@ -14,4 +18,5 @@ urlpatterns = [
     path('projects/movie-project', views.movie_project, name = "movie_project"),
     path('projects/countdown', views.countdown, name = "countdown"),
     path('projects/password-gen', views.password_gen, name = 'password_gen'),
+    path('api/', include(router.urls)),
 ]
