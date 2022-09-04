@@ -1,3 +1,4 @@
+from http.client import HTTPResponse
 from django.shortcuts import render
 from .models import *
 from .forms import ContactForm, GamingListForm
@@ -6,9 +7,10 @@ from django.core.mail import send_mail
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.hashers import check_password
 # Import the logout function from django.contrib.auth below
 from django.contrib.admin.views.decorators import staff_member_required
-from django.contrib.auth import logout
+from django.contrib.auth import get_user_model
 from django.http import Http404
 from django.urls import reverse_lazy
 from django.contrib.auth.forms import UserCreationForm
@@ -20,10 +22,15 @@ from django.http import HttpResponse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework import viewsets
 from .serializers import *
 import os
 import math
+import json
 
 # Create your views here.
 
@@ -42,6 +49,10 @@ def home(request):
 class homeView(viewsets.ModelViewSet):
     serializer_class = GamingSerializer
     queryset = Gaming.objects.all()
+
+class projectsView(viewsets.ModelViewSet):
+    serializer_class = ProjectSerializer
+    queryset = Project.objects.all()
 
 def gaming(request):
     gaming_serializer = GamingSerializer
@@ -195,11 +206,11 @@ def contactsubmit(request):
             return redirect('contact_success')
     return render(request, 'blog_site/contact_form.html')
 
-def contactsuccess(request):
-    return render(request, 'blog_site/contact_success.html')
+# def contactsuccess(request):
+#     return render(request, 'blog_site/contact_success.html')
 
-def contactfailure(request):
-    return render(request, 'blog_site/contact_failure.html')
+# def contactfailure(request):
+#     return render(request, 'blog_site/contact_failure.html')
 
 def singlereview(request, slug):
     gaming_serializer = GamingSerializer
@@ -236,8 +247,8 @@ def singleessay(request, slug):
     }
     return render(request, 'blog_site/base_review.html', context)
 
-def newsletter(request):
-    return render(request, 'blog_site/newsletter.html')
+# def newsletter(request):
+#     return render(request, 'blog_site/newsletter.html')
 
 def projects(request):
     # Uncomment below for deployment
@@ -317,9 +328,9 @@ def newsudoku(request):
     else:
         return render(request, 'blog_site/sudoku_submission.html')
     
-def chess(request):
-    context = {"success": "success"}
-    return render(request, 'blog_site/base_chess.html', context)
+# def chess(request):
+#     context = {"success": "success"}
+#     return render(request, 'blog_site/base_chess.html', context)
 
 def single_cheatsheet(request, slug):
     project_serializer = CheatsheetSectionSerializer
@@ -331,22 +342,22 @@ def single_cheatsheet(request, slug):
     context = {"type": sections.first().verbose, "sections": sections}
     return render(request, 'blog_site/base_cheatsheet.html', context)
 
-def periodic_table(request):
-    context = {}
-    return render(request, 'blog_site/periodic_table.html', context)
+# def periodic_table(request):
+#     context = {}
+#     return render(request, 'blog_site/periodic_table.html', context)
 
-def tv_license(request):
-    context = {}
-    return render(request, 'blog_site/tv_license.html', context)
+# def tv_license(request):
+#     context = {}
+#     return render(request, 'blog_site/tv_license.html', context)
 
-def movie_project(request):
-    context = {}
-    return render(request, 'blog_site/movie_project.html', context)
+# def movie_project(request):
+#     context = {}
+#     return render(request, 'blog_site/movie_project.html', context)
 
-def countdown(request):
-    context = {}
-    return render(request, 'blog_site/countdown.html', context)
+# def countdown(request):
+#     context = {}
+#     return render(request, 'blog_site/countdown.html', context)
 
-def password_gen(request):
-    context = {}
-    return render(request, 'blog_site/password_gen.html', context)
+# def password_gen(request):
+#     context = {}
+#     return render(request, 'blog_site/password_gen.html', context)
