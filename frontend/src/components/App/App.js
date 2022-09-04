@@ -11,6 +11,7 @@ import Home from "../Home/Home";
 import Projects from "../Projects/Projects";
 import Chess from "../Chess/Chess";
 import Sudoku from "../Sudoku/Sudoku";
+import Login from "../Login/Login";
 
 async function testCall() {
     return await fetch("/api/home/").then(response => {
@@ -30,6 +31,7 @@ function App() {
                 <Route path="/Projects" element={<Projects/>}/>
                 <Route path="/Chess" element={<Chess/>}/>
                 <Route path="/Sudoku" element={<Sudoku/>}/>
+                <Route path="/Login" element={<Login />} />
             </Routes>
             <button onClick={testCall}>API Call</button>
             </main>
